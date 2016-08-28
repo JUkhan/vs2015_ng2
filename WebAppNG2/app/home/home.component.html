@@ -1,0 +1,12 @@
+﻿
+
+<div juForm viewMode="form" (onLoad)="myFormLoad($event)" [options]="myOptions"></div>
+
+<juPanel viewMode="tab">
+    <content title="title 1">
+        <p>content---1</p>
+    </content>
+    <content title="title 2" [active]="true">
+        <p>content----2</p>
+    </content>
+</juPanel>

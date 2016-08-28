@@ -1,0 +1,95 @@
+.table{margin-bottom:3px; width:auto;}
+.icon-hide{display:none;}
+.icon-show{display:inline-block;}
+.filter-bar{float: right; cursor:hand;width:20px; height:20px; padding:1px; text-align:center; }
+.filter-window{
+    border:1px solid #808080;
+    min-height:50px;
+    position:absolute; 
+    display: none;    
+    z-index:1000; 
+    height: auto;
+    background-color:#f6f6f6; 
+    border-radius:3px;
+}
+.filter-window .title { 
+   padding-left: 5px; 
+   padding-top: 2px; 
+   padding-bottom: 2px; 
+   border-bottom:1px solid #808080;   
+}
+.filter-window .title a{
+    margin-right:3px;
+    float: right;
+}
+.filter-window .filter-content select{
+    height:26px;
+}
+.filter-window .filter-content #txtFilter, .filter-window .filter-content #txtSearch{
+    height:26px;
+    width:100%;
+    padding-left:5px;
+}
+.filter-window .filter-content .select-all{
+    border-top:1px solid #cdcdcd;
+    border-bottom:1px solid #cdcdcd;   
+    padding-left:5px;
+}
+.filter-window .filter-content .set-content{
+    overflow-y: auto;
+    max-height: 150px;    
+}
+.filter-window .filter-content .set-content .item{
+    padding-left:5px;    
+}
+.grid-toolbar{
+    padding-bottom:3px;
+}
+.quickSearch{
+    width:140px;    
+}
+.level-1{
+    padding-left:28px !important;
+}
+.level-2{
+    padding-left:48px !important;
+}
+.level-3{
+    padding-left:68px !important;
+}
+.level-4{
+    padding-left:88px !important;
+}
+.level-5{
+    padding-left:108px !important;
+}
+.level-6{
+    padding-left:128px !important;
+}
+.level-7{
+    padding-left:148px !important;
+}
+.level-8{
+    padding-left:168px !important;
+}
+.level-9{
+    padding-left:188px !important;
+}
+.level-10{
+    padding-left:208px !important;
+}
+
+.row-editor .form-control{
+    display: inline-block !important;
+}
+.row-editor .validation{
+ color: red;
+ cursor:pointer;
+}
+.row-editor .validation-msg-show{
+    visibility: visible; display:inline-block;
+}
+.row-editor .validation-msg-hide{
+    visibility: hidden;display:none;
+}
+.juPager nav ul{padding:0;}

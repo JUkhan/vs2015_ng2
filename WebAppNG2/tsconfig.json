@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": true,
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true    
+    //"watch": true
+  },
+  "compileOnSave": true,  
+  "exclude": [
+    "node_modules",
+    "publish",
+    "typings/index.d.ts",
+    "typings/modules",
+    "scripts"
+  ]
+
+}

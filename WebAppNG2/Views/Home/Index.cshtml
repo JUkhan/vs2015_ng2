@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="/">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="Content/Site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="Content/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="Content/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="Content/datepicker/css/bootstrap-datepicker.css">
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+</head>
+<body>    
+    <my-app>Loading...</my-app>
+    <script src="scripts/angular2/shim.min.js"></script>
+    <script src="scripts/angular2/zone.js"></script>
+    <script src="scripts/angular2/Reflect.js"></script>
+    <script src="scripts/angular2/system.src.js"></script>
+    <script src="systemjs.config.js"></script>   
+    <script>
+      System.import('app').catch(function(err){ console.error(err); });
+    </script>
+    <script src="Content/bootstrap/js/bootstrap.min.js"></script>
+    <script src="Content/ckeditor/ckeditor.js"></script>   
+    <script src="Content/datepicker/js/bootstrap-datepicker.min.js"></script>
+</body>
+</html>

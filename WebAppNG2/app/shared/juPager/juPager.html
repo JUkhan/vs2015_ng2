@@ -1,0 +1,37 @@
+<nav *ngIf="list.length>0">
+  <ul class="pagination">
+     <li class="page-item" [class.disabled]="isDisabledPrev()">
+      <a class="page-link" href="javascript:;" (click)="clickStart()" aria-label="Previous">
+        <span>Start</span>       
+      </a>
+    </li>
+    <li class="page-item" [class.disabled]="isDisabledPrev()">
+      <a class="page-link" href="javascript:;" (click)="clickPrev()" aria-label="Previous">
+        <span>&laquo;</span>       
+      </a>
+    </li>
+    <li class="page-item" [class.active]="ax==activePage" *ngFor="let ax of list">
+      <a class="page-link" (click)="clickPage(ax)" href="javascript:;">{{ax}}</a>
+    </li>   
+    <li class="page-item" [class.disabled]="isDisabledNext()">
+      <a class="page-link" href="javascript:;" (click)="clickNext()" aria-label="Next">
+        <span>&raquo;</span>       
+      </a>
+    </li>
+     <li class="page-item" [class.disabled]="isDisabledNext()">
+      <a class="page-link" href="javascript:;" (click)="clickEnd()" aria-label="Next">
+        <span>End</span>       
+      </a>
+    </li>
+  </ul>
+  <span style="position:relative;top:-10px"><span>Page Size </span>
+  <select style="display:inline-block;width:55px" class="form-control" #psize [ngModel]="pageSize" (change)="changePageSize(psize.value)">
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="30">30</option>
+    <option value="40">40</option>
+    <option value="50">50</option>
+    <option value="100">100</option>    
+  </select></span>
+</nav>

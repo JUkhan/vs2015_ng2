@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>CKEditor Sample</title>
+	<script src="ckeditor.js"></script>
+	
+</head>
+<body id="main">
+
+<form>
+            <textarea name="editor1" id="editor1" rows="10" cols="80">
+                This is my textarea to be replaced with CKEditor.
+            </textarea>
+            <script>
+                // Replace the <textarea id="editor1"> with a CKEditor
+                // instance, using default configuration.
+                CKEDITOR.replace( 'editor1' );
+				function getData(){
+					console.log(CKEDITOR.instances['editor1'].getData());
+				}
+				function setData(){
+					console.log(CKEDITOR.instances['editor1'].setData('<h1>Hello world!</h1>'));
+				}
+            </script>
+        </form>
+<input type="button" value="GetData" onclick="getData()">
+<input type="button" value="SetData" onclick="setData()">
+</body>
+</html>

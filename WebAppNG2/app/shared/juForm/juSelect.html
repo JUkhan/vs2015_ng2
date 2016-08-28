@@ -1,0 +1,25 @@
+<div style="position:relative">
+    <div class="ju-select form-control" (click)="toggleOPtions($event)"><span style="display:block;position:relative;top:3px">{{selectedText}}</span><b style="right:5px;position:absolute;top:10px;color:#555;font-size:9px">&#9660;</b></div>
+    <div  class="options" [class.empty-options]="!searchData || searchData.length==0">
+        <div  class="action" *ngIf="!checkCssClass()">
+            <div>
+                <label [hidden]="!(viewMode==='checkbox')"> <input [checked]="isAllSelected" (click)="checkAll($event.target.checked)" type="checkbox"  title="check all"> Select All</label>
+                <input *ngIf="!hideSearch" type="text" (keyup)="search($event.target.value)" placeholder="search item">
+                <span *ngIf="viewMode==='select'" (click)="checkAll(false)" title="Unselect the item" class="unselect">&#10006;</span>
+            </div>
+        </div>
+        <div class="items" >
+            <div class="option-host" (click)="selectOption(item)" *ngFor="let item of searchData">
+                <div class="ju-option" [class.selected]="item.selected">
+                    <div class="header" *ngIf="(viewMode==='select')"><span class="title" [innerHtml]="item.name"></span><span class="sub-title" *ngIf="item.subtitle" [innerHtml]="item.subtitle"></span></div>
+                    <div class="header" *ngIf="(viewMode==='radio')"><input type="radio" name="xp0000" [checked]="item.selected"><span class="title" style="padding-left:5px"
+                            [innerHtml]="item.name"></span><span class="sub-title" *ngIf="item.subtitle" [innerHtml]="item.subtitle"></span></div>
+                    <div class="header" *ngIf="(viewMode==='checkbox')"><input type="checkbox" [checked]="item.selected"><span class="title" style="padding-left:5px" [innerHtml]="item.name"></span>
+                        <span class="sub-title" *ngIf="item.subtitle" [innerHtml]="item.subtitle"></span>
+                    </div>
+                    <div *ngIf="item.description" class="description" [innerHtml]="item.description"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
