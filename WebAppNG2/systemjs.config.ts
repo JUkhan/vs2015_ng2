@@ -61,8 +61,7 @@ declare var System: any;
         packages: packages
     };
 
-    System.config(config);
-   
+    System.config(config);   
 
 })(this);
 
