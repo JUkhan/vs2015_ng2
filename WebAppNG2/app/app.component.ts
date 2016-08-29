@@ -12,7 +12,7 @@ export class AppComponent {
     }
     private setMenu() {
         this.menuData = [
-            { name: 'Home', link: '', icon: 'fa fa-home' },
+            { name: 'Home', link: 'home', icon: 'fa fa-home' },
             {
                 name: 'Settings',  icon: 'fa fa-gear', items: [
                     { name: 'Grid', link: 'setting', icon: 'fa fa-home' },

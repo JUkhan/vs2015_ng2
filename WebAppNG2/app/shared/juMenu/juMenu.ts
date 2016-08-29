@@ -10,11 +10,12 @@ import {Component, OnInit, Input} from '@angular/core';
 
 export class juMenu implements OnInit {
     
-    @Input() menuData:any[];
+    @Input() menuData: any[];
     constructor() { }
 
     ngOnInit() {
-        
-     }
+       
+    }
+   
 }
 
