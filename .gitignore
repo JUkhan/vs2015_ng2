@@ -1,5 +1,6 @@
 .idea
 typings/**
+scripts
 node_modules
 packages
 publish

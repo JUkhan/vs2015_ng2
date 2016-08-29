@@ -13,9 +13,9 @@ import {CkEditor, FileSelect}   from './juForm/CkEditor';
 import {Datetimepicker}         from './juForm/Datetimepicker';
 import {juGrid}                 from './juGrid/juGrid';
 import {rowEditor}              from './juGrid/rowEditor';
-import {juParentWindow}         from './juWindow/juParentWindow';
-import {juChildWindow}          from './juWindow/juChildWindow';
-import {juWindowService}        from './juWindow/juWindowService';
+//import {juParentWindow}         from './juWindow/juParentWindow';
+//import {juChildWindow}          from './juWindow/juChildWindow';
+//import {juWindowService}        from './juWindow/juWindowService';
 
 import {UiService}              from './ui.service';
 import {AppService}             from './app.service';
@@ -33,10 +33,7 @@ import {AppService}             from './app.service';
         FileSelect,
         Datetimepicker,
         juGrid,
-        rowEditor,
-        juParentWindow,
-        juChildWindow
-       
+        rowEditor       
     ],
     exports: [
         CommonModule,
@@ -51,12 +48,9 @@ import {AppService}             from './app.service';
         FileSelect,
         Datetimepicker,
         juGrid,
-        rowEditor,
-        juParentWindow,
-        juChildWindow
-       
+        rowEditor       
     ],
-    providers: [juWindowService]
+    providers: []
 })
 export class SharedModule {
 
