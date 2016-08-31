@@ -19,6 +19,7 @@ import {rowEditor}              from './juGrid/rowEditor';
 
 import {UiService}              from './ui.service';
 import {AppService}             from './app.service';
+import {CanDeactivateGuard} from './canDeactivateGuard.service';
 
 @NgModule({
     imports: [CommonModule, RouterModule, FormsModule],
@@ -57,7 +58,7 @@ export class SharedModule {
     static forRoot(): ModuleWithProviders {
         return {
             ngModule: SharedModule,
-            providers: [AppService, UiService]
+            providers: [AppService, UiService, CanDeactivateGuard]
         };
     }
 }

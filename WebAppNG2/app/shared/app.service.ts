@@ -1,6 +1,6 @@
 ﻿import {Injectable}   from '@angular/core';
 import {Http}         from '@angular/http';
-import {Observable}   from 'rxjs/Rx';
+import {Observable, Subject}   from 'rxjs/Rx';
 
 declare var window: any;
 declare var jQuery: any;
@@ -8,12 +8,60 @@ declare var jQuery: any;
 @Injectable()
 export class AppService {
     overLayElement: any;
-    baseUrl: string = '/';
+    private baseUrl: string = '';
+    public notifier$: Subject<any>;
     constructor(private http: Http) {
-
+        this.notifier$ = new Subject();
+       
+    }
+    private getBaseUrl() {
+        if (this.baseUrl) {
+            return this.baseUrl;
+        }
+        this.baseUrl = jQuery('base ').attr('href') || '/';
+        this.baseUrl += 'api/';
+        return this.baseUrl;
+    }
+    showMessage(message: string) {
+        this.notifyAll({ key: 'message', value: message });
+    }
+    notifyAll(obj: { key: string, value?: any }) {
+        this.notifier$.next(obj);
+    }
+    errorHandler(obj: any) {
+        this.overlay(false);
+        this.notifyAll({ key: 'error', value: obj.statusText || 'Invalid Url' });
+        return Observable.of(false);
+    }
+    hideOverlay(obj) {
+        this.overlay(false);
+        this.notifyAll({ key: 'error', value: obj.error || '' });
+    }
+    getUrl(url, params) {
+        let paramList = [];
+        for (let prop in params) {
+            paramList.push(prop + '=' + params[prop]);
+        }
+        return url + '?' + paramList.join('&');
+    }
+    get(url): Observable<any> {
+        this.overlay(true);
+        return this.http.get(this.getBaseUrl() + url)
+            .map(res => res.json())
+            .do(this.hideOverlay.bind(this))
+            .catch(this.errorHandler.bind(this));
+    }
+    getInterval(url, interval = 1000) {
+        return Observable.interval(interval).switchMap(res => this.get(url));
+    }
+    post(url, data): Observable<any> {
+        this.overlay(true);
+        return Observable.fromPromise(jQuery.post(this.getBaseUrl() + url, data))
+            .do(this.hideOverlay.bind(this))
+            .catch(this.errorHandler.bind(this));
     }
     upload(url, model: any) {
-        url = this.baseUrl + + url;
+        url = this.getBaseUrl() + url;
         return Observable.fromPromise(new Promise((resolve, reject) => {
 
             let formData: FormData = new FormData();
@@ -69,17 +117,17 @@ export class AppService {
         }
     }
 
-    //for test
-    get(url) {
+    // dummy data service   
+    get_d(url) {
         return Observable.of(this.scholarList)
     }
-    post(url, model) {
+    post_d(url, model) {
         return Observable.of(model)
     }
-    put(url, model) {
+    put_d(url, model) {
         return Observable.of(model)
     }
-    delete(url) {
+    delete_d(url) {
         return Observable.of(true);
     }
     scholarList: any[] = [
@@ -106,4 +154,6 @@ export class AppService {
     getEducations2() {
         return [{ name: 'CSE', value: 'CSE' }, { name: 'BBA', value: 'BBA' }, { name: 'MBA', value: 'MBA' }];
     }
+
+    
 }

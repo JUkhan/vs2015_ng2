@@ -17,10 +17,7 @@ declare var jQuery: any;
     changeDetection: ChangeDetectionStrategy.Default
 })
 export class juForm implements OnInit, OnDestroy, OnChanges {
-    //inputs
-    @Input('title')
-    title: string = 'Form Title Goes Here';
-
+    
     @Input('viewMode')
     viewMode: string = 'panel';
 
@@ -83,10 +80,7 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
     ngOnChanges(changes) {
 
     }
-    ngOnInit() {
-        if (this.options.title) {
-            this.title = this.options.title;
-        }
+    ngOnInit() {        
         this.options.viewMode = this.viewMode;
         this.options._events = {};
         if (this.viewMode === 'popup') {
@@ -304,7 +298,7 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
         if (this.viewMode === 'panel') {
             template.push(`<div class="panel panel-${this.panelMode}">
             <div class="panel-heading" style="cursor:pointer" (click)="slideToggle()">
-                <h3 class="panel-title">${this.title}</h3>
+                <h3 class="panel-title">{{config.title}}</h3>
             </div>
             <div class="panel-body">
             <div *ngIf="message" [class]="messageCss">{{message}}</div>       
@@ -315,7 +309,7 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">${this.title}</h4>
+                            <h4 class="modal-title">{{config.title }}</h4>
                         </div>
                         <div class="modal-body">
                         <div *ngIf="message" [class]="messageCss">{{message}}</div>                    

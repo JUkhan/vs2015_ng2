@@ -146,6 +146,9 @@
     <Content Include="app\shared\juPanel\juPanel.css" />
     <Content Include="app\shared\juPanel\juPanel.html" />
     <Content Include="app\shared\juPanel\juPanelContent.html" />
+    <Content Include="app\shared\juWindow\juChildWindow.html" />
+    <Content Include="app\shared\juWindow\juParentWindow.css" />
+    <Content Include="app\shared\juWindow\juParentWindow.html" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
@@ -569,6 +572,7 @@
     <TypeScriptCompile Include="app\setting\setting.routes.ts" />
     <TypeScriptCompile Include="app\setting\upload\upload.ts" />
     <TypeScriptCompile Include="app\shared\app.service.ts" />
+    <TypeScriptCompile Include="app\shared\canDeactivateGuard.service.ts" />
     <TypeScriptCompile Include="app\shared\juForm\CkEditor.ts" />
     <TypeScriptCompile Include="app\shared\juForm\Datetimepicker.ts" />
     <TypeScriptCompile Include="app\shared\juForm\FV.ts" />
@@ -585,6 +589,9 @@
     <TypeScriptCompile Include="app\shared\juPager\juPager.ts" />
     <TypeScriptCompile Include="app\shared\juPanel\juPanel.ts" />
     <TypeScriptCompile Include="app\shared\juPanel\juPanelContent.ts" />
+    <TypeScriptCompile Include="app\shared\juWindow\juChildWindow.ts" />
+    <TypeScriptCompile Include="app\shared\juWindow\juParentWindow.ts" />
+    <TypeScriptCompile Include="app\shared\juWindow\juWindowService.ts" />
     <TypeScriptCompile Include="app\shared\shared.module.ts" />
     <TypeScriptCompile Include="app\shared\ui.service.ts" />
     <TypeScriptCompile Include="typings\globals\angular-protractor\index.d.ts" />

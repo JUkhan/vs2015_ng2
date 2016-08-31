@@ -20,7 +20,7 @@ export class gridExample implements OnInit {
         this.initScholar();        
      }
      private onLoad(grid:juGrid){        
-        this.service.get('scholar')       
+        this.service.get_d('scholar')       
         .subscribe(list=>{this.scholarList=list;});   
         grid.slideToggle();   
      }
@@ -50,7 +50,7 @@ export class gridExample implements OnInit {
                  }
             },
             removeItem: data => {
-                this.service.delete('scholar/' + data.id).subscribe(res => {
+                this.service.delete_d('scholar/' + data.id).subscribe(res => {
                     this.scholarGridOptions.api.grid.showMessage('Data removed successfully');
                     this.scholarGridOptions.api.grid.removeItem(data);                  
                 });
@@ -59,13 +59,13 @@ export class gridExample implements OnInit {
     }
     private submitScholar(e:any) {
         if (this.scholarGridOptions.api.form.isUpdate) {
-            this.service.put('scholar', this.scholarGridOptions.api.form.getModel())
+            this.service.put_d('scholar', this.scholarGridOptions.api.form.getModel())
                 .subscribe(res => {
                     this.scholarGridOptions.api.grid.showMessage('Data updated successfully');
                     this.scholarGridOptions.api.form.showModal(false);
                 });
         } else {
-             this.service.post('scholar', this.scholarGridOptions.api.form.getModel())
+             this.service.post_d('scholar', this.scholarGridOptions.api.form.getModel())
                 .subscribe(res => {
                     this.scholarGridOptions.api.grid.showMessage('Data inserted successfully');                   
                     this.scholarGridOptions.api.grid.addItem(res);

@@ -244,6 +244,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         return { tpl: tpl.join('') };
     }
     private renderTable(tpl: any[]) {
+        tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
         tpl.push(`<table class="${this.options.classNames}">`);
         tpl.push('<thead>');
         tpl.push(this.getHeader(this.options.columnDefs));
@@ -252,7 +253,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         tpl.push(this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView());
         tpl.push('</tbody>');
         tpl.push('</table>');
-        tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
+        
     }
     private getCellEditingView() {
         let tpl: any[] = [];
