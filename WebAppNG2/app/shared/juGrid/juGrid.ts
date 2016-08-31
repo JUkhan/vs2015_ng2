@@ -746,8 +746,8 @@ function getComponent(obj: any) {
             this.data = [...this.data.sort(sortFn)];
         }
         sortIcon(colDef: any) {
-            let hidden = typeof colDef.reverse === 'undefined';
-            return { 'icon-hide': hidden, 'icon-show': !hidden, 'fa-caret-up': colDef.reverse === false, 'fa-caret-down': colDef.reverse === true };
+            let hidden = typeof colDef.reverse === 'undefined';            
+            return { 'fa-sort': hidden, 'fa-caret-up': colDef.reverse === false, 'fa-caret-down': colDef.reverse === true };
         }
         filterIcon(colDef: any) {
             return { 'icon-hide': !(colDef.filterApi && colDef.filterApi.isFilterActive()), 'icon-show': colDef.filterApi && colDef.filterApi.isFilterActive() };

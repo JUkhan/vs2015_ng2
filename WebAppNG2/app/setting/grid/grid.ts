@@ -7,7 +7,7 @@ import {AppService}   from '../../shared/app.service';
 @Component({
     moduleId: module.id,
     selector: 'selector',   
-    template: '<div juGrid viewMode="panel" title="Test" (onLoad)="onLoad($event)" [data]="scholarList" [options]="scholarGridOptions"></div>',
+    template: '<div juGrid panelMode="primary" viewMode="panel" title="Test" (onLoad)="onLoad($event)" [data]="scholarList" [options]="scholarGridOptions"></div>',
     styleUrls:['./grid.css'],
     encapsulation:ViewEncapsulation.None
 })
