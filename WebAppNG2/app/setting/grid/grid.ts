@@ -27,6 +27,7 @@ export class gridExample implements OnInit {
     private initScholar() {
         this.scholarGridOptions = { level:10,          
             pageSize:3, quickSearch:true, crud:true, enableCellEditing:false, enableTreeView:false, lazyLoad:this.service.getChildData,                       
+            rowEvents:'(click)="config.rowClick(row, i)"',
             columnDefs: [
                 { headerName: 'Name', field: 'name',width:140, sort:true, filter:'set', type:'juSelect'},
                 { headerName: 'Education', field: 'education', sort:true, filter:'set'},
@@ -54,7 +55,8 @@ export class gridExample implements OnInit {
                     this.scholarGridOptions.api.grid.showMessage('Data removed successfully');
                     this.scholarGridOptions.api.grid.removeItem(data);                  
                 });
-            }
+            },
+            rowClick: (row, index) => { row.address = row.address + '.....';}
         };
     }
     private submitScholar(e:any) {

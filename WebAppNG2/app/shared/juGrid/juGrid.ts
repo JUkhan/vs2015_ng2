@@ -142,6 +142,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         if (!('level' in this.options)) {
             this.options.level = 5;
         }
+        this.options.rowEvents = this.options.rowEvents || '';
 
         if (this.options.crud) {
             this.options.newItem = () => {
@@ -257,7 +258,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
     }
     private getCellEditingView() {
         let tpl: any[] = [];
-        tpl.push(`<tr [ngClass]="config.trClass(row, i, f, l)" [model]="row" [config]="config" class="row-editor" *ngFor="let row of viewList;${this.options.trackBy ? 'trackBy:trackByResolver();' : ''}let i = index;let f=first;let l = last">`);
+        tpl.push(`<tr ${this.options.rowEvents} [ngClass]="config.trClass(row, i, f, l)" [model]="row" [config]="config" class="row-editor" *ngFor="let row of viewList;${this.options.trackBy ? 'trackBy:trackByResolver();' : ''}let i = index;let f=first;let l = last">`);
         this.options.columnDefs.forEach((item, index) => {
             this.getCell(item, `config.columnDefs[${index}]`, tpl, index);
         });
@@ -352,7 +353,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
     }
     private getPlainView() {
         let tpl: any[] = [];
-        tpl.push(`<tr [ngClass]="config.trClass(row, i, f, l)" *ngFor="let row of viewList;${this.options.trackBy ? 'trackBy:trackByResolver();' : ''}let i = index;let f=first;let l = last">`);
+        tpl.push(`<tr ${this.options.rowEvents} [ngClass]="config.trClass(row, i, f, l)" *ngFor="let row of viewList;${this.options.trackBy ? 'trackBy:trackByResolver();' : ''}let i = index;let f=first;let l = last">`);
         this.options.columnDefs.forEach((item, index) => {
             tpl.push(this.getNormalTD(item, index));
         });
@@ -403,7 +404,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
             tpl.push(`<template [ngIf]="${previousChild}.expand">`);
             tpl.push(`<template ngFor let-${row} [ngForOf]="${previousChild}.items" let-i${level}="index" let-f${level}="first" let-l${level}="last" ${this.options.trackBy ? '[ngForTrackBy]="trackByResolver()"' : ''}>`);
         }
-        tpl.push(`<tr [ngClass]="config.trClass(${this.getParams(row, level)})">`);
+        tpl.push(`<tr ${this.options.rowEvents} [ngClass]="config.trClass(${this.getParams(row, level)})">`);
         this.options.columnDefs.forEach((item, index) => {
             tpl.push(`<td ${this.getLevel(index, level)}`);
             if (item.tdClass) {
