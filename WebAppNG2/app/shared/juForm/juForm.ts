@@ -27,7 +27,7 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
     @Input('options')
     options: any = {};
     @Input('panelMode')
-    panelMode: string = 'default';
+    panelMode: string = 'primary';
     //outputs
     @Output('onModalClose')
     onModalClose = new EventEmitter();
@@ -122,7 +122,8 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
                 .then((com) => {
                     this.dynamicComponent = com;
                     com.instance.setConfig(this.options, this);
-                    if (this.options.refreshBy) {
+                    if (this.options.refreshBy)
+                    {
                         this.setModel(this.options.refreshBy);
                     }
                     if (this.isTab) {
@@ -176,8 +177,9 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
         }
         return this;
     }
-    setModel(model: any): juForm {
-        this.dynamicComponent.instance.setModel(model);
+    setModel(model: any): juForm
+    {
+        this.dynamicComponent.instance.setModel(_.cloneDeep(model));
         return this
     }
     _setModelHelper(arr, fieldName, model) {
@@ -298,7 +300,7 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
         if (this.viewMode === 'panel') {
             template.push(`<div class="panel panel-${this.panelMode}">
             <div class="panel-heading" style="cursor:pointer" (click)="slideToggle()">
-                <h3 class="panel-title">{{config.title}}</h3>
+                <h3 class="panel-title">{{config.title}} <b class="pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle"></b></h3>
             </div>
             <div class="panel-body">
             <div *ngIf="message" [class]="messageCss">{{message}}</div>       
@@ -620,7 +622,7 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
         let labelSize = input.labelSize || this.options.labelSize || 3,
             labelPos = input.labelPos || this.options.labelPos || 'top',
             cfield = fieldName.split('.').join('_'),
-            element = `<input type="file" fileSelect [model]="model" propName="${fieldName}" [ext]="${config}.ext" ${input.multiple ? 'multiple' : ''} (click)="vlidate_input(model.${fieldName}, ${config})" [form]="myForm" [config]="${config}" [disabled]="${config}.disabled" class="form-control" placeholder="Select file(s)...">
+            element = `<input type="file" [(ngModel)]="model.${fieldName}" fileSelect [model]="model" propName="${fieldName}" [ext]="${config}.ext" ${input.multiple ? 'multiple' : ''} (click)="vlidate_input(model.${fieldName}, ${config})" [form]="myForm" [config]="${config}" [disabled]="${config}.disabled" class="form-control" placeholder="Select file(s)...">
                     <div *ngIf="!${config}.hideMsg" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
         return this.getHtml(input, element, fieldName, labelPos, labelSize);
     }
@@ -710,11 +712,14 @@ function getComponent(obj: any) {
                 }
             }
         }
+        private slideState: string = 'down';
         slideToggle() {
             jQuery(this.el.nativeElement).find('.panel-body').slideToggle();
+            this.slideState = this.slideState === 'down' ? 'up' : 'down';
         }
-        setModel(model: any) {
-            this.model = model;
+        setModel(model: any)
+        {
+            this.model = model; 
             for (let prop in this.config._events) {
                 let dmodel = model, arr = prop.split('.');
                 let field = this.config._events[prop].field;
@@ -737,12 +742,14 @@ function getComponent(obj: any) {
                         async_call(() => { field.api.value = dmodel; });
                     }
                 }
-                else if (field.type === 'datepicker' && dmodel) {
+                else if (field.type === 'datepicker' && dmodel)
+                {                  
                     async_call(() => { field.api.setDate(dmodel); });
                 }
                 else if (field.type === 'ckeditor' && dmodel) {
                     async_call(() => { field.api.setData(dmodel); });
                 }
+               
                 this.vlidate_input(dmodel, field, true);
             }
         }

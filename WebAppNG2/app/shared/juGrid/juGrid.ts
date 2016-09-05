@@ -54,7 +54,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
     dynamicComponent: ComponentRef<any>;
     @Input() viewMode;
     @Input() title;
-    @Input('panelMode') panelMode: string = 'default';
+    @Input('panelMode') panelMode: string = 'primary';
     constructor(
         private _elementRef: ElementRef,
         private loader: DynamicComponentLoader,
@@ -74,6 +74,10 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
             this.dynamicComponent.instance.addItem(item);
             //this.cd.markForCheck();
         }
+    }
+    getData()
+    {
+        return this.data.length ? this.data:this.dynamicComponent.instance.viewList;
     }
     showMessage(message: string, messageCss: string = 'alert alert-info') {
         this._updateRecord();

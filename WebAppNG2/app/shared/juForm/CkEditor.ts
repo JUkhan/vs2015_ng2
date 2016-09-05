@@ -21,8 +21,9 @@ export class FileSelect {
     @Input() ext: Array<string>;
     @Input() config: any;
     @Input() form: any;
+   
     constructor(private element: ElementRef) {
-
+       
     }
 
     @HostListener('change')
@@ -31,10 +32,12 @@ export class FileSelect {
             this.model.FILES = {};
         }        
         this.setFileNames();
-    }
+    }    
     setFileNames() {       
         let fileList: FileList = this.element.nativeElement.files;
-        if (fileList.length == 0) {
+        if (fileList.length == 0)
+        {
+            console.log(this.element.nativeElement);
             return '';
         }
         let filesName: Array<string> = [];

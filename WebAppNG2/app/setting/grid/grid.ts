@@ -23,11 +23,16 @@ export class gridExample implements OnInit {
         this.service.get_d('scholar')       
         .subscribe(list=>{this.scholarList=list;});   
         grid.slideToggle();   
+    }
+     getSSPFN(params:any)
+     {
+         return Observable.of({ totalPage: 50, data: this.scholarList });
      }
     private initScholar() {
         this.scholarGridOptions = { level:10,          
             pageSize:3, quickSearch:true, crud:true, enableCellEditing:false, enableTreeView:false, lazyLoad:this.service.getChildData,                       
-            rowEvents:'(click)="config.rowClick(row, i)"',
+            rowEvents: '(click)="config.rowClick(row, i)"',
+            sspFn: this.getSSPFN.bind(this),
             columnDefs: [
                 { headerName: 'Name', field: 'name',width:140, sort:true, filter:'set', type:'juSelect'},
                 { headerName: 'Education', field: 'education', sort:true, filter:'set'},

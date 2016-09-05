@@ -16,6 +16,7 @@ export class juPager implements OnInit, OnChanges {
     @Input() pageSize: number = 10;
     @Input() data;
 
+    powerList: any[] = [];
     sspFn: Function;
     totalPage: number = 0;
     activePage: number = 1;
@@ -119,11 +120,28 @@ export class juPager implements OnInit, OnChanges {
         this.firePageChange();
         this.calculatePagelinkes();
     }
+    calculatePowerList()
+    {
+        this.powerList = [];
+        let diff = parseInt(((this.totalPage - this.pageSize) / 5).toString()); console.log(diff);
+        let index = this.pageSize + diff;
+        while (index < this.totalPage)
+        {
+            this.powerList.push(index);
+            index += diff;
+        }
+    }
+    private clickPowerPage(pageNo)
+    {
+        this.activePage = pageNo;
+        this.firePageChange();
+    }
     firePageChange(isFire: boolean = false) {
         if (this.sspFn) {
             this.sspFn({ pageSize: this.pageSize, pageNo: this.activePage, searchText: this.searchText, sort: this._sort, filter: this._filter })
                 .subscribe(res => {
                     this.totalPage = res.totalPage;
+                    this.calculatePowerList();
                     this.pageChange.next(res.data);
                     if (this.activePage == 1 || isFire) {
                         this.calculatePagelinkes(false);
