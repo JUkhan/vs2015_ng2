@@ -27,8 +27,8 @@
       <a class="page-link" (click)="clickPage(ax)" href="javascript:;">{{ax}}</a>
     </li> 
 
-     <li class="page-item" [class.active]="pi==activePage" *ngFor="let pi of powerList">
-          <a class="page-link" (click)="clickPowerPage(pi)" href="javascript:;">{{pi}}</a>
+     <li class="page-item" *ngFor="let pi of powerList">
+          <a class="page-link" (click)="powerAction(pi)" href="javascript:;">{{pi}}</a>
      </li> 
         
     <li class="page-item" [class.disabled]="isDisabledNext()">

@@ -69,6 +69,10 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
         }
         return Observable.empty();
     }
+    disabled(key: string, value: boolean)
+    {
+         this.options._events[key].field.disabled = value;            
+    }
     get valid() {
         for (var prop in this.options._events) {
             if (!this.options._events[prop].hideMsg) {

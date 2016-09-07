@@ -48,12 +48,12 @@ export class UploadComponent implements OnInit {
             pageSize: 5, crud: false, quickSearch: false, enableCellEditing:true,
             //sspFn: this.loadData.bind(this),
             columnDefs: [
-                {headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item"><b class="fa fa-plus-circle"></b> </a>', cellRenderer:(row, index)=>++index},              
-                { headerName: 'Name', filter:'set', sort:true, field: 'name'},
-                { headerName: 'Education', filter:'set', sort:true, change:this.changeEducation.bind(this), validators:FV.required, field: 'education',type:'juSelect', width:120},
-                { headerName: 'Age', filter:'number', sort:true, field: 'age', type:'number', width:70, validators:FV.required},
+                { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item"><b class="fa fa-plus-circle"></b> </a>', cellRenderer: (row, index) => ++index },
+                { headerName: 'Name', width:120, filter:'set', sort: true, field: 'name' },
+                { headerName: 'Education', filter:'set', sort:true, change:this.changeEducation.bind(this), validators:FV.required, field: 'education',type:'select', width:160},
+                { headerName: 'Age', filter:'number', sort:true, field: 'age', type:'number', width:100, validators:FV.required},
                 { headerName: 'Birth Date', field: 'bdate', type:'datepicker', width:160, validators:FV.required},
-                { headerName: 'Address', viewMode:'checkbox', search:true,  field: 'address', type:'juSelect', width:150, validators:FV.required },
+                { headerName: 'Address', viewMode:'checkbox', search:true,  field: 'address', type:'select', width:150, validators:FV.required },
                 { headerName: 'Description', field: 'description', type:'text', validators:[FV.required, FV.minLength(5)] , width:220}
             ],
             addItem:()=>{

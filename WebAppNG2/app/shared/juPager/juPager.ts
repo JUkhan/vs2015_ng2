@@ -73,8 +73,11 @@ export class juPager implements OnInit, OnChanges {
         }
         return !this.hasNext();
     }
-    clickNext() {
-        if (this.hasNext()) {
+    clickNext()
+    {
+        if (this.hasNext())
+        {
+            console.log(this.groupNumber);
             this.groupNumber++;
             this.calculatePagelinkes();
         }
@@ -123,19 +126,14 @@ export class juPager implements OnInit, OnChanges {
     calculatePowerList()
     {
         this.powerList = [];
-        let diff = parseInt(((this.totalPage - this.pageSize) / 5).toString()); console.log(diff);
-        let index = this.pageSize + diff;
+        let diff = Math.floor((this.totalPage - this.linkPages) / 4); console.log(diff);
+        let index = this.linkPages + diff;
         while (index < this.totalPage)
         {
             this.powerList.push(index);
             index += diff;
         }
-    }
-    private clickPowerPage(pageNo)
-    {
-        this.activePage = pageNo;
-        this.firePageChange();
-    }
+    }    
     firePageChange(isFire: boolean = false) {
         if (this.sspFn) {
             this.sspFn({ pageSize: this.pageSize, pageNo: this.activePage, searchText: this.searchText, sort: this._sort, filter: this._filter })
@@ -175,7 +173,23 @@ export class juPager implements OnInit, OnChanges {
         }
 
     }
-
+    private powerAction(pageNo)
+    {
+        this.activePage = pageNo;
+        this.groupNumber = Math.ceil(pageNo / this.linkPages);
+        let start = pageNo, end = pageNo + this.linkPages;
+        if (end > this.totalPage)
+        {
+            end = this.totalPage;
+        }
+        this.list = [];
+        for (var index = start; index <= end; index++)
+        {
+            this.list.push(index);
+        }
+        this.cd.markForCheck();
+        this.firePageChange();
+    }
     private hasNext() {
         if (this.sspFn) {
             let totalPage = this.getTotalPage();

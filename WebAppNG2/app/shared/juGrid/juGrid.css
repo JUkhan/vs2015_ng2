@@ -94,3 +94,37 @@
 }
 .juPager nav ul{padding:0;}
 
+.tbl {
+}
+.tbl table {
+        width: 100%;
+    }
+
+.tbl thead, .tbl tbody, .tbl tr, .tbl td, .tbl th { display: block; }
+
+.tbl tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.tbl thead th {
+    /*height: 30px;*/
+
+    /*text-align: left;*/
+}
+
+.tbl tbody {  
+    overflow-y: scroll;
+}
+
+.tbl thead {
+    /* fallback */
+}
+
+
+.tbl tbody td, .tbl thead th {    
+    width:120px;
+    float: left;
+}

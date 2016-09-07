@@ -8,7 +8,7 @@ import {FormOptions, FormElement} from '../shared/juForm/juForm.d';
     templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy {
-    msg = 'say:Hello World';
+    msg = 'say:Hello World...';
     ngOnInit() {
         this.initForm();
     }

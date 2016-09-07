@@ -111,8 +111,11 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
             //this.cd.markForCheck();
         }
     }
-    ngOnInit() {
-
+    ngOnInit()
+    {
+        this.options.pagerPos = this.options.pagerPos || 'top';
+        this.options.pagerLeftPos = this.options.pagerLeftPos || 200;
+        this.options.height = this.options.height || 500;
         if (!this.options) {
             return;
         }
@@ -220,13 +223,27 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
 
     private getDynamicConfig() {
         var tpl: any[] = [];
-        if (this.viewMode && this.viewMode === "panel") {
-            tpl.push(`<div class="panel panel-${this.panelMode}">
-            <div class="panel-heading" style="cursor:pointer" (click)="slideToggle()">
+        if (this.viewMode && this.viewMode === "panel")
+        {
+            if (this.options.pagerPos === 'header')
+            {
+                tpl.push(`<div class="panel panel-${this.panelMode}">
+            <div class="panel-heading" style="position:relative">
+                <h3 class="panel-title">${this.title} <b style="cursor:pointer" (click)="slideToggle()" class="pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle"></b></h3>
+                <div style="position:absolute;top:2px;left:${this.options.pagerLeftPos}px" [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>
+                </div>
+            <div class="panel-body" style="overflow:auto">            
+            `);
+            } else
+            {
+                tpl.push(`<div class="panel panel-${this.panelMode}">
+            <div class="panel-heading">
                 <h3 class="panel-title">${this.title} <b class="pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle"></b></h3>
             </div>
             <div class="panel-body" style="overflow:auto">            
             `);
+
+            }
         }
         if (!this.options.classNames) {
             this.options.classNames = "table table-bordered table-striped";
@@ -248,17 +265,26 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         }
         return { tpl: tpl.join('') };
     }
-    private renderTable(tpl: any[]) {
-        tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
-        tpl.push(`<table class="${this.options.classNames}">`);
+    private renderTable(tpl: any[])
+    {
+        if (this.options.pagerPos === 'top')
+        {
+            tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
+        }
+       
+        tpl.push(`<table class="${this.options.classNames} tbl">`);
         tpl.push('<thead>');
         tpl.push(this.getHeader(this.options.columnDefs));
         tpl.push('</thead>');
-        tpl.push('<tbody (click)="hideFilterWindow()">');
+        tpl.push(`<tbody (click)="hideFilterWindow()" style="height:${this.options.height}px">`);
         tpl.push(this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView());
         tpl.push('</tbody>');
         tpl.push('</table>');
-        
+
+        if (this.options.pagerPos === 'bottom')
+        {
+            tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
+        }
     }
     private getCellEditingView() {
         let tpl: any[] = [];
@@ -287,13 +313,14 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
             if (item.validators) {
                 validation = ` <i [ngClass]="isValid('${item.field}', i)" class="validation fa fa-info-circle" [title]="getValidationMsg('${item.field}', i)"></i>`;
             }
-            style = item.width ? `style="display:inline-block;width:${item.width}px"` : '';
+            item.width = item.width || 120;           
+            style = item.width ? `style="display:inline-block;" [style.width.px]="config.columnDefs[${index}].width-40"` : '';
             item.headerName = item.headerName || '';
             header = item.headerName.replace(/(<([^>]+)>)/ig, '');
             switch (item.type) {
                 case 'juSelect':
                     change = item.change ? ` (option-change)="${config}.change($event)"` : '';
-                    tpl.push(`<td><div ${style}>
+                    tpl.push(`<td [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
                     <juSelect 
                         ${change} 
                         [config]="${config}" 
@@ -312,7 +339,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
                     break;
                 case 'select':
                     change = item.change ? `(change)="${config}.change(row, i)"` : '';
-                    tpl.push(`<td><select ${style} ${change} class="select form-control" [(ngModel)]="row.${item.field}" >
+                    tpl.push(`<td [style.width.px]="config.columnDefs[${index}].width"><select ${style} ${change} class="select form-control" [(ngModel)]="row.${item.field}" >
                             <option value="">{{${config}.emptyOptionText||'Select option'}}</option>
                             <option *ngFor="let v of ${this.getDataExpression(item, config)}" [value]="v.value">{{v.name}}</option>
                         </select>`);
@@ -320,10 +347,10 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
                     tpl.push('</td>');
                     break;
                 case 'html':
-                    tpl.push(`<td>${item.content}</td>`);
+                    tpl.push(`<td [style.width.px]="config.columnDefs[${index}].width">${item.content}</td>`);
                     break;
                 case 'datepicker':
-                    tpl.push(`<td><div ${style}>
+                    tpl.push(`<td [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
                     <div class="input-group date" [pickers]="${config}.config" picker-name="${item.type}" [model]="row" property="${item.field}" [config]="${config}" [form]="myForm" >
                         <input type="text" [disabled]="${config}.disabled" [(ngModel)]="row.${item.field}" class="form-control" placeholder="Enter ${header}">
                         <span class="input-group-addon">
@@ -336,13 +363,13 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
 
                 case 'text':
                 case 'number':
-                    tpl.push(`<td><div ${style}><input ${style} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}">`);
+                    tpl.push(`<td [style.width.px]="config.columnDefs[${index}].width"><div ${style}><input ${style} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}">`);
                     tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'textarea':
-                    tpl.push(`<td><div ${style}><textarea ${style} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
+                    tpl.push(`<td [style.width.px]="config.columnDefs[${index}].width"><div ${style}><textarea ${style} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
                     tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');
@@ -367,6 +394,10 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
     private getNormalTD(item: any, index: number) {
         let tpl: any[] = [];
         tpl.push('<td ');
+        if (item.width)
+        {
+            tpl.push(`[style.width.px]="config.columnDefs[${index}].width"`);
+        }
         if (item.tdClass) {
             tpl.push(`[ngClass]="config.columnDefs[${index}].tdClass(row, i, f, l)"`);
         }
@@ -493,11 +524,13 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         if (rc > 1) {
             this.options.columnDefs = colDef;
         }
+        this.headerHtml[0].push('<th style="width:24px">&nbsp;</th>');       
         return this.headerHtml.map(_ => `<tr>${_.join('')}</tr>`).reduce((p, c) => p + c, '');
     }
     private _colIndex: number = 0;
-    private traverseCell(cell, rs, headerRowFlag, colDef: any[]) {
-
+    private traverseCell(cell, rs, headerRowFlag, colDef: any[])
+    {
+        console.log(cell);
         if (cell.children) {
 
             this.headerHtml[headerRowFlag].push('<th');
@@ -521,7 +554,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
                 this.headerHtml[headerRowFlag].push(` valign="bottom" rowspan="${rs}"`);
             }
             if (cell.width) {
-                this.headerHtml[headerRowFlag].push(` style="min-width:${cell.width}px"`);
+                this.headerHtml[headerRowFlag].push(` [style.width.px]="config.columnDefs[${this._colIndex}].width"`);
             }
             if (cell.sort) {
                 this.headerHtml[headerRowFlag].push(` (click)="sort(config.columnDefs[${this._colIndex}])"`);

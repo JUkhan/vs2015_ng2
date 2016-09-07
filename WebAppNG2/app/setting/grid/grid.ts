@@ -26,16 +26,16 @@ export class gridExample implements OnInit {
     }
      getSSPFN(params:any)
      {
-         return Observable.of({ totalPage: 50, data: this.scholarList });
+         return Observable.of({ totalPage: 150, data: this.scholarList });        
      }
     private initScholar() {
         this.scholarGridOptions = { level:10,          
             pageSize:3, quickSearch:true, crud:true, enableCellEditing:false, enableTreeView:false, lazyLoad:this.service.getChildData,                       
-            rowEvents: '(click)="config.rowClick(row, i)"',
+            rowEvents: '(click)="config.rowClick(row, i)"', pagerPos:'header',
             sspFn: this.getSSPFN.bind(this),
             columnDefs: [
-                { headerName: 'Name', field: 'name',width:140, sort:true, filter:'set', type:'juSelect'},
-                { headerName: 'Education', field: 'education', sort:true, filter:'set'},
+                { headerName: 'Name', field: 'name', width: 120, sort: true, filter: 'set', type: 'juSelect' },
+                { headerName: 'Education', width:300, field: 'education', sort: true, filter: 'set' },
                 { headerName: 'Age', field: 'age', filter:'number', sort:true},
                 { headerName: 'Address', field: 'address'},
                 { headerName: 'Description', field: 'description' }
