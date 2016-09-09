@@ -18,7 +18,8 @@ export class AppComponent {
                     { name: 'Grid', link: 'setting', icon: 'fa fa-home' },
                     { name: 'Upload', link: 'setting/upload', icon: 'fa fa-home' }
                 ]
-            }
+            },
+            { name: 'Claim', link: 'setting/claim', icon: 'fa fa-home' },
         ];
     }
  }

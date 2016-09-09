@@ -45,11 +45,11 @@ export class UploadComponent implements OnInit {
 
     private initGrid() {
         this.gridOptions = {
-            pageSize: 5, crud: false, quickSearch: false, enableCellEditing:true,
+            pageSize: 5, crud: false, quickSearch: false, enableCellEditing: true, rowHeight: 60,
             //sspFn: this.loadData.bind(this),
             columnDefs: [
-                { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item"><b class="fa fa-plus-circle"></b> </a>', cellRenderer: (row, index) => ++index },
-                { headerName: 'Name', width:120, filter:'set', sort: true, field: 'name' },
+                { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item"><b class="fa fa-plus-circle"></b> </a>', width:30, cellRenderer: (row, index) => ++index },
+                { headerName: 'Name', filter:'set', sort: true, field: 'name' },
                 { headerName: 'Education', filter:'set', sort:true, change:this.changeEducation.bind(this), validators:FV.required, field: 'education',type:'select', width:160},
                 { headerName: 'Age', filter:'number', sort:true, field: 'age', type:'number', width:100, validators:FV.required},
                 { headerName: 'Birth Date', field: 'bdate', type:'datepicker', width:160, validators:FV.required},

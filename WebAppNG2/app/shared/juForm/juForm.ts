@@ -626,7 +626,7 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
         let labelSize = input.labelSize || this.options.labelSize || 3,
             labelPos = input.labelPos || this.options.labelPos || 'top',
             cfield = fieldName.split('.').join('_'),
-            element = `<input type="file" [(ngModel)]="model.${fieldName}" fileSelect [model]="model" propName="${fieldName}" [ext]="${config}.ext" ${input.multiple ? 'multiple' : ''} (click)="vlidate_input(model.${fieldName}, ${config})" [form]="myForm" [config]="${config}" [disabled]="${config}.disabled" class="form-control" placeholder="Select file(s)...">
+            element = `<input type="file" fileSelect [model]="model" propName="${fieldName}" [ext]="${config}.ext" ${input.multiple ? 'multiple' : ''} (click)="vlidate_input(model.${fieldName}, ${config})" [form]="myForm" [config]="${config}" [disabled]="${config}.disabled" class="form-control" placeholder="Select file(s)...">
                     <div *ngIf="!${config}.hideMsg" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
         return this.getHtml(input, element, fieldName, labelPos, labelSize);
     }

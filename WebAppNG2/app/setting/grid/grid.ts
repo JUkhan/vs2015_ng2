@@ -22,7 +22,7 @@ export class gridExample implements OnInit {
      private onLoad(grid:juGrid){        
         this.service.get_d('scholar')       
         .subscribe(list=>{this.scholarList=list;});   
-        grid.slideToggle();   
+        //grid.slideToggle();   
     }
      getSSPFN(params:any)
      {
@@ -32,7 +32,7 @@ export class gridExample implements OnInit {
         this.scholarGridOptions = { level:10,          
             pageSize:3, quickSearch:true, crud:true, enableCellEditing:false, enableTreeView:false, lazyLoad:this.service.getChildData,                       
             rowEvents: '(click)="config.rowClick(row, i)"', pagerPos:'header',
-            sspFn: this.getSSPFN.bind(this),
+            sspFn: this.getSSPFN.bind(this), 
             columnDefs: [
                 { headerName: 'Name', field: 'name', width: 120, sort: true, filter: 'set', type: 'juSelect' },
                 { headerName: 'Education', width:300, field: 'education', sort: true, filter: 'set' },
@@ -69,6 +69,7 @@ export class gridExample implements OnInit {
             this.service.put_d('scholar', this.scholarGridOptions.api.form.getModel())
                 .subscribe(res => {
                     this.scholarGridOptions.api.grid.showMessage('Data updated successfully');
+                    this.scholarGridOptions.api.grid.updateItem(this.scholarGridOptions.api.form.getModel());
                     this.scholarGridOptions.api.form.showModal(false);
                 });
         } else {
