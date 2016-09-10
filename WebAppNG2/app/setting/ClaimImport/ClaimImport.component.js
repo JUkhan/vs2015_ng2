@@ -58,7 +58,7 @@ var ClaimImport = (function () {
                 {
                     type: 'groupLayout', items: [
                         [{
-                                groupName: 'CMS format', labelSize: 4, size: 5, inputs: [
+                                groupName: 'CMS format', labelSize: 4, size: 4, inputs: [
                                     [{ field: 'program', size: 8, label: 'Program', type: 'select' },
                                         { type: 'html', content: "<button type=\"button\" [disabled]=\"model.program.toString()==='0'\" (click)=\"config.updateAll()\" class=\"btn btn-default\">Update All</button>" }]
                                 ]
@@ -69,7 +69,7 @@ var ClaimImport = (function () {
                                 ]
                             },
                             {
-                                groupName: '', labelPos: 'top', isContainer: true, inputs: [
+                                groupName: '', labelPos: 'top', size: 6, isContainer: true, inputs: [
                                     [
                                         { field: 'invoiceNo', size: 4, label: 'Invoice Number', type: 'text' },
                                         { field: 'postmarkDate', size: 4, label: 'Postmark Date', type: 'datepicker' },

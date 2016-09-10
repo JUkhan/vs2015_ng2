@@ -180,6 +180,7 @@
     <Content Include="app\setting\ClaimImport\ClaimImport.css" />
     <Content Include="app\setting\ClaimImport\ClaimImport.html" />
     <Content Include="app\setting\grid\grid.css" />
+    <Content Include="app\setting\grid\grid.html" />
     <Content Include="app\setting\upload\upload.css" />
     <Content Include="app\setting\upload\upload.html" />
     <Content Include="app\shared\juForm\juForm.css" />

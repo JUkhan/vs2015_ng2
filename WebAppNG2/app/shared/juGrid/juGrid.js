@@ -12,6 +12,7 @@ var core_1 = require('@angular/core');
 var TextFilter_1 = require('./TextFilter');
 var NumberFilter_1 = require('./NumberFilter');
 var SetFilter_1 = require('./SetFilter');
+var Rx_1 = require('rxjs/Rx');
 var rowEditor_1 = require('./rowEditor');
 var juGrid = (function () {
     function juGrid(_elementRef, loader, viewContainerRef) {
@@ -75,23 +76,22 @@ var juGrid = (function () {
     };
     juGrid.prototype.ngOnInit = function () {
         var _this = this;
-        this.options.pagerPos = this.options.pagerPos || 'header';
-        this.options.pagerLeftPos = this.options.pagerLeftPos || 200;
-        this.options.height = this.options.height || 500;
-        this.options.width = this.options.width || 1000;
-        this.options.rowHeight = this.options.rowHeight || 40;
-        this.options.headerHeight = this.options.headerHeight || 40;
         if (!this.options) {
             return;
         }
-        if (!('linkPages' in this.options)) {
-            this.options.linkPages = 10;
+        this.options.pagerPos = this.options.pagerPos || 'top';
+        this.options.pagerLeftPos = this.options.pagerLeftPos || 200;
+        this.options.height = this.options.height || 500;
+        this.options.rowHeight = this.options.rowHeight || 40;
+        this.options.headerHeight = this.options.headerHeight || 40;
+        this.options.linkPages = this.options.linkPages || 10;
+        this.options.pageSize = this.options.pageSize || 10;
+        this.options.confirmMessage = this.options.confirmMessage || 'Are you sure to remove this item?';
+        if (!('scroll' in this.options)) {
+            this.options.scroll = false;
         }
-        if (!('pageSize' in this.options)) {
-            this.options.pageSize = 10;
-        }
-        if (!('confirmMessage' in this.options)) {
-            this.options.confirmMessage = 'Are you sure to remove this item?';
+        if (!('colResize' in this.options)) {
+            this.options.colResize = false;
         }
         if (!('crud' in this.options)) {
             this.options.crud = true;
@@ -190,7 +190,7 @@ var juGrid = (function () {
                 tpl.push("<div class=\"panel panel-" + this.panelMode + "\">\n            <div class=\"panel-heading\" style=\"position:relative\">\n                <h3 class=\"panel-title\">" + this.title + " <b style=\"cursor:pointer\" (click)=\"slideToggle()\" class=\"pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle\"></b></h3>\n                <div style=\"position:absolute;top:7px;left:" + this.options.pagerLeftPos + "px\" [style.display]=\"viewList?.length?'block':'none'\" class=\"juPager\" [linkPages]=\"config.linkPages\" [pageSize]=\"config.pageSize\" [data]=\"data\" (onInit)=\"pagerInit($event)\" (pageChange)=\"onPageChange($event)\"></div>\n                </div>\n            <div class=\"panel-body\" style=\"overflow:auto\">            \n            ");
             }
             else {
-                tpl.push("<div class=\"panel panel-" + this.panelMode + "\">\n            <div class=\"panel-heading\">\n                <h3 class=\"panel-title\">" + this.title + " <b class=\"pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle\"></b></h3>\n            </div>\n            <div class=\"panel-body\" style=\"overflow:auto\">            \n            ");
+                tpl.push("<div class=\"panel panel-" + this.panelMode + "\">\n            <div class=\"panel-heading\" style=\"cursor:pointer\" (click)=\"slideToggle()\">\n                <h3 class=\"panel-title\">" + this.title + " <b class=\"pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle\"></b></h3>\n            </div>\n            <div class=\"panel-body\" style=\"overflow:auto\">            \n            ");
             }
         }
         if (!this.options.classNames) {
@@ -223,7 +223,7 @@ var juGrid = (function () {
             tpl.push("<div [style.display]=\"viewList?.length?'block':'none'\" class=\"juPager\" [linkPages]=\"config.linkPages\" [pageSize]=\"config.pageSize\" [data]=\"data\" (onInit)=\"pagerInit($event)\" (pageChange)=\"onPageChange($event)\"></div>");
         }
         tpl.push("<div style=\"width:" + this.getTotalWidth() + "px\">");
-        tpl.push("<table class=\"" + this.options.classNames + " tbl\">");
+        tpl.push("<table class=\"" + this.options.classNames + " " + (this.options.scroll ? 'tbl-scroll' : '') + "\">");
         tpl.push('<thead>');
         tpl.push(this.getHeader(this.options.columnDefs));
         tpl.push('</thead>');
@@ -446,7 +446,9 @@ var juGrid = (function () {
         if (rc > 1) {
             this.options.columnDefs = colDef;
         }
-        this.headerHtml[0].push("<th style=\"width:22px;height:" + this.options.headerHeight + "px\">&nbsp;</th>");
+        if (this.options.colResize) {
+            this.headerHtml[0].push("<th style=\"width:20px;height:" + this.options.headerHeight + "px\">&nbsp;</th>");
+        }
         return this.headerHtml.map(function (_) { return ("<tr>" + _.join('') + "</tr>"); }).reduce(function (p, c) { return p + c; }, '');
     };
     juGrid.prototype.traverseCell = function (cell, rs, headerRowFlag, colDef) {
@@ -643,6 +645,60 @@ function getComponent(obj) {
             return '';
         };
         TableComponent.prototype.ngOnInit = function () {
+            if (this.config.colResize) {
+                this.columnResizing();
+            }
+        };
+        TableComponent.prototype.columnResizing = function () {
+            var _this = this;
+            var thList = this.el.nativeElement.querySelectorAll('table thead tr th'), mousemove$ = Rx_1.Observable.fromEvent(document, 'mousemove'), mouseup$ = Rx_1.Observable.fromEvent(document, 'mouseup'), startX = 0, w1 = 0, w2 = 0, not_mousedown = true;
+            thList.forEach(function (th, index) {
+                Rx_1.Observable.fromEvent(th, 'mousemove')
+                    .filter(function (_) { return index !== 0 && index + 1 !== thList.length; })
+                    .filter(function (e) {
+                    if (e.target.tagName === 'TH') {
+                        if (Math.abs(e.x - _this.findPosX(e.target)) < 7) {
+                            e.target.style.cursor = 'col-resize';
+                            return true;
+                        }
+                        if (not_mousedown) {
+                            e.target.style.cursor = 'default';
+                        }
+                        return false;
+                    }
+                    return false;
+                })
+                    .flatMap(function (e) {
+                    return Rx_1.Observable.fromEvent(e.target, 'mousedown')
+                        .do(function (e) {
+                        not_mousedown = false;
+                        startX = e.x;
+                        w1 = _this.config.columnDefs[index - 1].width;
+                        w2 = _this.config.columnDefs[index].width;
+                    });
+                })
+                    .flatMap(function (e) { return mousemove$
+                    .map(function (e) { return e.x - startX; })
+                    .takeUntil(mouseup$.do(function (e) { return not_mousedown = true; })); })
+                    .distinctUntilChanged()
+                    .filter(function (e) { return e < 0 ? w1 + e > 20 : w2 - e > 20; })
+                    .subscribe(function (e) {
+                    _this.config.columnDefs[index - 1].width = w1 + e;
+                    _this.config.columnDefs[index].width = w2 - e;
+                });
+            });
+        };
+        TableComponent.prototype.findPosX = function (obj) {
+            var curleft = 0;
+            if (obj.offsetParent) {
+                while (obj.offsetParent) {
+                    curleft += obj.offsetLeft;
+                    obj = obj.offsetParent;
+                }
+            }
+            else if (obj.x)
+                curleft += obj.x;
+            return curleft;
         };
         TableComponent.prototype.slideToggle = function () {
             jQuery(this.el.nativeElement).find('.panel-body').slideToggle();
@@ -721,7 +777,7 @@ function getComponent(obj) {
         };
         TableComponent.prototype.sortIcon = function (colDef) {
             var hidden = typeof colDef.reverse === 'undefined';
-            return { 'fa-caret-up': colDef.reverse === false, 'fa-caret-down': colDef.reverse === true };
+            return { 'fa-sort not-active': hidden, 'fa-caret-up': colDef.reverse === false, 'fa-caret-down': colDef.reverse === true };
         };
         TableComponent.prototype.filterIcon = function (colDef) {
             return { 'icon-hide': !(colDef.filterApi && colDef.filterApi.isFilterActive()), 'icon-show': colDef.filterApi && colDef.filterApi.isFilterActive() };

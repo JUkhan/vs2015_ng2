@@ -7,7 +7,7 @@ import {AppService}   from '../../shared/app.service';
 @Component({
     moduleId: module.id,
     selector: 'selector',   
-    template: '<div juGrid panelMode="primary" viewMode="panel" title="Test" (onLoad)="onLoad($event)" [data]="scholarList" [options]="scholarGridOptions"></div>',
+    templateUrl: './grid.html',
     styleUrls:['./grid.css'],
     encapsulation:ViewEncapsulation.None
 })
@@ -29,9 +29,11 @@ export class gridExample implements OnInit {
          return Observable.of({ totalPage: 150, data: this.scholarList });        
      }
     private initScholar() {
-        this.scholarGridOptions = { level:10,          
-            pageSize:3, quickSearch:true, crud:true, enableCellEditing:false, enableTreeView:false, lazyLoad:this.service.getChildData,                       
-            rowEvents: '(click)="config.rowClick(row, i)"', pagerPos:'header',
+        this.scholarGridOptions = {
+            level: 10,
+            scroll:true, colResize:true,          
+            pageSize:3, quickSearch:false, crud:true, enableCellEditing:false, enableTreeView:false, lazyLoad:this.service.getChildData,                       
+            rowEvents: '(click)="config.rowClick(row, i)"', pagerPos:'top',
             sspFn: this.getSSPFN.bind(this), 
             columnDefs: [
                 { headerName: 'Name', field: 'name', width: 120, sort: true, filter: 'set', type: 'juSelect' },

@@ -78,22 +78,20 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
     getData() {
         return this.data.length ? this.data : this.dynamicComponent.instance.viewList;
     }
-    showMessage(message: string, messageCss: string = 'alert alert-info') {        
+    showMessage(message: string, messageCss: string = 'alert alert-info') {
         this.options.message = message;
         this.options.messageCss = messageCss;
-        
-        if (this.dynamicComponent && this.dynamicComponent.instance)
-        {
+
+        if (this.dynamicComponent && this.dynamicComponent.instance) {
             this.dynamicComponent.instance.showMessage(message, messageCss);
-            async_call(() =>
-            {
-                this.options.message = '';               
+            async_call(() => {
+                this.options.message = '';
                 this.dynamicComponent.instance.showMessage('', messageCss);
-               
+
             });
         }
     }
-    updateItem(record:any) {
+    updateItem(record: any) {
         if (this._oldItem && record) {
             for (let prop in record) {
                 this._oldItem[prop] = record[prop];
@@ -110,24 +108,23 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         }
     }
     ngOnInit() {
-        this.options.pagerPos = this.options.pagerPos || 'header';
-        this.options.pagerLeftPos = this.options.pagerLeftPos || 200;
-        this.options.height = this.options.height || 500;
-        this.options.width = this.options.width || 1000;
-        this.options.rowHeight = this.options.rowHeight || 40;
-        this.options.headerHeight = this.options.headerHeight || 40;
-
         if (!this.options) {
             return;
         }
-        if (!('linkPages' in this.options)) {
-            this.options.linkPages = 10;
+        this.options.pagerPos = this.options.pagerPos || 'top';
+        this.options.pagerLeftPos = this.options.pagerLeftPos || 200;
+        this.options.height = this.options.height || 500;        
+        this.options.rowHeight = this.options.rowHeight || 40;
+        this.options.headerHeight = this.options.headerHeight || 40;
+        this.options.linkPages = this.options.linkPages || 10;
+        this.options.pageSize = this.options.pageSize || 10;
+        this.options.confirmMessage = this.options.confirmMessage || 'Are you sure to remove this item?';
+
+        if (!('scroll' in this.options)) {
+            this.options.scroll = false;
         }
-        if (!('pageSize' in this.options)) {
-            this.options.pageSize = 10;
-        }
-        if (!('confirmMessage' in this.options)) {
-            this.options.confirmMessage = 'Are you sure to remove this item?';
+        if (!('colResize' in this.options)) {
+            this.options.colResize = false;
         }
         if (!('crud' in this.options)) {
             this.options.crud = true;
@@ -235,7 +232,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
             `);
             } else {
                 tpl.push(`<div class="panel panel-${this.panelMode}">
-            <div class="panel-heading">
+            <div class="panel-heading" style="cursor:pointer" (click)="slideToggle()">
                 <h3 class="panel-title">${this.title} <b class="pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle"></b></h3>
             </div>
             <div class="panel-body" style="overflow:auto">            
@@ -263,22 +260,20 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         }
         return { tpl: tpl.join('') };
     }
-    private getTotalWidth()
-    {
+    private getTotalWidth() {
         let totalWidth = 0;
-        this.options.columnDefs.forEach(_ =>
-        {          
-             _.width = _.width||120
-             totalWidth += _.width;
+        this.options.columnDefs.forEach(_ => {
+            _.width = _.width || 120
+            totalWidth += _.width;
         });
-        return totalWidth+25;
+        return totalWidth + 25;
     }
     private renderTable(tpl: any[]) {
         if (this.options.pagerPos === 'top') {
             tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
         }
         tpl.push(`<div style="width:${this.getTotalWidth()}px">`);
-        tpl.push(`<table class="${this.options.classNames} tbl">`);
+        tpl.push(`<table class="${this.options.classNames} ${this.options.scroll?'tbl-scroll':''}">`);
         tpl.push('<thead>');
         tpl.push(this.getHeader(this.options.columnDefs));
         tpl.push('</thead>');
@@ -528,12 +523,14 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         if (rc > 1) {
             this.options.columnDefs = colDef;
         }
-        this.headerHtml[0].push(`<th style="width:22px;height:${this.options.headerHeight}px">&nbsp;</th>`);
+        if (this.options.colResize) {
+            this.headerHtml[0].push(`<th style="width:20px;height:${this.options.headerHeight}px">&nbsp;</th>`);
+        }
         return this.headerHtml.map(_ => `<tr>${_.join('')}</tr>`).reduce((p, c) => p + c, '');
     }
     private _colIndex: number = 0;
     private traverseCell(cell, rs, headerRowFlag, colDef: any[]) {
-              
+
         if (cell.children) {
 
             this.headerHtml[headerRowFlag].push('<th');
@@ -707,8 +704,66 @@ function getComponent(obj: any) {
             }
             return '';
         }
-        ngOnInit() {
+        ngOnInit() {           
+            if (this.config.colResize) {
+                this.columnResizing();
+            }
+        }
+        private columnResizing() {
 
+            let thList: any[] = this.el.nativeElement.querySelectorAll('table thead tr th'),
+
+                mousemove$ = Observable.fromEvent(document, 'mousemove'),
+                mouseup$ = Observable.fromEvent(document, 'mouseup'),
+
+                startX = 0, w1 = 0, w2 = 0, not_mousedown = true;
+            thList.forEach((th, index) => {
+                Observable.fromEvent(th, 'mousemove')
+                    .filter(_ => index!==0 && index + 1 !== thList.length)
+                    .filter((e: any) => {
+                        if (e.target.tagName === 'TH') {
+                            if (Math.abs(e.x - this.findPosX(e.target)) < 7) {
+                                e.target.style.cursor = 'col-resize';
+                                return true;
+                            }
+                            if (not_mousedown) {
+                                e.target.style.cursor = 'default';
+                            }
+                            return false;
+                        }
+                        return false;
+                    })
+                    .flatMap((e: any) => {
+                        return Observable.fromEvent(e.target, 'mousedown')                           
+                            .do((e: any) => {
+                                not_mousedown = false;
+                                startX = e.x;
+                                w1 = this.config.columnDefs[index - 1].width;
+                                w2 = this.config.columnDefs[index].width;
+                            });
+                    })
+                    .flatMap(e => mousemove$
+                        .map((e: any) => e.x - startX)
+                        .takeUntil(mouseup$.do(e => not_mousedown = true)))
+                    .distinctUntilChanged()
+                    .filter(e => e < 0 ? w1 + e > 20 : w2 - e > 20)
+                    .subscribe(e => {                       
+                            this.config.columnDefs[index - 1].width = w1 + e;
+                            this.config.columnDefs[index].width = w2 - e;
+                    });
+            });
+        }
+        private findPosX(obj) {
+            var curleft = 0;
+            if (obj.offsetParent) {
+                while (obj.offsetParent) {
+                    curleft += obj.offsetLeft
+                    obj = obj.offsetParent;
+                }
+            }
+            else if (obj.x)
+                curleft += obj.x;
+            return curleft;
         }
         slideToggle() {
             jQuery(this.el.nativeElement).find('.panel-body').slideToggle();
@@ -788,7 +843,7 @@ function getComponent(obj: any) {
         }
         sortIcon(colDef: any) {
             let hidden = typeof colDef.reverse === 'undefined';
-            return { 'fa-caret-up': colDef.reverse === false, 'fa-caret-down': colDef.reverse === true };  // for default sort icon  ('fa-sort': hidden, )
+            return { 'fa-sort not-active': hidden, 'fa-caret-up': colDef.reverse === false, 'fa-caret-down': colDef.reverse === true };  // for default sort icon  ('fa-sort': hidden, )
         }
         filterIcon(colDef: any) {
             return { 'icon-hide': !(colDef.filterApi && colDef.filterApi.isFilterActive()), 'icon-show': colDef.filterApi && colDef.filterApi.isFilterActive() };
