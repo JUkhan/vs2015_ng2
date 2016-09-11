@@ -447,7 +447,7 @@ var juGrid = (function () {
             this.options.columnDefs = colDef;
         }
         if (this.options.colResize) {
-            this.headerHtml[0].push("<th style=\"width:20px;height:" + this.options.headerHeight + "px\">&nbsp;</th>");
+            this.headerHtml[0].push("<th style=\"width:17px;height:" + this.options.headerHeight + "px\">&nbsp;</th>");
         }
         return this.headerHtml.map(function (_) { return ("<tr>" + _.join('') + "</tr>"); }).reduce(function (p, c) { return p + c; }, '');
     };

@@ -524,7 +524,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
             this.options.columnDefs = colDef;
         }
         if (this.options.colResize) {
-            this.headerHtml[0].push(`<th style="width:20px;height:${this.options.headerHeight}px">&nbsp;</th>`);
+            this.headerHtml[0].push(`<th style="width:17px;height:${this.options.headerHeight}px">&nbsp;</th>`);
         }
         return this.headerHtml.map(_ => `<tr>${_.join('')}</tr>`).reduce((p, c) => p + c, '');
     }
@@ -709,6 +709,7 @@ function getComponent(obj: any) {
                 this.columnResizing();
             }
         }
+      
         private columnResizing() {
 
             let thList: any[] = this.el.nativeElement.querySelectorAll('table thead tr th'),
@@ -737,6 +738,7 @@ function getComponent(obj: any) {
                         return Observable.fromEvent(e.target, 'mousedown')                           
                             .do((e: any) => {
                                 not_mousedown = false;
+                                //e.target.style.cursor = 'col-resize';
                                 startX = e.x;
                                 w1 = this.config.columnDefs[index - 1].width;
                                 w2 = this.config.columnDefs[index].width;

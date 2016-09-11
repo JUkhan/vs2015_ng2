@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var Rx_1 = require('rxjs/Rx');
 var juPager = (function () {
     function juPager(cd) {
         this.cd = cd;
@@ -25,6 +26,16 @@ var juPager = (function () {
         this._filter = [];
         this.groupNumber = 1;
     }
+    juPager.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        Rx_1.Observable.fromEvent(this.txtPageNoRef.nativeElement, 'keyup')
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .pluck('target', 'value')
+            .map(function (_) { return parseInt(_); })
+            .filter(function (_) { return _ > 0 && _ < _this.totalPage; })
+            .subscribe(function (_) { return _this.powerAction(_); });
+    };
     juPager.prototype.changePageSize = function (size) {
         this.pageSize = size;
         this.groupNumber = 1;
@@ -70,7 +81,6 @@ var juPager = (function () {
     };
     juPager.prototype.clickNext = function () {
         if (this.hasNext()) {
-            console.log(this.groupNumber);
             this.groupNumber++;
             this.calculatePagelinkes();
         }
@@ -118,12 +128,14 @@ var juPager = (function () {
     };
     juPager.prototype.calculatePowerList = function () {
         this.powerList = [];
-        var diff = Math.floor((this.totalPage - this.linkPages) / 4);
-        console.log(diff);
-        var index = this.linkPages + diff;
-        while (index < this.totalPage) {
-            this.powerList.push(index);
-            index += diff;
+        var curPos = this.groupNumber * this.linkPages + 1, restPages = this.getTotalPage() - curPos, totalPage = this.getTotalPage();
+        if (restPages > 30) {
+            var index = curPos + 30, times = 5;
+            while (index < totalPage && times > 0) {
+                this.powerList.push(index);
+                index += 30;
+                times--;
+            }
         }
     };
     juPager.prototype.firePageChange = function (isFire) {
@@ -145,6 +157,7 @@ var juPager = (function () {
                 return;
             var startIndex = (this.activePage - 1) * this.pageSize;
             this.pageChange.next(this.data.slice(startIndex, startIndex + this.pageSize));
+            this.calculatePowerList();
         }
     };
     juPager.prototype.calculatePagelinkes = function (isFire) {
@@ -169,17 +182,9 @@ var juPager = (function () {
         }
     };
     juPager.prototype.powerAction = function (pageNo) {
-        this.activePage = pageNo;
         this.groupNumber = Math.ceil(pageNo / this.linkPages);
-        var start = pageNo, end = pageNo + this.linkPages;
-        if (end > this.totalPage) {
-            end = this.totalPage;
-        }
-        this.list = [];
-        for (var index = start; index <= end; index++) {
-            this.list.push(index);
-        }
-        this.cd.markForCheck();
+        this.calculatePagelinkes(false);
+        this.activePage = pageNo;
         this.firePageChange();
     };
     juPager.prototype.hasNext = function () {
@@ -226,6 +231,10 @@ var juPager = (function () {
         core_1.Input(), 
         __metadata('design:type', Object)
     ], juPager.prototype, "data", void 0);
+    __decorate([
+        core_1.ViewChild('txtPageNo'), 
+        __metadata('design:type', core_1.ElementRef)
+    ], juPager.prototype, "txtPageNoRef", void 0);
     juPager = __decorate([
         core_1.Component({
             moduleId: module.id,

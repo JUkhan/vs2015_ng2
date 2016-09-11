@@ -1,7 +1,7 @@
-<nav *ngIf="list.length>0">
+<nav [style.display]="list.length?'block':'none'">
     <span style="position:relative;top:-10px">
         <span>Page Size </span>
-        <select style="display:inline-block;width:55px" class="form-control" #psize [ngModel]="pageSize" (change)="changePageSize(psize.value)">
+        <select style="display:inline-block;width:52px"  #psize [ngModel]="pageSize" (change)="changePageSize(psize.value)">
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>
@@ -13,11 +13,11 @@
     </span>
     <span style="position:relative;top:-10px">Page {{activePage}} of {{totalPage}}</span>
   <ul class="pagination">
-     <!--<li class="page-item" [class.disabled]="isDisabledPrev()">
+     <li class="page-item" [class.disabled]="isDisabledPrev()">
       <a class="page-link" href="javascript:;" (click)="clickStart()" aria-label="Previous">
         <span>Start</span>       
       </a>
-    </li>-->
+    </li>
     <li class="page-item" [class.disabled]="isDisabledPrev()">
       <a class="page-link" href="javascript:;" (click)="clickPrev()" aria-label="Previous">
         <span>&laquo;</span>       
@@ -36,11 +36,13 @@
         <span>&raquo;</span>       
       </a>
     </li>
-     <!--<li class="page-item" [class.disabled]="isDisabledNext()">
+     <li class="page-item" [class.disabled]="isDisabledNext()">
       <a class="page-link" href="javascript:;" (click)="clickEnd()" aria-label="Next">
         <span>End</span>       
       </a>
-    </li>-->
+    </li>
   </ul>
-  
+    <span style="position:relative;top:-10px" title="Enter Page Number">
+        <input #txtPageNo type="text" style="display:inline-block;width:50px;text-align:center" />
+    </span>
 </nav>

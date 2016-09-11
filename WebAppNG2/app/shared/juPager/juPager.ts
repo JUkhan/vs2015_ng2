@@ -1,11 +1,11 @@
-import {Component, OnInit,ViewEncapsulation, OnDestroy, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
-//import {Observable} from 'rxjs/observable';
+import {Component, ViewChild, ElementRef, OnInit, ViewEncapsulation, OnDestroy, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
+import {Observable} from 'rxjs/Rx';
 @Component({
     moduleId: module.id,
     selector: '.juPager, [juPager]',
     templateUrl: './juPager.html',
-    styles:['.juPager select{height:30px;padding:2px;}'],
-     encapsulation: ViewEncapsulation.None,
+    styles: ['.juPager select{height:30px;padding:2px;}'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -24,10 +24,21 @@ export class juPager implements OnInit, OnChanges {
     searchText: any = '';
     _sort: string = '';
     _filter: any[] = [];
+   
     private groupNumber: number = 1;
 
     constructor(private cd: ChangeDetectorRef) {
 
+    }
+    @ViewChild('txtPageNo') txtPageNoRef: ElementRef;
+    ngAfterViewInit() {
+        Observable.fromEvent(this.txtPageNoRef.nativeElement, 'keyup')
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .pluck('target', 'value')
+            .map((_:any) =>parseInt(_))
+            .filter(_ => _ > 0 && _ < this.totalPage)
+            .subscribe(_ => this.powerAction(_));  
     }
     changePageSize(size) {
         this.pageSize = size;
@@ -73,11 +84,8 @@ export class juPager implements OnInit, OnChanges {
         }
         return !this.hasNext();
     }
-    clickNext()
-    {
-        if (this.hasNext())
-        {
-            console.log(this.groupNumber);
+    clickNext() {
+        if (this.hasNext()) {
             this.groupNumber++;
             this.calculatePagelinkes();
         }
@@ -123,17 +131,20 @@ export class juPager implements OnInit, OnChanges {
         this.firePageChange();
         this.calculatePagelinkes();
     }
-    calculatePowerList()
-    {
+    calculatePowerList() {
         this.powerList = [];
-        let diff = Math.floor((this.totalPage - this.linkPages) / 4); console.log(diff);
-        let index = this.linkPages + diff;
-        while (index < this.totalPage)
-        {
-            this.powerList.push(index);
-            index += diff;
+        let curPos = this.groupNumber * this.linkPages + 1,
+            restPages = this.getTotalPage() - curPos,
+            totalPage = this.getTotalPage();
+        if (restPages > 30) {
+            let index = curPos + 30, times = 5;
+            while (index < totalPage && times > 0) {
+                this.powerList.push(index);
+                index += 30;
+                times--;
+            }
         }
-    }    
+    }
     firePageChange(isFire: boolean = false) {
         if (this.sspFn) {
             this.sspFn({ pageSize: this.pageSize, pageNo: this.activePage, searchText: this.searchText, sort: this._sort, filter: this._filter })
@@ -149,6 +160,7 @@ export class juPager implements OnInit, OnChanges {
             if (!this.data) return;
             let startIndex = (this.activePage - 1) * this.pageSize;
             this.pageChange.next(this.data.slice(startIndex, startIndex + this.pageSize));
+            this.calculatePowerList();
         }
     }
     calculatePagelinkes(isFire: boolean = true) {
@@ -173,21 +185,11 @@ export class juPager implements OnInit, OnChanges {
         }
 
     }
-    private powerAction(pageNo)
-    {
-        this.activePage = pageNo;
+   
+    private powerAction(pageNo) {
         this.groupNumber = Math.ceil(pageNo / this.linkPages);
-        let start = pageNo, end = pageNo + this.linkPages;
-        if (end > this.totalPage)
-        {
-            end = this.totalPage;
-        }
-        this.list = [];
-        for (var index = start; index <= end; index++)
-        {
-            this.list.push(index);
-        }
-        this.cd.markForCheck();
+        this.calculatePagelinkes(false);
+        this.activePage = pageNo;
         this.firePageChange();
     }
     private hasNext() {
