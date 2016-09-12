@@ -58,7 +58,6 @@ var CellEditExample = (function () {
     };
     CellEditExample.prototype.changeEducation = function (obj) {
         var _this = this;
-        console.log(obj);
         this.service.get('dummyData/getAddress/' + obj.value)
             .subscribe(function (res) { return _this.gridOptions.api.grid.setJuSelectData('address', res, obj.index); });
     };

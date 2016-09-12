@@ -58,23 +58,24 @@ export class juSelect implements OnInit, OnChanges {
     optionsDom: any;
     domClickSubscription: any;
     constructor(private el: ElementRef, private uiService: UiService) {
-        this.valueChanges = new Subject();
+        this.valueChanges = new Subject();        
     }
     ngOnChanges(changes) {
 
     }
+    private _previousValue: any;
     _value: any;
     @Input()
     set value(val: any) {
-        this._value = val;
-
-        if (val) {
-            if (Array.isArray(val)) {
-                this.selectItems(val.join(this.spliter));
-            } else {
-                this.viewMode === 'checkbox' ? this.selectItems(val) : this.selectItem(val);
-            }
-        }
+            this._previousValue = this._value;       
+            this._value = val;
+            if (val) {
+                if (Array.isArray(val)) {
+                    this.selectItems(val.join(this.spliter));
+                } else {
+                    this.viewMode === 'checkbox' ? this.selectItems(val) : this.selectItem(val);
+                }
+            }        
     }
     get value() {
         return this._value;
@@ -227,7 +228,7 @@ export class juSelect implements OnInit, OnChanges {
         });
         this.searchData = temp;
     }
-    selectItem(value_or_name: any) {
+    selectItem(value_or_name: any) {        
         if (!value_or_name) return;
         this.checkAll(false, false);
         let valueSelected = false;
@@ -235,19 +236,21 @@ export class juSelect implements OnInit, OnChanges {
             this.searchData.forEach((v: any) => {
                 if (v.value.toString() === value_or_name.toString() || v.name === value_or_name) {
                     this.selectedText = v.name;
-                    let option = this.dataSrc.find((x: any) => x.value.toString() === v.value.toString());
+                    let option = this.dataSrc.find((x: any) => x.value.toString() === v.value.toString());                   
                     if (option) {
-                        option.selected = true;
+                        option.selected = true; 
                         valueSelected = true;
+                        
                     }
                 }
             });
         }
         if (valueSelected) {
             this._setValueByPropertyName(this.value);
-            this.onChange.next({ value: this.value, sender: this, form: this.myForm, index:this.index });
-            this.valueChanges.next({ value: this.value, sender: this, form: this.myForm , index:this.index});
-
+            if (this._value !== this._previousValue) {
+                this.onChange.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
+                this.valueChanges.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
+            }
         }
     }
     selectItems(values_or_names: any) {        
@@ -276,10 +279,11 @@ export class juSelect implements OnInit, OnChanges {
             });
         }
         if (valueSelected) {
-            this._setValueByPropertyName(this.value);
-            this.onChange.next({ value: this.value, sender: this, form: this.myForm , index:this.index});
-            this.valueChanges.next({ value: this.value, sender: this, form: this.myForm , index:this.index});
-
+            this._setValueByPropertyName(this.value);            
+            if (this._value !== this._previousValue) {
+                this.onChange.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
+                this.valueChanges.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
+            }
         }
     }
     getNames(): any {

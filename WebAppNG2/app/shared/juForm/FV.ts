@@ -36,7 +36,7 @@ export class FV {
     static regex(exp: RegExp, message: string): Function {
         return function (val: any, fieldName): any {
             val = (val || '').toString();
-            if (!exp.test(val)) {
+            if (!exp.test(val)) {                
                 return message;
             }
             return true;

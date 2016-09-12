@@ -63,7 +63,7 @@ var CrudExample = (function () {
                     { field: 'name', label: 'Name', type: 'text', validators: [FV_1.FV.required, FV_1.FV.minLength(5)] },
                     { field: 'education', width: 222, label: 'Education', type: 'juSelect', validators: FV_1.FV.required },
                     { field: 'address', label: 'Address', type: 'juSelect', validators: FV_1.FV.required },
-                    { field: 'age', label: 'Age', type: 'text', validators: [FV_1.FV.required, FV_1.FV.regex(/^\d+$/g, 'Age should be a number')] },
+                    { field: 'age', label: 'Age', type: 'text', validators: [FV_1.FV.required, FV_1.FV.regex(/^\d+$/, 'Age should be a number')] },
                     { field: 'description', label: 'Description', type: 'textarea' }
                 ],
                 buttons: {

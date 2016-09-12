@@ -37,6 +37,7 @@ var juSelect = (function () {
             return this._value;
         },
         set: function (val) {
+            this._previousValue = this._value;
             this._value = val;
             if (val) {
                 if (Array.isArray(val)) {
@@ -221,8 +222,10 @@ var juSelect = (function () {
         }
         if (valueSelected) {
             this._setValueByPropertyName(this.value);
-            this.onChange.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
-            this.valueChanges.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
+            if (this._value !== this._previousValue) {
+                this.onChange.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
+                this.valueChanges.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
+            }
         }
     };
     juSelect.prototype.selectItems = function (values_or_names) {
@@ -256,8 +259,10 @@ var juSelect = (function () {
         }
         if (valueSelected) {
             this._setValueByPropertyName(this.value);
-            this.onChange.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
-            this.valueChanges.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
+            if (this._value !== this._previousValue) {
+                this.onChange.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
+                this.valueChanges.next({ value: this.value, sender: this, form: this.myForm, index: this.index });
+            }
         }
     };
     juSelect.prototype.getNames = function () {
