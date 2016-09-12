@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Rx';
     moduleId: module.id,
     selector: '.juPager, [juPager]',
     templateUrl: './juPager.html',
-    styles: ['.juPager select{height:30px;padding:2px;}'],
+    styles: ['.juPager select{height:26px;padding:2px;}'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -212,6 +212,6 @@ export class juPager implements OnInit, OnChanges {
         let len = this.data.length;
         if (len == 0) return 0;
 
-        return len / this.pageSize + ((len % this.pageSize) > 0 ? 1 : 0);
+        return parseInt((len / this.pageSize).toString()) + ((len % this.pageSize) > 0 ? 1 : 0);
     }
 }

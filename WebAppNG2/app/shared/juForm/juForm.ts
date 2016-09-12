@@ -164,7 +164,7 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
         }
 
     }
-    showMessage(message: string, messageCss: string = 'alert alert-info') {
+    showMessage(message: string, messageCss: string = 'alert alert-info') {       
         if (this.dynamicComponent && this.dynamicComponent.instance) {
             this.dynamicComponent.instance.showMessage(message, messageCss)
         }
@@ -307,7 +307,7 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
                 <h3 class="panel-title">{{config.title}} <b class="pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle"></b></h3>
             </div>
             <div class="panel-body">
-            <div *ngIf="message" [class]="messageCss">{{message}}</div>       
+            <div [style.display]="message?'block':'none'" [class]="messageCss">{{message}}</div>       
             `);
         } else if (this.viewMode === 'popup') {
             template.push(`<div class="modal fade" tabindex="-1" role="dialog">    
@@ -318,7 +318,7 @@ export class juForm implements OnInit, OnDestroy, OnChanges {
                             <h4 class="modal-title">{{config.title }}</h4>
                         </div>
                         <div class="modal-body">
-                        <div *ngIf="message" [class]="messageCss">{{message}}</div>                    
+                        <div [style.display]="message?'block':'none'" [class]="messageCss">{{message}}</div>                    
                         `);
         }
         template.push('<div class="form-horizontal">');
@@ -1005,7 +1005,7 @@ function getComponent(obj: any) {
             return [];
         }
         message: string = '';
-        messageCss: string = 'alert alert-info'
+        messageCss: string = ''
         showMessage(message: string, messageCss: string = 'alert alert-info') {
             this.message = message;
             this.messageCss = messageCss;

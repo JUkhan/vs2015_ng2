@@ -1,5 +1,6 @@
 import {Directive, OnInit, ContentChildren, QueryList, ElementRef, OnDestroy} from '@angular/core';
 import {juSelect}                 from '../juForm/juSelect';
+import {Datetimepicker}                 from '../juForm/Datetimepicker';
 import {Observable, Subscription} from 'rxjs/Rx';
 @Directive({
     selector: '.row-editor',
@@ -15,12 +16,16 @@ export class rowEditor implements OnInit {
 
     }
     @ContentChildren(juSelect) juSelectList: QueryList<juSelect>;
+    @ContentChildren(Datetimepicker) datepickerList: QueryList<Datetimepicker>;
 
     ngAfterContentInit() {
         this.eventBinding(this.el.nativeElement.querySelectorAll('.select'), 'change');
         this.eventBinding(this.el.nativeElement.querySelectorAll('.text'), 'change');
         this.juSelectList.toArray().forEach(_=>{
            this.subsList.push(_.notifyRowEditor.subscribe(()=>{this.isUpdated=true}));
+        });
+        this.datepickerList.toArray().forEach(_ => {
+            this.subsList.push(_.notifyRowEditor.subscribe(() => { this.isUpdated = true }));
         });
     }
 

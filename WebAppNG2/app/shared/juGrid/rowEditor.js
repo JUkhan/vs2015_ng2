@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var juSelect_1 = require('../juForm/juSelect');
+var Datetimepicker_1 = require('../juForm/Datetimepicker');
 var Rx_1 = require('rxjs/Rx');
 var rowEditor = (function () {
     function rowEditor(el) {
@@ -23,6 +24,9 @@ var rowEditor = (function () {
         this.eventBinding(this.el.nativeElement.querySelectorAll('.select'), 'change');
         this.eventBinding(this.el.nativeElement.querySelectorAll('.text'), 'change');
         this.juSelectList.toArray().forEach(function (_) {
+            _this.subsList.push(_.notifyRowEditor.subscribe(function () { _this.isUpdated = true; }));
+        });
+        this.datepickerList.toArray().forEach(function (_) {
             _this.subsList.push(_.notifyRowEditor.subscribe(function () { _this.isUpdated = true; }));
         });
     };
@@ -89,6 +93,10 @@ var rowEditor = (function () {
         core_1.ContentChildren(juSelect_1.juSelect), 
         __metadata('design:type', core_1.QueryList)
     ], rowEditor.prototype, "juSelectList", void 0);
+    __decorate([
+        core_1.ContentChildren(Datetimepicker_1.Datetimepicker), 
+        __metadata('design:type', core_1.QueryList)
+    ], rowEditor.prototype, "datepickerList", void 0);
     rowEditor = __decorate([
         core_1.Directive({
             selector: '.row-editor',

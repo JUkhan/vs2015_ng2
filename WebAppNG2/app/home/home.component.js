@@ -18,21 +18,19 @@ var HomeComponent = (function () {
         this.initForm();
     };
     HomeComponent.prototype.ngOnDestroy = function () { };
-    HomeComponent.prototype.hideElement = function () {
-        this.myOptions.api.refresh();
-    };
     HomeComponent.prototype.initForm = function () {
         var _this = this;
         this.myOptions = {
-            labelPos: 'left', title: 'Hello', labelSize: 2, refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {} },
-            isNameHide: true,
+            labelPos: 'left', title: 'Complex Form Example',
+            labelSize: 2,
+            refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {} },
             tabs: {
                 'Tab-1': [
                     {
                         type: 'groupLayout', items: [
                             [{
                                     groupName: 'Group-1', size: 8, inputs: [
-                                        { field: 'name', exp: "[style.display]=\"config.isNameHide?'block':'none'\"", label: 'Name1', type: 'file', validators: [FV_1.FV.required, FV_1.FV.minLength(5)] },
+                                        { field: 'name', label: 'Name1', type: 'file', validators: [FV_1.FV.required, FV_1.FV.minLength(5)] },
                                         { field: 'country', change: function (e) { return console.log(e); }, label: 'Country', type: 'select', validators: FV_1.FV.required },
                                         { field: 'address', label: 'Address', type: 'text', validators: FV_1.FV.required },
                                         [{ field: 'age', labelSize: 4, size: 6 }, { field: 'address1.post', label: 'Post', type: 'datepicker', size: 4, offset: 2, validators: FV_1.FV.required }],

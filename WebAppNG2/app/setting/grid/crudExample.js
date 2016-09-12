@@ -12,32 +12,47 @@ var core_1 = require('@angular/core');
 var FV_1 = require('../../shared/juForm/FV');
 var Rx_1 = require('rxjs/Rx');
 var app_service_1 = require('../../shared/app.service');
-var gridExample = (function () {
-    function gridExample(service) {
+var CrudExample = (function () {
+    function CrudExample(service) {
         this.service = service;
     }
-    gridExample.prototype.ngOnInit = function () {
+    CrudExample.prototype.ngOnInit = function () {
+        var _this = this;
         this.initScholar();
+        this.service.get('dummyData/getEducations')
+            .subscribe(function (res) { return _this.educationList = res; });
+        this.service.get('dummyData/getAddress/1')
+            .subscribe(function (res) { return _this.addressList = res; });
     };
-    gridExample.prototype.onLoad = function (grid) {
+    CrudExample.prototype.onLoad = function (grid) {
         var _this = this;
         this.service.get('dummydata/GetScholarList')
-            .subscribe(function (list) { return _this.scholarList = list; });
+            .subscribe(function (list) {
+            _this.scholarGridOptions.api.form
+                .setData('education', _this.educationList)
+                .setData('address', _this.addressList);
+            _this.scholarList = list;
+        });
     };
-    gridExample.prototype.getSSPFN = function (params) {
+    CrudExample.prototype.getSSPFN = function (params) {
         return Rx_1.Observable.of({ totalPage: 150, data: this.scholarList });
     };
-    gridExample.prototype.initScholar = function () {
+    CrudExample.prototype.educationCellRender = function (row) {
+        return this.educationList.find(function (_) { return _.value == row.education; }).name;
+    };
+    CrudExample.prototype.initScholar = function () {
         var _this = this;
         this.scholarGridOptions = {
-            level: 10,
-            scroll: true, colResize: true,
-            quickSearch: false, crud: true, enableCellEditing: false, enableTreeView: false, lazyLoad: this.service.getChildData,
+            crud: true,
             columnDefs: [
-                { headerName: 'Name', field: 'name', sort: true, filter: 'set', type: 'juSelect' },
-                { headerName: 'Education', field: 'education', sort: true, filter: 'set' },
+                { headerName: 'Name', field: 'name', sort: true, filter: 'set' },
+                {
+                    headerName: 'Education', field: 'education', sort: true, filter: 'set',
+                    params: { valueGetter: this.educationCellRender.bind(this) },
+                    cellRenderer: this.educationCellRender.bind(this)
+                },
                 { headerName: 'Age', field: 'age', filter: 'number', sort: true },
-                { headerName: 'Address', field: 'address' },
+                { headerName: 'Address', field: 'address', cellRenderer: function (row) { return _this.addressList.find(function (_) { return _.value == row.address; }).name; } },
                 { headerName: 'Description', width: 300, field: 'description' }
             ],
             formDefs: {
@@ -46,8 +61,8 @@ var gridExample = (function () {
                 labelSize: 3,
                 inputs: [
                     { field: 'name', label: 'Name', type: 'text', validators: [FV_1.FV.required, FV_1.FV.minLength(5)] },
-                    { field: 'education', label: 'Education', type: 'text', validators: FV_1.FV.required },
-                    { field: 'address', label: 'Address', type: 'text', validators: FV_1.FV.required },
+                    { field: 'education', width: 222, label: 'Education', type: 'juSelect', validators: FV_1.FV.required },
+                    { field: 'address', label: 'Address', type: 'juSelect', validators: FV_1.FV.required },
                     { field: 'age', label: 'Age', type: 'text', validators: [FV_1.FV.required, FV_1.FV.regex(/^\d+$/g, 'Age should be a number')] },
                     { field: 'description', label: 'Description', type: 'textarea' }
                 ],
@@ -64,7 +79,7 @@ var gridExample = (function () {
             }
         };
     };
-    gridExample.prototype.submitScholar = function (e) {
+    CrudExample.prototype.submitScholar = function (e) {
         var _this = this;
         this.service.post('dummydata/create_update_scholar', this.scholarGridOptions.api.form.getModel())
             .subscribe(function (res) {
@@ -78,17 +93,16 @@ var gridExample = (function () {
             _this.scholarGridOptions.api.form.showModal(false);
         });
     };
-    gridExample = __decorate([
+    CrudExample = __decorate([
         core_1.Component({
             moduleId: module.id,
-            selector: 'selector',
-            templateUrl: './grid.html',
-            styleUrls: ['./grid.css'],
+            selector: 'crud',
+            template: "\n                <div \n                     juGrid \n                     panelMode=\"primary\" \n                     viewMode=\"panel\" \n                     title=\"CRUD Example\" \n                     (onLoad)=\"onLoad($event)\" \n                     [data]=\"scholarList\" \n                     [options]=\"scholarGridOptions\">\n\n                </div>",
             encapsulation: core_1.ViewEncapsulation.None
         }), 
         __metadata('design:paramtypes', [app_service_1.AppService])
-    ], gridExample);
-    return gridExample;
+    ], CrudExample);
+    return CrudExample;
 }());
-exports.gridExample = gridExample;
-//# sourceMappingURL=grid.js.map
+exports.CrudExample = CrudExample;
+//# sourceMappingURL=crudExample.js.map

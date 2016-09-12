@@ -10,14 +10,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var juWindowService_1 = require('../../shared/juWindow/juWindowService');
-var grid_1 = require('../grid/grid');
+var crudExample_1 = require('../grid/crudExample');
 var WindowComponent = (function () {
     function WindowComponent(service) {
         this.service = service;
     }
     WindowComponent.prototype.ngOnInit = function () {
         this.service.windowConfig = {
-            'about': { title: 'About us', width: 600, height: 400, loader: function () { return grid_1.gridExample; } },
+            'about': { title: 'About us', width: 600, height: 400, loader: function () { return crudExample_1.CrudExample; } },
         };
     };
     WindowComponent = __decorate([

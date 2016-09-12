@@ -19,7 +19,7 @@ export class AppService {
             return this.baseUrl;
         }
         this.baseUrl = jQuery('base ').attr('href') || '/';
-        this.baseUrl += 'api/';
+        this.baseUrl += '';
         return this.baseUrl;
     }
     showMessage(message: string) {

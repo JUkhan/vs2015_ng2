@@ -1,14 +1,15 @@
 ﻿import { Routes,
     RouterModule }  from '@angular/router';
 
-import { gridExample }         from './grid/grid';
-import {UploadComponent}       from './upload/upload';
-import {ClaimImport}       from './ClaimImport/ClaimImport.component';
+import { CrudExample }         from './grid/crudExample';
+import { TreeExample }         from './grid/treeExample';
+import {CellEditExample}       from './grid/cellEditExample';
+
 
 const routes: Routes = [
-    { path: '', component: gridExample },   
-    { path: 'upload', component: UploadComponent },
-    { path: 'claim', component: ClaimImport }
+    { path: '', component: CrudExample },   
+    { path: 'cellEdit', component: CellEditExample },
+    { path: 'treeView', component: TreeExample }
 ];
 
 export const routing = RouterModule.forChild(routes);

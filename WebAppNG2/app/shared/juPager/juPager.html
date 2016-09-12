@@ -1,7 +1,7 @@
 <nav [style.display]="list.length?'block':'none'">
-    <span style="position:relative;top:-10px">
+    <span style="position:relative;top:-8px">
         <span>Page Size </span>
-        <select style="display:inline-block;width:52px"  #psize [ngModel]="pageSize" (change)="changePageSize(psize.value)">
+        <select style="display:inline-block;width:52px" #psize [ngModel]="pageSize" (change)="changePageSize(psize.value)">
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>
@@ -11,7 +11,7 @@
             <option value="100">100</option>
         </select>
     </span>
-    <span style="position:relative;top:-10px">Page {{activePage}} of {{totalPage}}</span>
+    <span style="position:relative;top:-8px">Page {{activePage}} of {{getTotalPage()}}</span>
   <ul class="pagination">
      <li class="page-item" [class.disabled]="isDisabledPrev()">
       <a class="page-link" href="javascript:;" (click)="clickStart()" aria-label="Previous">
@@ -42,7 +42,7 @@
       </a>
     </li>
   </ul>
-    <span style="position:relative;top:-10px" title="Enter Page Number">
+    <span style="position:relative;top:-8px" title="Enter Page Number">
         <input #txtPageNo type="text" style="display:inline-block;width:50px;text-align:center" />
     </span>
 </nav>

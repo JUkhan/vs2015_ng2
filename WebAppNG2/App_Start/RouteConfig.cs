@@ -18,6 +18,11 @@ namespace WebAppNG2
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+            routes.MapRoute(
+                name: "dummyData",
+                url: "api/{controller}/{action}/{id}",
+                defaults: new { id = UrlParameter.Optional }
+            );
         }
     }
 }

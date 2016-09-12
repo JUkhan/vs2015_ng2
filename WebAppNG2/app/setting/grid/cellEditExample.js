@@ -11,22 +11,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var FV_1 = require('../../shared/juForm/FV');
 var app_service_1 = require('../../shared/app.service');
-var UploadComponent = (function () {
-    function UploadComponent(service) {
+var CellEditExample = (function () {
+    function CellEditExample(service) {
         this.service = service;
         this.list = [];
         this.counter = 0;
     }
-    UploadComponent.prototype.ngOnInit = function () {
+    CellEditExample.prototype.ngOnInit = function () {
+        var _this = this;
         this.initGrid();
+        this.service.get('dummydata/GetScholarList')
+            .subscribe(function (res) { return _this.list = res; });
     };
-    UploadComponent.prototype.loadData = function (params) {
+    CellEditExample.prototype.loadData = function (params) {
         return this.service.getUploadData('scolar');
     };
-    UploadComponent.prototype.saveRecords = function () {
+    CellEditExample.prototype.saveRecords = function () {
         console.log(this.gridOptions.api.grid.getUpdatedRecords());
     };
-    UploadComponent.prototype.initGrid = function () {
+    CellEditExample.prototype.initGrid = function () {
         var _this = this;
         this.gridOptions = {
             quickSearch: true,
@@ -36,11 +39,11 @@ var UploadComponent = (function () {
             enableCellEditing: true,
             columnDefs: [
                 { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item"><b class="fa fa-plus-circle"></b> </a>', width: 30, cellRenderer: function (row, index) { return ++index; } },
-                { headerName: 'Name', filter: 'set', sort: true, field: 'name' },
-                { headerName: 'Education', filter: 'set', sort: true, change: this.changeEducation.bind(this), validators: FV_1.FV.required, field: 'education', type: 'juSelect', width: 160 },
-                { headerName: 'Age', filter: 'number', sort: true, field: 'age', type: 'number', width: 100, validators: FV_1.FV.required },
+                { headerName: 'Name', field: 'name', filter: 'set', sort: true },
+                { headerName: 'Education', field: 'education', filter: 'set', sort: true, change: this.changeEducation.bind(this), validators: FV_1.FV.required, type: 'juSelect', width: 160 },
+                { headerName: 'Age', field: 'age', filter: 'number', sort: true, type: 'number', width: 100, validators: FV_1.FV.required },
                 { headerName: 'Birth Date', field: 'bdate', type: 'datepicker', width: 160, validators: FV_1.FV.required },
-                { headerName: 'Address', viewMode: 'select', search: true, field: 'address', type: 'juSelect', width: 170, validators: FV_1.FV.required },
+                { headerName: 'Address', field: 'address', viewMode: 'select', search: true, type: 'juSelect', width: 170, validators: FV_1.FV.required },
                 { headerName: 'Description', field: 'description', type: 'text', validators: [FV_1.FV.required, FV_1.FV.minLength(5)], width: 220 }
             ],
             addItem: function () {
@@ -49,21 +52,25 @@ var UploadComponent = (function () {
             }
         };
     };
-    UploadComponent.prototype.gridLoad = function (grid) {
-        grid.setDropdownData('education', this.service.getEducations2());
+    CellEditExample.prototype.gridLoad = function (grid) {
+        this.service.get('dummyData/getEducations')
+            .subscribe(function (res) { return grid.setDropdownData('education', res); });
     };
-    UploadComponent.prototype.changeEducation = function (obj) {
-        var data = [{ name: 'Tangail', value: 'Tangail' }, { name: 'Dhaka', value: 'Dhaka' }];
-        this.gridOptions.api.grid.setJuSelectData('address', data, obj.index);
+    CellEditExample.prototype.changeEducation = function (obj) {
+        var _this = this;
+        console.log(obj);
+        this.service.get('dummyData/getAddress/' + obj.value)
+            .subscribe(function (res) { return _this.gridOptions.api.grid.setJuSelectData('address', res, obj.index); });
     };
-    UploadComponent = __decorate([
+    CellEditExample = __decorate([
         core_1.Component({
             moduleId: module.id,
+            selector: 'cellEdit',
             template: "\n            <div \n                  class=\"juGrid\" \n                  title=\"Grid Cell Editable Example\"                  \n                  (onLoad)=\"gridLoad($event)\" \n                  [data]=\"list\" \n                  [options]=\"gridOptions\">\n\n             </div>\n            <button type=\"button\" class=\"btn btn-primary\" (click)=\"saveRecords()\">Save Records</button>\n            "
         }), 
         __metadata('design:paramtypes', [app_service_1.AppService])
-    ], UploadComponent);
-    return UploadComponent;
+    ], CellEditExample);
+    return CellEditExample;
 }());
-exports.UploadComponent = UploadComponent;
-//# sourceMappingURL=upload.js.map
+exports.CellEditExample = CellEditExample;
+//# sourceMappingURL=cellEditExample.js.map

@@ -80,16 +80,8 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
     }
     showMessage(message: string, messageCss: string = 'alert alert-info') {
         this.options.message = message;
-        this.options.messageCss = messageCss;
-
-        if (this.dynamicComponent && this.dynamicComponent.instance) {
-            this.dynamicComponent.instance.showMessage(message, messageCss);
-            async_call(() => {
-                this.options.message = '';
-                this.dynamicComponent.instance.showMessage('', messageCss);
-
-            });
-        }
+        this.options.messageCss = messageCss;       
+        async_call(() => { this.options.message = ''; },3000);        
     }
     updateItem(record: any) {
         if (this._oldItem && record) {
@@ -127,7 +119,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
             this.options.colResize = false;
         }
         if (!('crud' in this.options)) {
-            this.options.crud = true;
+            this.options.crud = false;
         }
         if (!('create' in this.options)) {
             this.options.create = true;
@@ -139,7 +131,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
             this.options.remove = true;
         }
         if (!('quickSearch' in this.options)) {
-            this.options.quickSearch = true;
+            this.options.quickSearch = false;
         }
         if (!('trClass' in this.options)) {
             this.options.trClass = () => null;
@@ -269,6 +261,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         return totalWidth + 25;
     }
     private renderTable(tpl: any[]) {
+        tpl.push(`<div [style.display]="config.message?'block':'none'" [class]="config.messageCss">{{config.message}}</div>`);
         if (this.options.pagerPos === 'top') {
             tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
         }
@@ -440,7 +433,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         }
         tpl.push(`<tr ${this.options.rowEvents} [ngClass]="config.trClass(${this.getParams(row, level)})">`);
         this.options.columnDefs.forEach((item, index) => {
-            tpl.push(`<td ${this.getLevel(index, level)}`);
+            tpl.push(`<td [style.width.px]="config.columnDefs[${index}].width" ${this.getLevel(index, level)}`);
             if (item.tdClass) {
                 tpl.push(`[ngClass]="config.columnDefs[${index}].tdClass(${this.getParams(row, level)})"`);
             }
@@ -523,7 +516,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         if (rc > 1) {
             this.options.columnDefs = colDef;
         }
-        if (this.options.colResize) {
+        if (this.options.scroll) {
             this.headerHtml[0].push(`<th style="width:17px;height:${this.options.headerHeight}px">&nbsp;</th>`);
         }
         return this.headerHtml.map(_ => `<tr>${_.join('')}</tr>`).reduce((p, c) => p + c, '');
@@ -682,7 +675,7 @@ function getComponent(obj: any) {
         config: any = {};
         formObj: juForm;
         viewList: any[] = [];
-        _copyOfData: any;
+        _copyOfData: any;        
         private pager: juPager;
         private slideState: string = 'down';
         constructor(private renderer: Renderer, private el: ElementRef) {
@@ -821,12 +814,7 @@ function getComponent(obj: any) {
             this.pager.calculatePagelinkes();
             this.notifyFilter();
 
-        }
-        showMessage(message: string, messageCss: string) {
-            if (this.formObj) {
-                this.formObj.showMessage(message, messageCss);
-            }
-        }
+        }        
         sort(colDef: any) {
             colDef.reverse = !(typeof colDef.reverse === 'undefined' ? true : colDef.reverse);
             this.config.columnDefs.forEach(_ => {

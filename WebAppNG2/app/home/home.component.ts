@@ -14,24 +14,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() { }
     myOptions: any;
-    private hideElement()
-    {
-        //this.myOptions.isNameHide = !this.myOptions.isNameHide;
-       
-        this.myOptions.api.refresh();
-    }
+   
     initForm() {
 
         this.myOptions = {
-            labelPos: 'left', title:'Hello', labelSize: 2, refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {} },
-            isNameHide:true,
+            labelPos: 'left', title: 'Complex Form Example',
+            labelSize: 2,
+            refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {} },           
             tabs: {
                 'Tab-1': [
                     {
                         type: 'groupLayout', items: [
                             [{
                                 groupName: 'Group-1', size: 8, inputs: [
-                                    <FormElement>{ field: 'name', exp: `[style.display]="config.isNameHide?'block':'none'"`, label: 'Name1', type: 'file', validators: [FV.required, FV.minLength(5)] },
+                                    <FormElement>{ field: 'name', label: 'Name1', type: 'file', validators: [FV.required, FV.minLength(5)] },
                                     { field: 'country', change: e => console.log(e), label: 'Country', type: 'select', validators: FV.required },
                                     { field: 'address', label: 'Address', type: 'text', validators: FV.required },
                                     [{ field: 'age', labelSize: 4, size: 6 }, { field: 'address1.post', label: 'Post', type: 'datepicker', size: 4, offset: 2, validators: FV.required }],

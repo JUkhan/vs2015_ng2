@@ -279,10 +279,10 @@ var juForm = (function () {
     juForm.prototype.getConfig = function () {
         var template = [], obj = {};
         if (this.viewMode === 'panel') {
-            template.push("<div class=\"panel panel-" + this.panelMode + "\">\n            <div class=\"panel-heading\" style=\"cursor:pointer\" (click)=\"slideToggle()\">\n                <h3 class=\"panel-title\">{{config.title}} <b class=\"pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle\"></b></h3>\n            </div>\n            <div class=\"panel-body\">\n            <div *ngIf=\"message\" [class]=\"messageCss\">{{message}}</div>       \n            ");
+            template.push("<div class=\"panel panel-" + this.panelMode + "\">\n            <div class=\"panel-heading\" style=\"cursor:pointer\" (click)=\"slideToggle()\">\n                <h3 class=\"panel-title\">{{config.title}} <b class=\"pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle\"></b></h3>\n            </div>\n            <div class=\"panel-body\">\n            <div [style.display]=\"message?'block':'none'\" [class]=\"messageCss\">{{message}}</div>       \n            ");
         }
         else if (this.viewMode === 'popup') {
-            template.push("<div class=\"modal fade\" tabindex=\"-1\" role=\"dialog\">    \n                <div class=\"modal-dialog\">           \n                    <div class=\"modal-content\">\n                        <div class=\"modal-header\">\n                            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n                            <h4 class=\"modal-title\">{{config.title }}</h4>\n                        </div>\n                        <div class=\"modal-body\">\n                        <div *ngIf=\"message\" [class]=\"messageCss\">{{message}}</div>                    \n                        ");
+            template.push("<div class=\"modal fade\" tabindex=\"-1\" role=\"dialog\">    \n                <div class=\"modal-dialog\">           \n                    <div class=\"modal-content\">\n                        <div class=\"modal-header\">\n                            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n                            <h4 class=\"modal-title\">{{config.title }}</h4>\n                        </div>\n                        <div class=\"modal-body\">\n                        <div [style.display]=\"message?'block':'none'\" [class]=\"messageCss\">{{message}}</div>                    \n                        ");
         }
         template.push('<div class="form-horizontal">');
         if (this.options.inputs) {
@@ -613,7 +613,7 @@ function getComponent(obj) {
             this.slideState = 'down';
             this._sh = {};
             this.message = '';
-            this.messageCss = 'alert alert-info';
+            this.messageCss = '';
         }
         DynamicComponent.prototype.ngOnInit = function () {
             var _this = this;

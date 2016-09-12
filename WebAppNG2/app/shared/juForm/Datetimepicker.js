@@ -9,12 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var Rx_1 = require('rxjs/Rx');
 var Datetimepicker = (function () {
     function Datetimepicker(el) {
         this.el = el;
         this.pickers = {};
         this.pickerName = '';
         this.model = {};
+        this.notifyRowEditor = new Rx_1.Subject();
     }
     Datetimepicker.prototype.ngOnInit = function () {
         var _this = this;
@@ -36,6 +38,7 @@ var Datetimepicker = (function () {
                         _this.form.dynamicComponent.instance
                             .vlidate_input(e.format(), _this.config);
                     }
+                    _this.notifyRowEditor.next(e.format());
                 });
                 break;
             case 'timepicker':
@@ -49,6 +52,7 @@ var Datetimepicker = (function () {
     };
     Datetimepicker.prototype.setDate = function (date) {
         this.pickerObject.datepicker('update', date);
+        this.notifyRowEditor.next(date);
     };
     Datetimepicker.prototype.ngOnDestroy = function () {
         if (this.pickerName === 'datepicker') {

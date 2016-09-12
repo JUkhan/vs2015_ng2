@@ -1,4 +1,5 @@
 import {Directive, OnInit, Input, ElementRef, OnDestroy, AfterViewInit} from '@angular/core';
+import {Subject} from 'rxjs/Rx';
 declare var jQuery: any;
 //declare var CKEDITOR:any;
 
@@ -13,6 +14,7 @@ export class Datetimepicker implements OnInit, OnDestroy {
     @Input() property: string;
     @Input() config: any;
     @Input() form: any;
+    notifyRowEditor: Subject<any> = new Subject();
     private pickerObject: any;
     constructor(private el: ElementRef) { }
     ngOnInit() {
@@ -33,6 +35,7 @@ export class Datetimepicker implements OnInit, OnDestroy {
                         this.form.dynamicComponent.instance
                             .vlidate_input(e.format(), this.config);
                     }
+                    this.notifyRowEditor.next(e.format());
                 });
                 break;
             case 'timepicker':
@@ -44,8 +47,9 @@ export class Datetimepicker implements OnInit, OnDestroy {
         }
         this.config.api = this;
     }
-    setDate(date: any) {
+    setDate(date: any) {       
         this.pickerObject.datepicker('update', date);
+        this.notifyRowEditor.next(date);
     }
     ngOnDestroy() {
         if (this.pickerName === 'datepicker') {

@@ -1,6 +1,6 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {juWindowService} from '../../shared/juWindow/juWindowService';
-import {gridExample} from '../grid/grid';
+import {CrudExample} from '../grid/crudExample';
 @Component({
     selector: 'window-component',
     template: `
@@ -19,7 +19,7 @@ export class WindowComponent implements OnInit {
 
     ngOnInit() {
         this.service.windowConfig = {
-            'about': { title: 'About us', width: 600, height: 400, loader: () => gridExample },
+            'about': { title: 'About us', width: 600, height: 400, loader: () => CrudExample },
             //'form': { title: 'Sample Form', width: 900, height: 450, loader: () => require('../home/home.component').HomeComponent },
            // 'grid': { title: 'Sample Grid', width: 800, height: 400, loader: () => require('../settings/grid/grid').gridExample }
         };

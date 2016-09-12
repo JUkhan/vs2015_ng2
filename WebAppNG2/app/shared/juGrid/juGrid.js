@@ -51,13 +51,7 @@ var juGrid = (function () {
         if (messageCss === void 0) { messageCss = 'alert alert-info'; }
         this.options.message = message;
         this.options.messageCss = messageCss;
-        if (this.dynamicComponent && this.dynamicComponent.instance) {
-            this.dynamicComponent.instance.showMessage(message, messageCss);
-            async_call(function () {
-                _this.options.message = '';
-                _this.dynamicComponent.instance.showMessage('', messageCss);
-            });
-        }
+        async_call(function () { _this.options.message = ''; }, 3000);
     };
     juGrid.prototype.updateItem = function (record) {
         if (this._oldItem && record) {
@@ -94,7 +88,7 @@ var juGrid = (function () {
             this.options.colResize = false;
         }
         if (!('crud' in this.options)) {
-            this.options.crud = true;
+            this.options.crud = false;
         }
         if (!('create' in this.options)) {
             this.options.create = true;
@@ -106,7 +100,7 @@ var juGrid = (function () {
             this.options.remove = true;
         }
         if (!('quickSearch' in this.options)) {
-            this.options.quickSearch = true;
+            this.options.quickSearch = false;
         }
         if (!('trClass' in this.options)) {
             this.options.trClass = function () { return null; };
@@ -219,6 +213,7 @@ var juGrid = (function () {
         return totalWidth + 25;
     };
     juGrid.prototype.renderTable = function (tpl) {
+        tpl.push("<div [style.display]=\"config.message?'block':'none'\" [class]=\"config.messageCss\">{{config.message}}</div>");
         if (this.options.pagerPos === 'top') {
             tpl.push("<div [style.display]=\"viewList?.length?'block':'none'\" class=\"juPager\" [linkPages]=\"config.linkPages\" [pageSize]=\"config.pageSize\" [data]=\"data\" (onInit)=\"pagerInit($event)\" (pageChange)=\"onPageChange($event)\"></div>");
         }
@@ -370,7 +365,7 @@ var juGrid = (function () {
         }
         tpl.push("<tr " + this.options.rowEvents + " [ngClass]=\"config.trClass(" + this.getParams(row, level) + ")\">");
         this.options.columnDefs.forEach(function (item, index) {
-            tpl.push("<td " + _this.getLevel(index, level));
+            tpl.push("<td [style.width.px]=\"config.columnDefs[" + index + "].width\" " + _this.getLevel(index, level));
             if (item.tdClass) {
                 tpl.push("[ngClass]=\"config.columnDefs[" + index + "].tdClass(" + _this.getParams(row, level) + ")\"");
             }
@@ -446,7 +441,7 @@ var juGrid = (function () {
         if (rc > 1) {
             this.options.columnDefs = colDef;
         }
-        if (this.options.colResize) {
+        if (this.options.scroll) {
             this.headerHtml[0].push("<th style=\"width:17px;height:" + this.options.headerHeight + "px\">&nbsp;</th>");
         }
         return this.headerHtml.map(function (_) { return ("<tr>" + _.join('') + "</tr>"); }).reduce(function (p, c) { return p + c; }, '');
@@ -753,11 +748,6 @@ function getComponent(obj) {
             this._copyOfData.splice(this.data.indexOf(item), 1);
             this.pager.calculatePagelinkes();
             this.notifyFilter();
-        };
-        TableComponent.prototype.showMessage = function (message, messageCss) {
-            if (this.formObj) {
-                this.formObj.showMessage(message, messageCss);
-            }
         };
         TableComponent.prototype.sort = function (colDef) {
             colDef.reverse = !(typeof colDef.reverse === 'undefined' ? true : colDef.reverse);

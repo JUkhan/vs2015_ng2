@@ -28,7 +28,7 @@ var AppService = (function () {
             return this.baseUrl;
         }
         this.baseUrl = jQuery('base ').attr('href') || '/';
-        this.baseUrl += 'api/';
+        this.baseUrl += '';
         return this.baseUrl;
     };
     AppService.prototype.showMessage = function (message) {
