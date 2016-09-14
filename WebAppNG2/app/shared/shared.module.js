@@ -12,6 +12,7 @@ var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var forms_1 = require('@angular/forms');
 var router_1 = require('@angular/router');
+var compiler_1 = require('@angular/compiler');
 var juPanel_1 = require('./juPanel/juPanel');
 var juPanelContent_1 = require('./juPanel/juPanelContent');
 var juMenu_1 = require('./juMenu/juMenu');
@@ -22,16 +23,21 @@ var CkEditor_1 = require('./juForm/CkEditor');
 var Datetimepicker_1 = require('./juForm/Datetimepicker');
 var juGrid_1 = require('./juGrid/juGrid');
 var rowEditor_1 = require('./juGrid/rowEditor');
+var juParentWindow_1 = require('./juWindow/juParentWindow');
+var juChildWindow_1 = require('./juWindow/juChildWindow');
+var juWindowService_1 = require('./juWindow/juWindowService');
+var TestForm_1 = require('./juForm/TestForm');
 var ui_service_1 = require('./ui.service');
 var app_service_1 = require('./app.service');
 var canDeactivateGuard_service_1 = require('./canDeactivateGuard.service');
+var juForm_builder_1 = require('./juForm/juForm.builder');
 var SharedModule = (function () {
     function SharedModule() {
     }
     SharedModule.forRoot = function () {
         return {
             ngModule: SharedModule,
-            providers: [app_service_1.AppService, ui_service_1.UiService, canDeactivateGuard_service_1.CanDeactivateGuard]
+            providers: [app_service_1.AppService, ui_service_1.UiService, canDeactivateGuard_service_1.CanDeactivateGuard, juWindowService_1.juWindowService, juForm_builder_1.juFormBuilder]
         };
     };
     SharedModule = __decorate([
@@ -48,7 +54,10 @@ var SharedModule = (function () {
                 CkEditor_1.FileSelect,
                 Datetimepicker_1.Datetimepicker,
                 juGrid_1.juGrid,
-                rowEditor_1.rowEditor
+                rowEditor_1.rowEditor,
+                juParentWindow_1.juParentWindow,
+                juChildWindow_1.juChildWindow,
+                TestForm_1.TestForm
             ],
             exports: [
                 common_1.CommonModule,
@@ -63,9 +72,12 @@ var SharedModule = (function () {
                 CkEditor_1.FileSelect,
                 Datetimepicker_1.Datetimepicker,
                 juGrid_1.juGrid,
-                rowEditor_1.rowEditor
+                rowEditor_1.rowEditor,
+                juParentWindow_1.juParentWindow,
+                juChildWindow_1.juChildWindow,
+                TestForm_1.TestForm
             ],
-            providers: []
+            providers: [compiler_1.COMPILER_PROVIDERS]
         }), 
         __metadata('design:paramtypes', [])
     ], SharedModule);

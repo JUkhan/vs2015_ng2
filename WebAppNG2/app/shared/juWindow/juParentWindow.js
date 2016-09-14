@@ -74,9 +74,7 @@ var juParentWindow = (function () {
                 comOptions.child = compRef;
                 compRef.instance.windowId = id;
                 _this.service.setProperty(id);
-                _this.appRef._loadComponent(compRef);
                 compRef.onDestroy(function () {
-                    _this.appRef._unloadComponent(compRef);
                 });
                 return compRef;
             });

@@ -4,12 +4,13 @@
 import { CrudExample }         from './grid/crudExample';
 import { TreeExample }         from './grid/treeExample';
 import {CellEditExample}       from './grid/cellEditExample';
-
+import {WindowComponent}       from './grid/windowExample';
 
 const routes: Routes = [
     { path: '', component: CrudExample },   
     { path: 'cellEdit', component: CellEditExample },
-    { path: 'treeView', component: TreeExample }
+    { path: 'treeView', component: TreeExample },
+    { path: 'window', component: WindowComponent }
 ];
 
 export const routing = RouterModule.forChild(routes);

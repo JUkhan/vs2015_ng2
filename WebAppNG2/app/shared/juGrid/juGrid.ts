@@ -307,7 +307,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
                 validation = ` <i [ngClass]="isValid('${item.field}', i)" class="validation fa fa-info-circle" [title]="getValidationMsg('${item.field}', i)"></i>`;
             }
             item.width = item.width || 120;
-            style = item.width ? `style="display:inline-block;" [style.width.px]="config.columnDefs[${index}].width-40"` : '';
+            style = item.width ? `style="display:inline-block;" [style.width.px]="(config.columnDefs[${index}].width-(isValid('${item.field}', i)['validation-msg-hide']?18:40))"` : '';
             item.headerName = item.headerName || '';
             header = item.headerName.replace(/(<([^>]+)>)/ig, '');
             switch (item.type) {

@@ -33,7 +33,7 @@ var juPager = (function () {
             .distinctUntilChanged()
             .pluck('target', 'value')
             .map(function (_) { return parseInt(_); })
-            .filter(function (_) { return _ > 0 && _ < _this.totalPage; })
+            .filter(function (_) { return _ > 0 && _ <= _this.getTotalPage(); })
             .subscribe(function (_) { return _this.powerAction(_); });
     };
     juPager.prototype.changePageSize = function (size) {

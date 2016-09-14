@@ -37,7 +37,7 @@ export class juPager implements OnInit, OnChanges {
             .distinctUntilChanged()
             .pluck('target', 'value')
             .map((_:any) =>parseInt(_))
-            .filter(_ => _ > 0 && _ < this.totalPage)
+            .filter(_ => _ > 0 && _ <= this.getTotalPage())
             .subscribe(_ => this.powerAction(_));  
     }
     changePageSize(size) {

@@ -2,6 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { FormsModule }          from '@angular/forms';
 import { RouterModule }         from '@angular/router';
+import { COMPILER_PROVIDERS } from '@angular/compiler';
 
 import {juPanel}                from './juPanel/juPanel';
 import {juPanelContent}         from './juPanel/juPanelContent';
@@ -13,13 +14,16 @@ import {CkEditor, FileSelect}   from './juForm/CkEditor';
 import {Datetimepicker}         from './juForm/Datetimepicker';
 import {juGrid}                 from './juGrid/juGrid';
 import {rowEditor}              from './juGrid/rowEditor';
-//import {juParentWindow}         from './juWindow/juParentWindow';
-//import {juChildWindow}          from './juWindow/juChildWindow';
-//import {juWindowService}        from './juWindow/juWindowService';
+import {juParentWindow}         from './juWindow/juParentWindow';
+import {juChildWindow}          from './juWindow/juChildWindow';
+import {juWindowService}        from './juWindow/juWindowService';
+import {TestForm}        from './juForm/TestForm';
 
 import {UiService}              from './ui.service';
 import {AppService}             from './app.service';
 import {CanDeactivateGuard} from './canDeactivateGuard.service';
+import {juFormBuilder} from './juForm/juForm.builder';
+
 
 @NgModule({
     imports: [CommonModule, RouterModule, FormsModule],
@@ -34,7 +38,10 @@ import {CanDeactivateGuard} from './canDeactivateGuard.service';
         FileSelect,
         Datetimepicker,
         juGrid,
-        rowEditor       
+        rowEditor,
+        juParentWindow,
+        juChildWindow,
+        TestForm 
     ],
     exports: [
         CommonModule,
@@ -49,16 +56,19 @@ import {CanDeactivateGuard} from './canDeactivateGuard.service';
         FileSelect,
         Datetimepicker,
         juGrid,
-        rowEditor       
+        rowEditor,
+        juParentWindow,
+        juChildWindow,
+        TestForm  
     ],
-    providers: []
+    providers: [COMPILER_PROVIDERS]
 })
 export class SharedModule {
 
     static forRoot(): ModuleWithProviders {
         return {
             ngModule: SharedModule,
-            providers: [AppService, UiService, CanDeactivateGuard]
+            providers: [AppService, UiService, CanDeactivateGuard, juWindowService, juFormBuilder]
         };
     }
 }

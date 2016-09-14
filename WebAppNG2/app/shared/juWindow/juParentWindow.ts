@@ -2,6 +2,7 @@ import {Component, ViewChild, Renderer, ViewEncapsulation, ApplicationRef, Compo
 import {juChildWindow}            from './juChildWindow';
 import {juWindowService}          from './juWindowService';
 import {Subscription}             from 'rxjs/Rx';
+
 @Component({
     moduleId: module.id,
     selector: 'pw, .pw',
@@ -57,6 +58,7 @@ export class juParentWindow implements OnInit, OnDestroy {
         this.createPlaceHolder(id);
     }
     private createPlaceHolder(id: string) {
+       
         if (typeof this.childList[id] === 'undefined') {
             this.placeHolder = this.renderer.createElement(this.container.nativeElement, 'div');
             this.childList[id] = {};
@@ -74,10 +76,10 @@ export class juParentWindow implements OnInit, OnDestroy {
                 .then((compRef: ComponentRef<juChildWindow>) => {
                     comOptions.child = compRef;
                     compRef.instance.windowId = id;
-                    this.service.setProperty(id);
-                    (<any>this.appRef)._loadComponent(compRef);
+                    this.service.setProperty(id);                    
+                    //(<any>this.appRef)._loadComponent(compRef);
                     compRef.onDestroy(() => {
-                        (<any>this.appRef)._unloadComponent(compRef);
+                        //(<any>this.appRef)._unloadComponent(compRef);
                     });
                     return compRef;
                 })

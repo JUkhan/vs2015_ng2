@@ -13,6 +13,7 @@ var shared_module_1 = require('../shared/shared.module');
 var crudExample_1 = require('./grid/crudExample');
 var treeExample_1 = require('./grid/treeExample');
 var cellEditExample_1 = require('./grid/cellEditExample');
+var windowExample_1 = require('./grid/windowExample');
 var setting_routes_1 = require('./setting.routes');
 var SettingModule = (function () {
     function SettingModule() {
@@ -20,7 +21,7 @@ var SettingModule = (function () {
     SettingModule = __decorate([
         core_1.NgModule({
             imports: [shared_module_1.SharedModule, setting_routes_1.routing],
-            declarations: [crudExample_1.CrudExample, cellEditExample_1.CellEditExample, treeExample_1.TreeExample],
+            declarations: [crudExample_1.CrudExample, cellEditExample_1.CellEditExample, treeExample_1.TreeExample, windowExample_1.WindowComponent],
             exports: []
         }), 
         __metadata('design:paramtypes', [])

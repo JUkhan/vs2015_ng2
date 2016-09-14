@@ -186,8 +186,6 @@
   <ItemGroup>
     <Content Include="app\app.component.html" />
     <Content Include="app\home\home.component.html" />
-    <Content Include="app\setting\upload\upload.css" />
-    <Content Include="app\setting\upload\upload.html" />
     <Content Include="app\shared\juForm\juForm.css" />
     <Content Include="app\shared\juForm\juForm.html" />
     <Content Include="app\shared\juForm\juSelect.css" />
@@ -626,17 +624,19 @@
     <TypeScriptCompile Include="app\setting\grid\cellEditExample.ts" />
     <TypeScriptCompile Include="app\setting\grid\crudExample.ts" />
     <TypeScriptCompile Include="app\setting\grid\treeExample.ts" />
+    <TypeScriptCompile Include="app\setting\grid\windowExample.ts" />
     <TypeScriptCompile Include="app\setting\setting.module.ts" />
     <TypeScriptCompile Include="app\setting\setting.routes.ts" />
-    <TypeScriptCompile Include="app\setting\upload\upload.ts" />
     <TypeScriptCompile Include="app\shared\app.service.ts" />
     <TypeScriptCompile Include="app\shared\canDeactivateGuard.service.ts" />
     <TypeScriptCompile Include="app\shared\juForm\CkEditor.ts" />
     <TypeScriptCompile Include="app\shared\juForm\Datetimepicker.ts" />
     <TypeScriptCompile Include="app\shared\juForm\FV.ts" />
+    <TypeScriptCompile Include="app\shared\juForm\juForm.builder.ts" />
     <TypeScriptCompile Include="app\shared\juForm\juForm.d.ts" />
     <TypeScriptCompile Include="app\shared\juForm\juForm.ts" />
     <TypeScriptCompile Include="app\shared\juForm\juSelect.ts" />
+    <TypeScriptCompile Include="app\shared\juForm\TestForm.ts" />
     <TypeScriptCompile Include="app\shared\juGrid\juGrid.d.ts" />
     <TypeScriptCompile Include="app\shared\juGrid\juGrid.ts" />
     <TypeScriptCompile Include="app\shared\juGrid\NumberFilter.ts" />
