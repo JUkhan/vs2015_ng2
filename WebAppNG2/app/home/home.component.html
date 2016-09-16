@@ -1,8 +1,7 @@
 ﻿
-<div 
-     juForm 
-     viewMode="panel" 
-     (onLoad)="myFormLoad($event)" 
+<div juForm
+     viewMode="panel"
+     (onLoad)="myFormLoad($event)"
      [options]="myOptions">
 
 </div>
@@ -15,3 +14,250 @@
         <p>content----2</p>
     </content>
 </juPanel>
+<br />
+<div class="ju-grid">
+    <div style="overflow:hidden" id="headerDiv">
+        <div style="width:2300px;">
+            <table  class="table table-bordered">
+                <thead><tr><th style="height: 40px; width: 50px;"><a href="javascript:;" title="New item"><b class="fa fa-plus-circle"></b> </a></th><th style="height: 40px; width: 120px;"><b class="fa fa-sort not-active"></b> <b class="fa fa-filter icon-hide"></b> <span>Name</span><a class="filter-bar icon-hide" href="javascript:;" title="Show filter window."><b class="fa fa-filter"></b></a></th><th style="height: 40px; width: 120px;"><b class="fa fa-sort not-active"></b> <b class="fa fa-filter icon-hide"></b> <span>Education</span><a class="filter-bar icon-hide" href="javascript:;" title="Show filter window."><b class="fa fa-filter"></b></a></th><th style="height: 40px; width: 120px;"><b class="fa fa-sort not-active"></b> <b class="fa fa-filter icon-hide"></b> <span>Age</span><a class="filter-bar icon-hide" href="javascript:;" title="Show filter window."><b class="fa fa-filter"></b></a></th><th style="height: 40px; width: 120px;"> <span>Address</span></th><th style="height: 40px; width: 300px;"> <span>Description</span></th></tr></thead>
+            </table>
+        </div>
+    </div>
+
+    <div style="height:220px;overflow:auto" itemscope (scroll)="tblScroll($event)">
+        <div style="width:2300px">
+            <table class="table table-bordered table-striped ">
+                <tbody><!--template bindings={}--><tr><td style="height: 40px; width: 50px;" title="undefined"><a href="javascript:;" title="Edit"><b class="fa fa-pencil"></b></a> <a href="javascript:;" title="Remove"><b class="fa fa-remove"></b></a> </td><td style="height: 40px; width: 120px;" title="Abdulla-up">Abdulla-up</td><td style="height: 40px; width: 120px;" title="1">CSE</td><td style="height: 40px; width: 120px;" title="23">23</td><td style="height: 40px; width: 120px;" title="101">Address-1</td><td style="height: 40px; width: 300px;" title="Description">Description</td></tr><tr><td style="height: 40px; width: 50px;" title="undefined"><a href="javascript:;" title="Edit"><b class="fa fa-pencil"></b></a> <a href="javascript:;" title="Remove"><b class="fa fa-remove"></b></a> </td><td style="height: 40px; width: 120px;" title="Arif1">Arif1</td><td style="height: 40px; width: 120px;" title="2">BBA</td><td style="height: 40px; width: 120px;" title="22">22</td><td style="height: 40px; width: 120px;" title="102">Address-2</td><td style="height: 40px; width: 300px;" title="Description">Description</td></tr><tr><td style="height: 40px; width: 50px;" title="undefined"><a href="javascript:;" title="Edit"><b class="fa fa-pencil"></b></a> <a href="javascript:;" title="Remove"><b class="fa fa-remove"></b></a> </td><td style="height: 40px; width: 120px;" title="Sobuj">Sobuj</td><td style="height: 40px; width: 120px;" title="3">MBA</td><td style="height: 40px; width: 120px;" title="25">25</td><td style="height: 40px; width: 120px;" title="103">Address-3</td><td style="height: 40px; width: 300px;" title="Description">Description</td></tr><tr><td style="height: 40px; width: 50px;" title="undefined"><a href="javascript:;" title="Edit"><b class="fa fa-pencil"></b></a> <a href="javascript:;" title="Remove"><b class="fa fa-remove"></b></a> </td><td style="height: 40px; width: 120px;" title="Fruk1">Fruk1</td><td style="height: 40px; width: 120px;" title="4">EEE</td><td style="height: 40px; width: 120px;" title="26">26</td><td style="height: 40px; width: 120px;" title="101">Address-1</td><td style="height: 40px; width: 300px;" title="Description">Description</td></tr><tr><td style="height: 40px; width: 50px;" title="undefined"><a href="javascript:;" title="Edit"><b class="fa fa-pencil"></b></a> <a href="javascript:;" title="Remove"><b class="fa fa-remove"></b></a> </td><td style="height: 40px; width: 120px;" title="Ranu1up">Ranu1up</td><td style="height: 40px; width: 120px;" title="1">CSE</td><td style="height: 40px; width: 120px;" title="27">27</td><td style="height: 40px; width: 120px;" title="102">Address-2</td><td style="height: 40px; width: 300px;" title="Description">Description</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div id="myGrid" style="width: 600px; height: 500px; overflow: hidden; outline: 0px; position: relative;" class="slickgrid_464790 ui-widget">
+    <div tabindex="0" hidefocus="" style="position:fixed;width:0;height:0;top:0;left:0;outline:0;"></div>
+    <div class="slick-header ui-state-default" style="overflow:hidden;position:relative;">
+        <div class="slick-header-columns" style="left: -1000px; width: 1703px;" unselectable="on">
+            <div class="ui-state-default slick-header-column" id="slickgrid_464790title" title="" style="width: 273px;">
+                <span class="slick-column-name">Title</span>
+                <div class="slick-resizable-handle"></div>
+            </div>
+            <div class="ui-state-default slick-header-column" id="slickgrid_464790duration" title="" style="width: 71px;">
+                <span class="slick-column-name">Duration</span>
+                <div class="slick-resizable-handle"></div>
+            </div>
+            <div class="ui-state-default slick-header-column" id="slickgrid_464790%" title="" style="width: 71px;">
+                <span class="slick-column-name">% Complete</span>
+                <div class="slick-resizable-handle"></div>
+            </div>
+            <div class="ui-state-default slick-header-column" id="slickgrid_464790start" title="" style="width: 71px;">
+                <span class="slick-column-name">Start</span>
+                <div class="slick-resizable-handle"></div>
+            </div>
+            <div class="ui-state-default slick-header-column" id="slickgrid_464790finish" title="" style="width: 71px;">
+                <span class="slick-column-name">Finish</span>
+                <div class="slick-resizable-handle"></div>
+            </div>
+            <div class="ui-state-default slick-header-column" id="slickgrid_464790effort-driven" title="" style="width: 71px;">
+                <span class="slick-column-name">Effort Driven</span>
+                <div class="slick-resizable-handle"></div>
+            </div>
+        </div>
+    </div>
+    <div class="slick-headerrow ui-state-default" style="overflow: hidden; position: relative; display: none;">
+        <div class="slick-headerrow-columns" style="width: 682px;"></div>
+        <div style="display: block; height: 1px; position: absolute; top: 0px; left: 0px; width: 703px;"></div>
+    </div>
+    <div class="slick-top-panel-scroller ui-state-default" style="overflow: hidden; position: relative; display: none;">
+        <div class="slick-top-panel" style="width:10000px"></div>
+    </div>
+    <div class="slick-viewport" style="width: 100%; overflow: auto; outline: 0px; position: relative; height: 473px;">
+        <div class="grid-canvas" style="height: 12500px; width: 682px;">
+            <div class="ui-widget-content slick-row even" style="top:450px">
+                <div class="slick-cell l0 r0">Task 18</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">42</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:475px">
+                <div class="slick-cell l0 r0">Task 19</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">62</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:500px">
+                <div class="slick-cell l0 r0">Task 20</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">24</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">true</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:525px">
+                <div class="slick-cell l0 r0">Task 21</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">56</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:550px">
+                <div class="slick-cell l0 r0">Task 22</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">38</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:350px">
+                <div class="slick-cell l0 r0">Task 14</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">31</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:375px">
+                <div class="slick-cell l0 r0">Task 15</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">45</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">true</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:400px">
+                <div class="slick-cell l0 r0">Task 16</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">23</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:425px">
+                <div class="slick-cell l0 r0">Task 17</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">16</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:225px">
+                <div class="slick-cell l0 r0">Task 9</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">56</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:250px">
+                <div class="slick-cell l0 r0">Task 10</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">19</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">true</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:275px">
+                <div class="slick-cell l0 r0">Task 11</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">61</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:300px">
+                <div class="slick-cell l0 r0">Task 12</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">68</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:325px">
+                <div class="slick-cell l0 r0">Task 13</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">46</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:125px">
+                <div class="slick-cell l0 r0">Task 5</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">70</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">true</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:150px">
+                <div class="slick-cell l0 r0">Task 6</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">59</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:175px">
+                <div class="slick-cell l0 r0">Task 7</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">36</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:200px">
+                <div class="slick-cell l0 r0">Task 8</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">50</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:50px">
+                <div class="slick-cell l0 r0">Task 2</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">13</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:75px">
+                <div class="slick-cell l0 r0">Task 3</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">0</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:100px">
+                <div class="slick-cell l0 r0">Task 4</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">10</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+            <div class="ui-widget-content slick-row even" style="top:0px">
+                <div class="slick-cell l0 r0">Task 0</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">61</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">true</div>
+            </div>
+            <div class="ui-widget-content slick-row odd" style="top:25px">
+                <div class="slick-cell l0 r0">Task 1</div>
+                <div class="slick-cell l1 r1">5 days</div>
+                <div class="slick-cell l2 r2">40</div>
+                <div class="slick-cell l3 r3">01/01/2009</div>
+                <div class="slick-cell l4 r4">01/05/2009</div>
+                <div class="slick-cell l5 r5">false</div>
+            </div>
+        </div>
+    </div>
+    <div tabindex="0" hidefocus="" style="position:fixed;width:0;height:0;top:0;left:0;outline:0;"></div>
+</div>

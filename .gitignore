@@ -1,11 +1,12 @@
 .idea
-typings/**
+typings
 scripts
 node_modules
 packages
 publish
 bin
 obj
+.vs
 jspm_packages
 link-checker-results.txt
 **/*npm-debug.log.*

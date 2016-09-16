@@ -146,6 +146,18 @@
     border-color:#fff;
 }
 
+.ju-grid {
+    border: 1px solid #ddd;
+}
+.ju-grid .table{
+     margin-bottom: 0px;
+}
+.ju-grid .header{
+     margin-bottom:0;
+     border-bottom: 0px solid transparent !important;
+     border-top: 0px solid transparent !important;
+}
+
 .tbl-scroll {
 }
 .tbl-scroll table {
@@ -161,7 +173,7 @@
     clear: both;
 }
 .tbl-scroll tbody {  
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
 }
 .tbl-scroll tbody td, .tbl-scroll thead th {    
     width:120px;
@@ -169,18 +181,16 @@
     white-space: nowrap;
     overflow: hidden;   
     text-overflow: ellipsis;
-    border-bottom: 1px solid transparent !important;
-    border-right: 1px solid transparent !important;
+    border-bottom: 0px solid transparent !important;
+    border-right: 0px solid transparent !important;
 }
 .tbl-scroll tbody td:first-child, .tbl-scroll thead th:first-child{
- border-left:solid 1px transparent !important;
+ border-left:solid 0px transparent !important;
 }
 .tbl-scroll thead th {   
-    border-bottom: 1px solid #ddd !important;    
+    border-bottom: 0px solid #ddd !important;    
 }
-/*.tbl-scroll thead th:last-child{ 
- background-color:#f9f9f9;
-}*/
+
 .not-active{
     color:rgba(0,0,0,0.2);
 }

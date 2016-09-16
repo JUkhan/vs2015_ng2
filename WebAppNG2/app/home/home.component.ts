@@ -5,7 +5,14 @@ import {FormOptions, FormElement} from '../shared/juForm/juForm.d';
 @Component({
     moduleId: module.id,
     selector: 'my-home',
-    templateUrl: './home.component.html'
+    templateUrl: './home.component.html',
+    styles: [`
+        .ju-grid{}
+        .ju-grid .table{
+
+            margin-bottom:0;
+        }
+    `]
 })
 export class HomeComponent implements OnInit, OnDestroy {
     msg = 'say:Hello World...';
@@ -14,7 +21,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() { }
     myOptions: any;
-   
+    tblScroll(e)
+    {
+        console.log(e);    
+        document.getElementById('headerDiv').scrollLeft = e.target.scrollLeft;
+    }
     initForm() {
 
         this.myOptions = {

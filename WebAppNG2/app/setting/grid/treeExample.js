@@ -32,10 +32,15 @@ var TreeExample = (function () {
             enableTreeView: true,
             lazyLoad: this.getChildData.bind(this),
             columnDefs: [
-                { headerName: 'Name', field: 'name', width: 250 },
-                { headerName: 'Education', field: 'education' },
-                { headerName: 'Age', field: 'age' },
-                { headerName: 'Address', field: 'address' },
+                { headerName: 'Name', sort: true, field: 'name', width: 250 },
+                { headerName: 'Education', sort: true, field: 'education' },
+                { headerName: 'Age', sort: true, field: 'age' },
+                { headerName: 'Address', sort: true, field: 'address' },
+                { headerName: 'Description', sort: true, width: 300, field: 'description' },
+                { headerName: 'Description', width: 300, field: 'description' },
+                { headerName: 'Description', width: 300, field: 'description' },
+                { headerName: 'Description', width: 300, field: 'description' },
+                { headerName: 'Description', width: 300, field: 'description' },
                 { headerName: 'Description', width: 300, field: 'description' }
             ]
         };

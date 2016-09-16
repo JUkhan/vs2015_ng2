@@ -264,18 +264,31 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         tpl.push(`<div [style.display]="config.message?'block':'none'" [class]="config.messageCss">{{config.message}}</div>`);
         if (this.options.pagerPos === 'top') {
             tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
-        }
-        tpl.push(`<div style="width:${this.getTotalWidth()}px">`);
-        tpl.push(`<table class="${this.options.classNames} ${this.options.scroll?'tbl-scroll':''}">`);
-        tpl.push('<thead>');
-        tpl.push(this.getHeader(this.options.columnDefs));
-        tpl.push('</thead>');
-        tpl.push(`<tbody (click)="hideFilterWindow()" style="max-height:${this.options.height}px">`);
-        tpl.push(this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView());
-        tpl.push('</tbody>');
-        tpl.push('</table>');
-        tpl.push('</div>');
-        if (this.options.pagerPos === 'bottom') {
+        }        
+        tpl.push(`<div class="ju-grid">
+            <div style="overflow:hidden" #headerDiv>
+                <div style="width:${this.getTotalWidth()}px;">
+                    <table  class="${this.options.classNames} header tbl-scroll">
+                        <thead>
+                            ${this.getHeader(this.options.columnDefs)}
+                        </thead>
+                     </table>
+                </div>
+            </div>
+
+            <div style="max-height:${this.options.height}px;overflow:auto;" itemscope (scroll)="tblScroll($event, headerDiv)">
+                <div style="width:${this.getTotalWidth()-22}px">
+                    <table class="${this.options.classNames} tbl-scroll">
+                        <tbody (click)="hideFilterWindow()" style="max-height:${this.options.height}px">
+                            ${this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()}
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+        </div>`);
+        if (this.options.pagerPos === 'bottom')
+        {
+            tpl.push('<div style="height:5px;"></div>');
             tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
         }
     }
@@ -517,7 +530,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
             this.options.columnDefs = colDef;
         }
         if (this.options.scroll) {
-            this.headerHtml[0].push(`<th style="width:17px;height:${this.options.headerHeight}px">&nbsp;</th>`);
+            //this.headerHtml[0].push(`<th style="width:17px;height:${this.options.headerHeight}px">&nbsp;</th>`);
         }
         return this.headerHtml.map(_ => `<tr>${_.join('')}</tr>`).reduce((p, c) => p + c, '');
     }
@@ -675,7 +688,8 @@ function getComponent(obj: any) {
         config: any = {};
         formObj: juForm;
         viewList: any[] = [];
-        _copyOfData: any;        
+        _copyOfData: any;
+        private isColResize: boolean = false;      
         private pager: juPager;
         private slideState: string = 'down';
         constructor(private renderer: Renderer, private el: ElementRef) {
@@ -702,36 +716,42 @@ function getComponent(obj: any) {
                 this.columnResizing();
             }
         }
-      
+       private tblScroll(e, headerDiv){
+           headerDiv.scrollLeft = e.target.scrollLeft;
+       }
         private columnResizing() {
 
             let thList: any[] = this.el.nativeElement.querySelectorAll('table thead tr th'),
 
                 mousemove$ = Observable.fromEvent(document, 'mousemove'),
                 mouseup$ = Observable.fromEvent(document, 'mouseup'),
-
                 startX = 0, w1 = 0, w2 = 0, not_mousedown = true;
             thList.forEach((th, index) => {
                 Observable.fromEvent(th, 'mousemove')
-                    .filter(_ => index!==0 && index + 1 !== thList.length)
-                    .filter((e: any) => {
-                        if (e.target.tagName === 'TH') {
-                            if (Math.abs(e.x - this.findPosX(e.target)) < 7) {
+                    .filter(_ => index !== 0 /*&& index + 1 !== thList.length*/)
+                    .filter((e: any) =>
+                    {
+                        if (e.target.tagName === 'TH')
+                        {
+                            if (Math.abs(e.x - jQuery(e.target).offset().left) < 7)
+                            {
                                 e.target.style.cursor = 'col-resize';
                                 return true;
                             }
-                            if (not_mousedown) {
+                            if (not_mousedown)
+                            {
                                 e.target.style.cursor = 'default';
                             }
                             return false;
                         }
                         return false;
                     })
-                    .flatMap((e: any) => {
-                        return Observable.fromEvent(e.target, 'mousedown')                           
-                            .do((e: any) => {
-                                not_mousedown = false;
-                                //e.target.style.cursor = 'col-resize';
+                    .flatMap((e: any) =>
+                    {
+                        return Observable.fromEvent(e.target, 'mousedown')
+                            .do((e: any) =>
+                            {
+                                not_mousedown = false; 
                                 startX = e.x;
                                 w1 = this.config.columnDefs[index - 1].width;
                                 w2 = this.config.columnDefs[index].width;
@@ -739,7 +759,8 @@ function getComponent(obj: any) {
                     })
                     .flatMap(e => mousemove$
                         .map((e: any) => e.x - startX)
-                        .takeUntil(mouseup$.do(e => not_mousedown = true)))
+                        .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } })
+                        .takeUntil(mouseup$.do(e => { not_mousedown = true; })))
                     .distinctUntilChanged()
                     .filter(e => e < 0 ? w1 + e > 20 : w2 - e > 20)
                     .subscribe(e => {                       
@@ -748,7 +769,9 @@ function getComponent(obj: any) {
                     });
             });
         }
-        private findPosX(obj) {
+        private findPosX(obj)
+        {
+            console.log(obj.offset());
             var curleft = 0;
             if (obj.offsetParent) {
                 while (obj.offsetParent) {
@@ -815,7 +838,9 @@ function getComponent(obj: any) {
             this.notifyFilter();
 
         }        
-        sort(colDef: any) {
+        sort(colDef: any)
+        {
+            if (this.isColResize) { this.isColResize = false; return;}            
             colDef.reverse = !(typeof colDef.reverse === 'undefined' ? true : colDef.reverse);
             this.config.columnDefs.forEach(_ => {
                 if (_ !== colDef) {
