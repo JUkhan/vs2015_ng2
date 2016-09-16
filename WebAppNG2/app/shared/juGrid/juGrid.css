@@ -13,7 +13,7 @@
 
 .filter-bar {
     float: right;
-    cursor: hand;
+    cursor: pointer;
     width: 20px;
     height: 20px;
     padding: 1px;
@@ -147,35 +147,39 @@
 }
 
 .ju-grid {
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
 }
 .ju-grid .table{
      margin-bottom: 0px;
 }
-.ju-grid .header{
-     margin-bottom:0;
-     border-bottom: 0px solid transparent !important;
-     border-top: 0px solid transparent !important;
+.ju-grid .theader{
+     margin-bottom:0;    
 }
 
-.tbl-scroll {
+.ju-grid .tbody{    
+     border-top: 0px solid transparent !important;
 }
-.tbl-scroll table {
+.ju-grid .tbody tr:first-child td{
+  border-top: 0px solid transparent !important;
+}
+.tbl-resize {
+}
+.tbl-resize table {
         width: 100%;
 }
-.tbl-scroll thead, .tbl-scroll tbody, .tbl-scroll tr, .tbl-scroll td, .tbl-scroll th { 
+.tbl-resize thead, .tbl-resize tbody, .tbl-resize tr, .tbl-resize td, .tbl-resize th { 
     display: block;
 }
-.tbl-scroll tr:after {
+.tbl-resize tr:after {
     content: ' ';
     display: block;
     visibility: hidden;
     clear: both;
 }
-.tbl-scroll tbody {  
+.tbl-resize tbody {  
     /*overflow-y: scroll;*/
 }
-.tbl-scroll tbody td, .tbl-scroll thead th {    
+.tbl-resize tbody td, .tbl-resize thead th {    
     width:120px;
     float: left;
     white-space: nowrap;
@@ -184,10 +188,10 @@
     border-bottom: 0px solid transparent !important;
     border-right: 0px solid transparent !important;
 }
-.tbl-scroll tbody td:first-child, .tbl-scroll thead th:first-child{
+.tbl-resize tbody td:first-child, .tbl-resize thead th:first-child{
  border-left:solid 0px transparent !important;
 }
-.tbl-scroll thead th {   
+.tbl-resize thead th {   
     border-bottom: 0px solid #ddd !important;    
 }
 

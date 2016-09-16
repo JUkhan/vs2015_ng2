@@ -76,8 +76,8 @@ var juGrid = (function () {
         this.options.pagerPos = this.options.pagerPos || 'top';
         this.options.pagerLeftPos = this.options.pagerLeftPos || 200;
         this.options.height = this.options.height || 500;
-        this.options.rowHeight = this.options.rowHeight || 40;
-        this.options.headerHeight = this.options.headerHeight || 40;
+        this.options.rowHeight = this.options.rowHeight || 0;
+        this.options.headerHeight = this.options.headerHeight || 0;
         this.options.linkPages = this.options.linkPages || 10;
         this.options.pageSize = this.options.pageSize || 10;
         this.options.confirmMessage = this.options.confirmMessage || 'Are you sure to remove this item?';
@@ -217,7 +217,7 @@ var juGrid = (function () {
         if (this.options.pagerPos === 'top') {
             tpl.push("<div [style.display]=\"viewList?.length?'block':'none'\" class=\"juPager\" [linkPages]=\"config.linkPages\" [pageSize]=\"config.pageSize\" [data]=\"data\" (onInit)=\"pagerInit($event)\" (pageChange)=\"onPageChange($event)\"></div>");
         }
-        tpl.push("<div class=\"ju-grid\">\n            <div style=\"overflow:hidden\" #headerDiv>\n                <div style=\"width:" + this.getTotalWidth() + "px;\">\n                    <table  class=\"" + this.options.classNames + " header tbl-scroll\">\n                        <thead>\n                            " + this.getHeader(this.options.columnDefs) + "\n                        </thead>\n                     </table>\n                </div>\n            </div>\n\n            <div style=\"max-height:" + this.options.height + "px;overflow:auto;\" itemscope (scroll)=\"tblScroll($event, headerDiv)\">\n                <div style=\"width:" + (this.getTotalWidth() - 22) + "px\">\n                    <table class=\"" + this.options.classNames + " tbl-scroll\">\n                        <tbody (click)=\"hideFilterWindow()\" style=\"max-height:" + this.options.height + "px\">\n                            " + (this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()) + "\n                        </tbody>\n                    </table>\n                </div>\n            </div>            \n        </div>");
+        tpl.push("<div class=\"ju-grid\" [ngStyle]=\"getStyle(tc1, tc2)\">\n            <div style=\"overflow:hidden\" #headerDiv>\n                <div style=\"width:" + this.getTotalWidth() + "px;\">\n                    <table  class=\"" + this.options.classNames + " theader " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <thead>\n                            " + this.getHeader(this.options.columnDefs) + "\n                        </thead>\n                     </table>\n                </div>\n            </div>\n\n            <div #tc1 style=\"max-height:" + this.options.height + "px;overflow:auto;\" itemscope (scroll)=\"tblScroll($event, headerDiv)\">\n                <div #tc2 style=\"width:" + (this.getTotalWidth() - 22) + "px\">\n                    <table class=\"" + this.options.classNames + " tbody " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <tbody (click)=\"hideFilterWindow()\">\n                            " + (this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()) + "\n                        </tbody>\n                    </table>\n                </div>\n            </div>            \n        </div>");
         if (this.options.pagerPos === 'bottom') {
             tpl.push('<div style="height:5px;"></div>');
             tpl.push("<div [style.display]=\"viewList?.length?'block':'none'\" class=\"juPager\" [linkPages]=\"config.linkPages\" [pageSize]=\"config.pageSize\" [data]=\"data\" (onInit)=\"pagerInit($event)\" (pageChange)=\"onPageChange($event)\"></div>");
@@ -245,7 +245,7 @@ var juGrid = (function () {
     juGrid.prototype.getHeaderName = function (item) {
     };
     juGrid.prototype.getCell = function (item, config, tpl, index) {
-        var style = '', change = '', validation = '', header = '', rowHeight = "style=\"height:" + this.options.rowHeight + "px\"";
+        var style = '', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? "style=\"height:" + this.options.rowHeight + "px\"" : '';
         if (item.type) {
             if (item.validators) {
                 validation = " <i [ngClass]=\"isValid('" + item.field + "', i)\" class=\"validation fa fa-info-circle\" [title]=\"getValidationMsg('" + item.field + "', i)\"></i>";
@@ -308,8 +308,8 @@ var juGrid = (function () {
         return tpl.join('');
     };
     juGrid.prototype.getNormalTD = function (item, index) {
-        var tpl = [];
-        tpl.push('<td ' + ("style=\"height:" + this.options.rowHeight + "px\" [title]=\"row." + item.field + "\" "));
+        var tpl = [], rowHeight = this.options.rowHeight > 0 ? "style=\"height:" + this.options.rowHeight + "px\"" : '';
+        tpl.push('<td ' + (rowHeight + " [title]=\"row." + item.field + "\" "));
         if (item.width) {
             tpl.push("[style.width.px]=\"config.columnDefs[" + index + "].width\"");
         }
@@ -433,8 +433,6 @@ var juGrid = (function () {
         if (rc > 1) {
             this.options.columnDefs = colDef;
         }
-        if (this.options.scroll) {
-        }
         return this.headerHtml.map(function (_) { return ("<tr>" + _.join('') + "</tr>"); }).reduce(function (p, c) { return p + c; }, '');
     };
     juGrid.prototype.traverseCell = function (cell, rs, headerRowFlag, colDef) {
@@ -455,7 +453,8 @@ var juGrid = (function () {
         }
         else {
             colDef.push(cell);
-            this.headerHtml[headerRowFlag].push("<th style=\"height:" + this.options.headerHeight + "px\" ");
+            var rh = this.options.headerHeight > 0 ? "style=\"height:" + this.options.headerHeight + "px\"" : '';
+            this.headerHtml[headerRowFlag].push("<th " + rh + " ");
             if (rs > 1) {
                 this.headerHtml[headerRowFlag].push(" valign=\"bottom\" rowspan=\"" + rs + "\"");
             }
@@ -636,13 +635,28 @@ function getComponent(obj) {
                 this.columnResizing();
             }
         };
+        TableComponent.prototype.getStyle = function (tc1, tc2) {
+            var style = {};
+            if (tc2.offsetWidth <= tc1.offsetWidth) {
+                style.border = 0;
+                style.width = tc2.offsetWidth + 20 + 'px';
+            }
+            else {
+                style.border = '1px solid #ddd';
+            }
+            if (tc1.offsetHeight === this.config.height) {
+                style.border = '1px solid #ddd';
+            }
+            return style;
+        };
         TableComponent.prototype.tblScroll = function (e, headerDiv) {
             headerDiv.scrollLeft = e.target.scrollLeft;
         };
         TableComponent.prototype.columnResizing = function () {
             var _this = this;
             var thList = this.el.nativeElement.querySelectorAll('table thead tr th'), mousemove$ = Rx_1.Observable.fromEvent(document, 'mousemove'), mouseup$ = Rx_1.Observable.fromEvent(document, 'mouseup'), startX = 0, w1 = 0, w2 = 0, not_mousedown = true;
-            thList.forEach(function (th, index) {
+            var _loop_1 = function(index) {
+                var th = thList[index];
                 Rx_1.Observable.fromEvent(th, 'mousemove')
                     .filter(function (_) { return index !== 0; })
                     .filter(function (e) {
@@ -679,7 +693,10 @@ function getComponent(obj) {
                     _this.config.columnDefs[index - 1].width = w1 + e;
                     _this.config.columnDefs[index].width = w2 - e;
                 });
-            });
+            };
+            for (var index = 0; index < thList.length; index++) {
+                _loop_1(index);
+            }
         };
         TableComponent.prototype.findPosX = function (obj) {
             console.log(obj.offset());
