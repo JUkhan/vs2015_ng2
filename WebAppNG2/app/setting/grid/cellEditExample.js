@@ -34,11 +34,11 @@ var CellEditExample = (function () {
         this.gridOptions = {
             quickSearch: true,
             pagerPos: 'bottom',
-            colResize: true,
+            colResize: false,
             rowHeight: 50,
             enableCellEditing: true,
             columnDefs: [
-                { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item"><b class="fa fa-plus-circle"></b> </a>', width: 30, cellRenderer: function (row, index) { return ++index; } },
+                { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item"><b class="fa fa-plus-circle"></b> </a>', width: 40, cellRenderer: function (row, index) { return ++index; } },
                 { headerName: 'Name', field: 'name', filter: 'set', sort: true },
                 { headerName: 'Education', field: 'education', filter: 'set', sort: true, change: this.changeEducation.bind(this), validators: FV_1.FV.required, type: 'juSelect', width: 160 },
                 { headerName: 'Age', field: 'age', filter: 'number', sort: true, type: 'number', width: 100, validators: FV_1.FV.required },
