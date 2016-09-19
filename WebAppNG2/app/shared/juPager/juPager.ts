@@ -41,7 +41,7 @@ export class juPager implements OnInit, OnChanges {
             .subscribe(_ => this.powerAction(_));  
     }
     changePageSize(size) {
-        this.pageSize = size;
+        this.pageSize = +size;
         this.groupNumber = 1;
         this.activePage = 1;
         this.sspFn ?

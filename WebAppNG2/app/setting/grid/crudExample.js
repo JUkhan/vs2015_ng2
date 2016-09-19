@@ -19,10 +19,10 @@ var CrudExample = (function () {
     CrudExample.prototype.ngOnInit = function () {
         var _this = this;
         this.initScholar();
-        this.service.get('dummyData/getEducations')
-            .subscribe(function (res) { return _this.educationList = res; });
-        this.service.get('dummyData/getAddress/1')
-            .subscribe(function (res) { return _this.addressList = res; });
+        Rx_1.Observable.forkJoin(this.service.get('dummyData/getEducations'), this.service.get('dummyData/getAddress/1')).subscribe(function (res) {
+            _this.educationList = res[0];
+            _this.addressList = res[1];
+        });
     };
     CrudExample.prototype.onLoad = function (grid) {
         var _this = this;
@@ -33,9 +33,6 @@ var CrudExample = (function () {
                 .setData('address', _this.addressList);
             _this.scholarList = list;
         });
-    };
-    CrudExample.prototype.getSSPFN = function (params) {
-        return Rx_1.Observable.of({ totalPage: 150, data: this.scholarList });
     };
     CrudExample.prototype.educationCellRender = function (row) {
         return this.educationList.find(function (_) { return _.value == row.education; }).name;

@@ -37,7 +37,7 @@ var juPager = (function () {
             .subscribe(function (_) { return _this.powerAction(_); });
     };
     juPager.prototype.changePageSize = function (size) {
-        this.pageSize = size;
+        this.pageSize = +size;
         this.groupNumber = 1;
         this.activePage = 1;
         this.sspFn ?
