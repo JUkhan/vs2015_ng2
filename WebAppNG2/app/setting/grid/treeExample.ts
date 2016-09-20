@@ -6,7 +6,7 @@ import {AppService}   from '../../shared/app.service';
 @Component({
     moduleId: module.id,
     selector: 'tree',
-    template: `
+    template: ` 
                 <div 
                      juGrid 
                      panelMode="primary" 

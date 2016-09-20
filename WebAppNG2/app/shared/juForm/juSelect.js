@@ -340,9 +340,12 @@ var juSelect = (function () {
         if (Array.isArray(vals)) {
             vals = vals.join(this.spliter);
         }
-        if (this.myForm) {
+        if (this.myForm.dynamicComponent) {
             this.myForm.dynamicComponent.instance
                 .vlidate_input(vals, this.config, !this.focusToValidate);
+        }
+        else {
+            this.myForm.componentRef.instance.vlidate_input(vals, this.config, !this.focusToValidate);
         }
         return !this.config.hideMsg;
     };
@@ -404,8 +407,6 @@ var juSelect = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'juSelect',
-            templateUrl: './juSelect.html',
-            styleUrls: ['./juSelect.css'],
             encapsulation: core_1.ViewEncapsulation.None,
             changeDetection: core_1.ChangeDetectionStrategy.Default,
             animations: [
@@ -415,7 +416,8 @@ var juSelect = (function () {
                     core_1.transition('up => down', [core_1.style({ height: 1 }), core_1.animate('300ms ease-in')]),
                     core_1.transition('down => up', core_1.animate('200ms ease-out'))
                 ])
-            ]
+            ],
+            template: "<div style=\"position:relative\">\n    <div class=\"ju-select form-control\" (click)=\"toggleOPtions($event)\"><span style=\"display:block;position:relative;top:3px\">{{selectedText}}</span><b style=\"right:5px;position:absolute;top:10px;color:#555;font-size:9px\">&#9660;</b></div>\n    <div  class=\"options\" [class.empty-options]=\"!searchData || searchData.length==0\">\n        <div  class=\"action\" *ngIf=\"!checkCssClass()\">\n            <div>\n                <label [hidden]=\"!(viewMode==='checkbox')\"> <input [checked]=\"isAllSelected\" (click)=\"checkAll($event.target.checked)\" type=\"checkbox\"  title=\"check all\"> Select All</label>\n                <input *ngIf=\"!hideSearch\" type=\"text\" (keyup)=\"search($event.target.value)\" placeholder=\"search item\">\n                <span *ngIf=\"viewMode==='select'\" (click)=\"checkAll(false)\" title=\"Unselect the item\" class=\"unselect\">&#10006;</span>\n            </div>\n        </div>\n        <div class=\"items\" >\n            <div class=\"option-host\" (click)=\"selectOption(item)\" *ngFor=\"let item of searchData\">\n                <div class=\"ju-option\" [class.selected]=\"item.selected\">\n                    <div class=\"header\" *ngIf=\"(viewMode==='select')\"><span class=\"title\" [innerHtml]=\"item.name\"></span><span class=\"sub-title\" *ngIf=\"item.subtitle\" [innerHtml]=\"item.subtitle\"></span></div>\n                    <div class=\"header\" *ngIf=\"(viewMode==='radio')\"><input type=\"radio\" name=\"xp0000\" [checked]=\"item.selected\"><span class=\"title\" style=\"padding-left:5px\"\n                            [innerHtml]=\"item.name\"></span><span class=\"sub-title\" *ngIf=\"item.subtitle\" [innerHtml]=\"item.subtitle\"></span></div>\n                    <div class=\"header\" *ngIf=\"(viewMode==='checkbox')\"><input type=\"checkbox\" [checked]=\"item.selected\"><span class=\"title\" style=\"padding-left:5px\" [innerHtml]=\"item.name\"></span>\n                        <span class=\"sub-title\" *ngIf=\"item.subtitle\" [innerHtml]=\"item.subtitle\"></span>\n                    </div>\n                    <div *ngIf=\"item.description\" class=\"description\" [innerHtml]=\"item.description\"></div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>"
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, ui_service_1.UiService])
     ], juSelect);

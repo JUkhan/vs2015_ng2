@@ -18,10 +18,6 @@ var HomeComponent = (function () {
         this.initForm();
     };
     HomeComponent.prototype.ngOnDestroy = function () { };
-    HomeComponent.prototype.tblScroll = function (e) {
-        console.log(e);
-        document.getElementById('headerDiv').scrollLeft = e.target.scrollLeft;
-    };
     HomeComponent.prototype.initForm = function () {
         var _this = this;
         this.myOptions = {
@@ -128,8 +124,7 @@ var HomeComponent = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'my-home',
-            templateUrl: './home.component.html',
-            styles: ["\n        .ju-grid{}\n        .ju-grid .table{\n\n            margin-bottom:0;\n        }\n    "]
+            templateUrl: './home.component.html'
         }), 
         __metadata('design:paramtypes', [])
     ], HomeComponent);

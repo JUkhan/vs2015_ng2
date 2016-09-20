@@ -52,7 +52,6 @@ var juPanelContent = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'content, [content]',
-            templateUrl: './juPanelContent.html',
             inputs: ['title', 'active'],
             encapsulation: core_1.ViewEncapsulation.None,
             animations: [
@@ -62,7 +61,8 @@ var juPanelContent = (function () {
                     core_1.transition('up => down', core_1.animate('300ms ease-in')),
                     core_1.transition('down => up', core_1.animate('300ms ease-out'))
                 ])
-            ]
+            ],
+            template: "<div [ngClass]=\"{'panel panel-default':panel.viewMode==='accordion', 'tab':panel.viewMode==='tab'}\">\n    <div (click)=\"slideToggle()\" *ngIf=\"panel.viewMode==='accordion'\" class=\"panel-heading cursor\">\n        <h3 class=\"panel-title\">{{title}} <b class=\"pull-right fa fa-{{active?'minus':'plus'}}-circle\"></b></h3>\n    </div>\n    <div [class.panel-body]=\"panel.viewMode==='accordion'\" [@slide]=\"slideState\">\n        <ng-content></ng-content>\n    </div>\n</div>\n"
         }), 
         __metadata('design:paramtypes', [juPanel_1.juPanel, core_1.ElementRef])
     ], juPanelContent);

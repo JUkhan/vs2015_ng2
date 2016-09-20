@@ -54,10 +54,8 @@ var TestForm = (function () {
     };
     TestForm.prototype.refreshContent = function () {
         var _this = this;
-        console.log('refresh...');
         this.initOptions();
         if (this.componentRef) {
-            console.log('desrtroy');
             this.componentRef.destroy();
         }
         this.typeBuilder
@@ -67,7 +65,6 @@ var TestForm = (function () {
                 .dynamicComponentTarget
                 .createComponent(factory);
             var component = _this.componentRef.instance;
-            console.log(_this.options);
             component.setConfig(_this.options, _this);
             if (_this.options.refreshBy) {
                 _this.setModel(_this.options.refreshBy);
@@ -120,7 +117,7 @@ var TestForm = (function () {
         }
         var item = this.options._events[key];
         if (item && item.field) {
-            var div = this._elementRef.nativeElement.nextSibling.firstChild;
+            var div = this._elementRef.nativeElement;
             switch (item.type) {
                 case 'juSelect':
                     return item.field.api.valueChanges;
@@ -224,7 +221,6 @@ var TestForm = (function () {
     TestForm = __decorate([
         core_1.Component({
             moduleId: module.id,
-            styleUrls: ['./juForm.css'],
             selector: 'df',
             template: "<div #dynamicContentPlaceHolder></div>",
             changeDetection: core_1.ChangeDetectionStrategy.Default

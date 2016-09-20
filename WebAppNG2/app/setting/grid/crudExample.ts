@@ -30,10 +30,14 @@ export class CrudExample implements OnInit {
     constructor(private service: AppService) { }
     ngOnInit() {
         this.initScholar();
-        this.service.get('dummyData/getEducations')
-            .subscribe(res => this.educationList = res);
-        this.service.get('dummyData/getAddress/1' )
-            .subscribe(res => this.addressList = res);
+        Observable.forkJoin(
+            this.service.get('dummyData/getEducations'),
+            this.service.get('dummyData/getAddress/1')
+        ).subscribe(res => {
+            this.educationList = res[0];
+            this.addressList = res[1]
+        });
+
     }
     private onLoad(grid: juGrid) {
         this.service.get('dummydata/GetScholarList')
@@ -44,14 +48,11 @@ export class CrudExample implements OnInit {
                 this.scholarList = list
             });
     }
-    getSSPFN(params: any) {
-        return Observable.of({ totalPage: 150, data: this.scholarList });
-    }
     educationCellRender(row) {
         return this.educationList.find(_ => _.value == row.education).name;
     }
     private initScholar() {
-        this.scholarGridOptions = {           
+        this.scholarGridOptions = {
             crud: true,
             columnDefs: [
                 { headerName: 'Name', field: 'name', sort: true, filter: 'set' },
@@ -61,7 +62,7 @@ export class CrudExample implements OnInit {
                     cellRenderer: this.educationCellRender.bind(this)
                 },
                 { headerName: 'Age', field: 'age', filter: 'number', sort: true },
-                { headerName: 'Address', field: 'address', cellRenderer: row => this.addressList.find(_=>_.value==row.address).name },
+                { headerName: 'Address', field: 'address', cellRenderer: row => this.addressList.find(_ => _.value == row.address).name },
                 { headerName: 'Description', width: 300, field: 'description' }
             ],
             formDefs: {
@@ -70,7 +71,7 @@ export class CrudExample implements OnInit {
                 labelSize: 3,
                 inputs: [
                     { field: 'name', label: 'Name', type: 'text', validators: [FV.required, FV.minLength(5)] },
-                    { field: 'education', width:222, label: 'Education', type: 'juSelect', validators: FV.required },
+                    { field: 'education', width: 222, label: 'Education', type: 'juSelect', validators: FV.required },
                     { field: 'address', label: 'Address', type: 'juSelect', validators: FV.required },
                     { field: 'age', label: 'Age', type: 'text', validators: [FV.required, FV.regex(/^\d+$/, 'Age should be a number')] },
                     { field: 'description', label: 'Description', type: 'textarea' }

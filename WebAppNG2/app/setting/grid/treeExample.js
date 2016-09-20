@@ -49,7 +49,7 @@ var TreeExample = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'tree',
-            template: "\n                <div \n                     juGrid \n                     panelMode=\"primary\" \n                     viewMode=\"panel\" \n                     title=\"Tree View Example\" \n                     (onLoad)=\"onLoad($event)\" \n                     [data]=\"scholarList\" \n                     [options]=\"scholarGridOptions\">\n\n                </div>",
+            template: " \n                <div \n                     juGrid \n                     panelMode=\"primary\" \n                     viewMode=\"panel\" \n                     title=\"Tree View Example\" \n                     (onLoad)=\"onLoad($event)\" \n                     [data]=\"scholarList\" \n                     [options]=\"scholarGridOptions\">\n\n                </div>",
             encapsulation: core_1.ViewEncapsulation.None
         }), 
         __metadata('design:paramtypes', [app_service_1.AppService])

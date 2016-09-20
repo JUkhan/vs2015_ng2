@@ -32,7 +32,7 @@ export class Datetimepicker implements OnInit, OnDestroy {
                         this.model[this.property] = e.format();
                     }
                     if (this.form) {
-                        this.form.dynamicComponent.instance
+                        this.form.componentRef.instance
                             .vlidate_input(e.format(), this.config);
                     }
                     this.notifyRowEditor.next(e.format());

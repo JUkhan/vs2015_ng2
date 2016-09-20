@@ -25,10 +25,10 @@ var WindowComponent = (function () {
             labelSize: 3,
             inputs: [
                 { field: 'name', label: 'Name', type: 'text', validators: [FV_1.FV.required, FV_1.FV.minLength(5)] },
-                { field: 'education', width: 222, label: 'Education', type: 'datepicker', validators: FV_1.FV.required },
+                { field: 'education', width: 222, label: 'Education', type: 'juSelect', validators: FV_1.FV.required },
                 { field: 'address', label: 'Address', type: 'text', validators: FV_1.FV.required },
                 { field: 'age', label: 'Age', type: 'text', validators: [FV_1.FV.required, FV_1.FV.regex(/^\d+$/, 'Age should be a number')] },
-                { field: 'description', label: 'Description', type: 'textarea' }
+                { field: 'description', label: 'Description', type: 'ckeditor' }
             ],
             buttons: {
                 'Save Change': { type: 'submit', cssClass: 'btn btn-success', click: this.submitScholar.bind(this) },
@@ -43,7 +43,7 @@ var WindowComponent = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'test-component',
-            template: "<div>  \n    <df [options]=\"formDefs\"></df></div>\n    ",
+            template: "<div>  \n                <df [options]=\"formDefs\"></df>\n            </div>\n    ",
             styles: ["\n          .wnav{margin-top:1px;}  \n    "],
             encapsulation: core_1.ViewEncapsulation.None
         }), 

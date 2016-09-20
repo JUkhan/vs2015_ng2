@@ -36,11 +36,23 @@ declare var jQuery: any;
 @Component({
     moduleId: module.id,
     selector: '.juGrid, [juGrid], juGrid',
-    templateUrl: './juGrid.html',
-    styleUrls: ['./juGrid.css'],
+    //templateUrl: './juGrid.html',
+    //styleUrls: ['./juGrid.css'],
     //directives: [juForm], 
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Default,
+    template:`<div class="grid-toolbar">
+        <div class="quickSearch" *ngIf="options.quickSearch">             
+                <div class="input-group stylish-input-group">
+                    <input type="text" class="form-control" (keyup)="search($event.target.value)" placeholder="Search" >
+                    <span class="input-group-addon">                        
+                            <span class="fa fa-search"></span>                         
+                    </span>
+                </div>            
+        </div>
+	</div>    
+    <juForm *ngIf="options.crud" viewMode="popup" title="Sample Form" (onLoad)="onFormLoad($event)" [options]="options.formDefs">
+    </juForm>`
 })
 
 export class juGrid implements OnInit, OnChanges, OnDestroy {
@@ -106,8 +118,8 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         this.options.pagerPos = this.options.pagerPos || 'top';
         this.options.pagerLeftPos = this.options.pagerLeftPos || 200;
         this.options.height = this.options.height || 500;        
-        this.options.rowHeight = this.options.rowHeight || 40;
-        this.options.headerHeight = this.options.headerHeight || 40;
+        this.options.rowHeight = this.options.rowHeight || 0;
+        this.options.headerHeight = this.options.headerHeight || 0;
         this.options.linkPages = this.options.linkPages || 10;
         this.options.pageSize = this.options.pageSize || 10;
         this.options.confirmMessage = this.options.confirmMessage || 'Are you sure to remove this item?';
@@ -264,11 +276,11 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         tpl.push(`<div [style.display]="config.message?'block':'none'" [class]="config.messageCss">{{config.message}}</div>`);
         if (this.options.pagerPos === 'top') {
             tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
-        }        
-        tpl.push(`<div class="ju-grid">
+        } //       
+        tpl.push(`<div class="ju-grid" [ngStyle]="getStyle(tc1, tc2)">
             <div style="overflow:hidden" #headerDiv>
                 <div style="width:${this.getTotalWidth()}px;">
-                    <table  class="${this.options.classNames} header tbl-scroll">
+                    <table  class="${this.options.classNames} theader ${this.options.colResize?'tbl-resize':''}">
                         <thead>
                             ${this.getHeader(this.options.columnDefs)}
                         </thead>
@@ -276,10 +288,10 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
                 </div>
             </div>
 
-            <div style="max-height:${this.options.height}px;overflow:auto;" itemscope (scroll)="tblScroll($event, headerDiv)">
-                <div style="width:${this.getTotalWidth()-22}px">
-                    <table class="${this.options.classNames} tbl-scroll">
-                        <tbody (click)="hideFilterWindow()" style="max-height:${this.options.height}px">
+            <div #tc1 style="max-height:${this.options.height}px;overflow:auto;" itemscope (scroll)="tblScroll($event, headerDiv)">
+                <div #tc2 style="width:${this.getTotalWidth()-22}px">
+                    <table class="${this.options.classNames} tbody ${this.options.colResize?'tbl-resize':''}">
+                        <tbody (click)="hideFilterWindow()">
                             ${this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()}
                         </tbody>
                     </table>
@@ -314,7 +326,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
 
     }
     private getCell(item, config: string, tpl: any[], index: number) {
-        var style = '', change = '', validation = '', header = '', rowHeight = `style="height:${this.options.rowHeight}px"`;
+        var style = '', change = '', validation = '', header = '', rowHeight =this.options.rowHeight>0? `style="height:${this.options.rowHeight}px"`:'';
         if (item.type) {
             if (item.validators) {
                 validation = ` <i [ngClass]="isValid('${item.field}', i)" class="validation fa fa-info-circle" [title]="getValidationMsg('${item.field}', i)"></i>`;
@@ -398,8 +410,8 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         return tpl.join('');
     }
     private getNormalTD(item: any, index: number) {
-        let tpl: any[] = [];
-        tpl.push('<td ' + `style="height:${this.options.rowHeight}px" [title]="row.${item.field}" `);
+        let tpl: any[] = [], rowHeight=this.options.rowHeight>0? `style="height:${this.options.rowHeight}px"`:'';
+        tpl.push('<td ' + `${rowHeight} [title]="row.${item.field}" `);
         if (item.width) {
             tpl.push(`[style.width.px]="config.columnDefs[${index}].width"`);
         }
@@ -529,9 +541,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
         if (rc > 1) {
             this.options.columnDefs = colDef;
         }
-        if (this.options.scroll) {
-            //this.headerHtml[0].push(`<th style="width:17px;height:${this.options.headerHeight}px">&nbsp;</th>`);
-        }
+       
         return this.headerHtml.map(_ => `<tr>${_.join('')}</tr>`).reduce((p, c) => p + c, '');
     }
     private _colIndex: number = 0;
@@ -555,7 +565,8 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
 
         } else {
             colDef.push(cell);
-            this.headerHtml[headerRowFlag].push(`<th style="height:${this.options.headerHeight}px" `);
+            let rh=this.options.headerHeight>0?`style="height:${this.options.headerHeight}px"`:'';
+            this.headerHtml[headerRowFlag].push(`<th ${rh} `);
             if (rs > 1) {
                 this.headerHtml[headerRowFlag].push(` valign="bottom" rowspan="${rs}"`);
             }
@@ -716,6 +727,19 @@ function getComponent(obj: any) {
                 this.columnResizing();
             }
         }
+        private getStyle(tc1, tc2) {           
+            let style: any= {};
+            if (tc2.offsetWidth <= tc1.offsetWidth) {
+                style.border = 0;
+                style.width = tc2.offsetWidth+20+'px';
+            } else {
+                style.border = '1px solid #ddd';
+            }            
+            if (tc1.offsetHeight === this.config.height) {
+                style.border = '1px solid #ddd';
+            }
+            return style;
+        }
        private tblScroll(e, headerDiv){
            headerDiv.scrollLeft = e.target.scrollLeft;
        }
@@ -726,7 +750,9 @@ function getComponent(obj: any) {
                 mousemove$ = Observable.fromEvent(document, 'mousemove'),
                 mouseup$ = Observable.fromEvent(document, 'mouseup'),
                 startX = 0, w1 = 0, w2 = 0, not_mousedown = true;
-            thList.forEach((th, index) => {
+            //thList.forEach((th, index) => 
+             for(let index=0; index<thList.length; index++) {
+                 let th=thList[index];
                 Observable.fromEvent(th, 'mousemove')
                     .filter(_ => index !== 0 /*&& index + 1 !== thList.length*/)
                     .filter((e: any) =>
@@ -767,7 +793,7 @@ function getComponent(obj: any) {
                             this.config.columnDefs[index - 1].width = w1 + e;
                             this.config.columnDefs[index].width = w2 - e;
                     });
-            });
+            }
         }
         private findPosX(obj)
         {
@@ -982,8 +1008,5 @@ function getComponent(obj: any) {
     return TableComponent;
 }
 function async_call(fx: Function, time = 0) {
-    let tid = setTimeout(() => {
-        fx();
-        clearTimeout(tid);
-    }, time);
+    let tid = setTimeout(() => { fx(); clearTimeout(tid);}, time);
 }

@@ -12,7 +12,7 @@ var core_1 = require('@angular/core');
 var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
 var compiler_1 = require('@angular/compiler');
-var juSelect_1 = require('../../../app/shared/juForm/juSelect');
+var shared_module_1 = require('../../../app/shared/shared.module');
 var juFormBuilder = (function () {
     function juFormBuilder(compiler) {
         this.compiler = compiler;
@@ -327,7 +327,6 @@ var juFormBuilder = (function () {
                 .compileModuleAndAllComponentsAsync(module)
                 .then(function (moduleWithFactories) {
                 factory = _.find(moduleWithFactories.componentFactories, { componentType: type });
-                _this._cacheOfFactories[options] = factory;
                 resolve(factory);
             });
         });
@@ -609,10 +608,10 @@ var juFormBuilder = (function () {
             RuntimeComponentModuleForJuForm = __decorate([
                 core_1.NgModule({
                     imports: [
-                        common_1.CommonModule, forms_1.FormsModule
+                        common_1.CommonModule, forms_1.FormsModule, shared_module_1.SharedModule
                     ],
                     declarations: [
-                        componentType, juSelect_1.juSelect
+                        componentType
                     ],
                 }), 
                 __metadata('design:paramtypes', [])

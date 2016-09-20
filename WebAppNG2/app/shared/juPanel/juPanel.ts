@@ -3,12 +3,21 @@ import {juPanelContent} from './juPanelContent';
 declare var jQuery: any;
 @Component({
     moduleId: module.id,
-    selector: 'juPanel,[juPanel]',
-    templateUrl: './juPanel.html',
-    styleUrls: ['./juPanel.css'],
+    selector: 'juPanel,[juPanel]',   
+    //styleUrls: ['juPanel.css'],
     inputs: ['viewMode'],
     outputs: ['onActive'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    template:`<div [class.card]="viewMode==='tab'">
+    <ul class="nav nav-tabs" *ngIf="viewMode==='tab'">
+        <li *ngFor="let pane of contentList" (click)="select(pane)" role="presentation" [class.active]="pane.active">
+            <a>{{pane.title}}</a>
+        </li>
+    </ul>
+    <div [class.tab-content]="viewMode==='tab'">
+        <ng-content></ng-content>
+    </div>
+</div>`
 })
 
 export class juPanel {

@@ -5,14 +5,7 @@ import {FormOptions, FormElement} from '../shared/juForm/juForm.d';
 @Component({
     moduleId: module.id,
     selector: 'my-home',
-    templateUrl: './home.component.html',
-    styles: [`
-        .ju-grid{}
-        .ju-grid .table{
-
-            margin-bottom:0;
-        }
-    `]
+    templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy {
     msg = 'say:Hello World...';
@@ -21,13 +14,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() { }
     myOptions: any;
-    tblScroll(e)
-    {
-        console.log(e);    
-        document.getElementById('headerDiv').scrollLeft = e.target.scrollLeft;
-    }
+    
     initForm() {
-
+        
         this.myOptions = {
             labelPos: 'left', title: 'Complex Form Example',
             labelSize: 2,
@@ -117,7 +106,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
 
-    myFormLoad(form: juForm) {
+    myFormLoad(form: juForm)
+    {
+        
         form.setData('country', [{ name: 'Bangladesh', value: 1 }, { name: 'India', value: 2 }])
             .setData('address1.country', [{ name: 'Bangladesh', value: 1 }, { name: 'India', value: 2 }])
             .setData('address2.country', [{ name: 'Bangladesh', value: 1 }, { name: 'India', value: 2 }]);

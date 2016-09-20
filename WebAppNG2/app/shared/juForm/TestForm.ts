@@ -11,17 +11,15 @@ import * as _ from 'lodash';
 declare var jQuery: any;
 
 @Component({
-    moduleId: module.id,
-    styleUrls: ['./juForm.css'],
+    moduleId: module.id,    
     selector: 'df',
     template: `<div #dynamicContentPlaceHolder></div>`,
     changeDetection: ChangeDetectionStrategy.Default
 })
 export class TestForm implements AfterViewInit, OnChanges, OnDestroy, OnInit {
-    // reference for a <div> with #dynamicContentPlaceHolder
+    
     @ViewChild('dynamicContentPlaceHolder', { read: ViewContainerRef })
-    protected dynamicComponentTarget: ViewContainerRef;
-    // this will be reference to dynamic content - to be able to destroy it
+    protected dynamicComponentTarget: ViewContainerRef;    
     protected componentRef: ComponentRef<IDynamicForm>;
 
     @Input('options')           options: any = {};
@@ -70,14 +68,10 @@ export class TestForm implements AfterViewInit, OnChanges, OnDestroy, OnInit {
         this.options.api = this;
     }
 
-    /** Get a Factory and create a component */
-
-    protected refreshContent() {
-        console.log('refresh...');
+    protected refreshContent() {       
         this.initOptions();
        
-        if (this.componentRef) {
-            console.log('desrtroy');
+        if (this.componentRef) {           
             this.componentRef.destroy();
         }
         this.typeBuilder
@@ -86,9 +80,8 @@ export class TestForm implements AfterViewInit, OnChanges, OnDestroy, OnInit {
                 this.componentRef = this
                     .dynamicComponentTarget
                     .createComponent(factory);               
-                let component = this.componentRef.instance;
-                ///
-                console.log(this.options);
+                const component = this.componentRef.instance;               
+               
                 component.setConfig(this.options, this);
                 if (this.options.refreshBy) {
                     this.setModel(this.options.refreshBy);
@@ -121,11 +114,11 @@ export class TestForm implements AfterViewInit, OnChanges, OnDestroy, OnInit {
     public ngOnChanges(changes: { [key: string]: SimpleChange }): void {       
         if (this.wasViewInitialized) {
             return;
-        }
-       // this.refreshContent();
+        }       
     }
     public ngOnDestroy() {
-        if (this.componentRef) {
+        if (this.componentRef)
+        {            
             this.componentRef.destroy();
             this.componentRef = null;
         }
@@ -142,8 +135,9 @@ export class TestForm implements AfterViewInit, OnChanges, OnDestroy, OnInit {
             return Observable.merge(..._observers).map(_ => this.getModel());
         }
         let item = this.options._events[key];
-        if (item && item.field) {
-            let div = this._elementRef.nativeElement.nextSibling.firstChild;
+        if (item && item.field)
+        {           
+            const div = this._elementRef.nativeElement;
             switch (item.type) {
 
                 case 'juSelect':
