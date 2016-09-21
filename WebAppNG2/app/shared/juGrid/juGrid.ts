@@ -36,11 +36,23 @@ declare var jQuery: any;
 @Component({
     moduleId: module.id,
     selector: '.juGrid, [juGrid], juGrid',
-    templateUrl: './juGrid.html',
-    styleUrls: ['./juGrid.css'],
+    //templateUrl: './juGrid.html',
+    //styleUrls: ['./juGrid.css'],
     //directives: [juForm], 
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Default,
+    template:`<div class="grid-toolbar">
+        <div class="quickSearch" *ngIf="options.quickSearch">             
+                <div class="input-group stylish-input-group">
+                    <input type="text" class="form-control" (keyup)="search($event.target.value)" placeholder="Search" >
+                    <span class="input-group-addon">                        
+                            <span class="fa fa-search"></span>                         
+                    </span>
+                </div>            
+        </div>
+	</div>    
+    <juForm *ngIf="options.crud" viewMode="popup" title="Sample Form" (onLoad)="onFormLoad($event)" [options]="options.formDefs">
+    </juForm>`
 })
 
 export class juGrid implements OnInit, OnChanges, OnDestroy {
@@ -421,8 +433,11 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
             });
 
         }
-        else if (item.cellRenderer) {
+        else if (item.cellRenderer) { 
             tpl.push(` [innerHTML]="config.columnDefs[${index}].cellRenderer(row,i,f, l)">`);
+        }
+        else if (item.exp) {
+            tpl.push(`>${item.exp}`);
         }
         else if (item.field) {
             tpl.push(`>{{row.${item.field}}}`);
@@ -478,11 +493,13 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
                 }
             }
             else if (item.field) {
+                let exp = item.exp ? item.exp : `{{${row}.${item.field}}}`;
                 if (index === 0) {
                     tpl.push(`><a *ngIf="${row}.hasChild||${row}.items" href="javascript:;" (click)="toggleChildView(${row})" title="Toggling for child view."><b class="fa fa-{{${row}.expand?'minus':'plus'}}-square-o"></b></a>
-                        {{${row}.${item.field}}}`);
-                } else {
-                    tpl.push(`>{{${row}.${item.field}}}`);
+                        ${exp}`);
+                }               
+                else {
+                    tpl.push(`>${exp}`);
                 }
             } else {
                 tpl.push(`>`);
@@ -667,7 +684,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy {
     }
 }
 
-function getComponent(obj: any) {
+function getComponent(obj: any) {    
     @Component({
         selector: 'dynamic-grid',
         template: obj.tpl,
@@ -996,8 +1013,5 @@ function getComponent(obj: any) {
     return TableComponent;
 }
 function async_call(fx: Function, time = 0) {
-    let tid = setTimeout(() => {
-        fx();
-        clearTimeout(tid);
-    }, time);
+    let tid = setTimeout(() => { fx(); clearTimeout(tid);}, time);
 }

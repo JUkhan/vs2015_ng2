@@ -30,11 +30,10 @@ var juPanel = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'juPanel,[juPanel]',
-            templateUrl: './juPanel.html',
-            styleUrls: ['./juPanel.css'],
             inputs: ['viewMode'],
             outputs: ['onActive'],
-            encapsulation: core_1.ViewEncapsulation.None
+            encapsulation: core_1.ViewEncapsulation.None,
+            template: "<div [class.card]=\"viewMode==='tab'\">\n    <ul class=\"nav nav-tabs\" *ngIf=\"viewMode==='tab'\">\n        <li *ngFor=\"let pane of contentList\" (click)=\"select(pane)\" role=\"presentation\" [class.active]=\"pane.active\">\n            <a>{{pane.title}}</a>\n        </li>\n    </ul>\n    <div [class.tab-content]=\"viewMode==='tab'\">\n        <ng-content></ng-content>\n    </div>\n</div>"
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef])
     ], juPanel);

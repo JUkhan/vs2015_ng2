@@ -35,7 +35,7 @@ var Datetimepicker = (function () {
                         _this.model[_this.property] = e.format();
                     }
                     if (_this.form) {
-                        _this.form.dynamicComponent.instance
+                        _this.form.componentRef.instance
                             .vlidate_input(e.format(), _this.config);
                     }
                     _this.notifyRowEditor.next(e.format());

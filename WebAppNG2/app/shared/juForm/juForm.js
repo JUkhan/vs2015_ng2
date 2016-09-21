@@ -593,7 +593,6 @@ var juForm = (function () {
             selector: 'juForm,[juForm],.juForm',
             encapsulation: core_1.ViewEncapsulation.None,
             template: '<div></div>',
-            styleUrls: ['./juForm.css'],
             changeDetection: core_1.ChangeDetectionStrategy.Default
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, core_1.DynamicComponentLoader, core_1.ViewContainerRef])

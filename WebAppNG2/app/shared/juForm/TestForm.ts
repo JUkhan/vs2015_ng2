@@ -2,7 +2,7 @@
 import { AfterViewInit, OnInit, OnDestroy}          from '@angular/core';
 import { OnChanges, SimpleChange, ComponentFactory} from '@angular/core';
 
-import {IDynamicForm, juFormBuilder} from './juForm.builder';
+import {IJUForm, juFormBuilder} from './juForm.builder';
 import {juSelect}              from './juSelect';
 import {Datetimepicker}        from './Datetimepicker';
 import {CkEditor, FileSelect}  from './CkEditor';
@@ -11,18 +11,16 @@ import * as _ from 'lodash';
 declare var jQuery: any;
 
 @Component({
-    moduleId: module.id,
-    styleUrls: ['./juForm.css'],
+    moduleId: module.id,    
     selector: 'df',
     template: `<div #dynamicContentPlaceHolder></div>`,
     changeDetection: ChangeDetectionStrategy.Default
 })
 export class TestForm implements AfterViewInit, OnChanges, OnDestroy, OnInit {
-    // reference for a <div> with #dynamicContentPlaceHolder
+    
     @ViewChild('dynamicContentPlaceHolder', { read: ViewContainerRef })
-    protected dynamicComponentTarget: ViewContainerRef;
-    // this will be reference to dynamic content - to be able to destroy it
-    protected componentRef: ComponentRef<IDynamicForm>;
+    protected dynamicComponentTarget: ViewContainerRef;    
+    protected componentRef: ComponentRef<IJUForm>;
 
     @Input('options')           options: any = {};
     @Input('model')             model: any;
@@ -70,25 +68,20 @@ export class TestForm implements AfterViewInit, OnChanges, OnDestroy, OnInit {
         this.options.api = this;
     }
 
-    /** Get a Factory and create a component */
-
-    protected refreshContent() {
-        console.log('refresh...');
+    protected refreshContent() {       
         this.initOptions();
        
-        if (this.componentRef) {
-            console.log('desrtroy');
+        if (this.componentRef) {           
             this.componentRef.destroy();
         }
         this.typeBuilder
             .createComponentFactory(this.options)
-            .then((factory: ComponentFactory<IDynamicForm>) => {                
+            .then((factory: ComponentFactory<IJUForm>) => {                
                 this.componentRef = this
                     .dynamicComponentTarget
                     .createComponent(factory);               
-                let component = this.componentRef.instance;
-                ///
-                console.log(this.options);
+                const component = this.componentRef.instance;               
+               
                 component.setConfig(this.options, this);
                 if (this.options.refreshBy) {
                     this.setModel(this.options.refreshBy);
@@ -121,11 +114,11 @@ export class TestForm implements AfterViewInit, OnChanges, OnDestroy, OnInit {
     public ngOnChanges(changes: { [key: string]: SimpleChange }): void {       
         if (this.wasViewInitialized) {
             return;
-        }
-       // this.refreshContent();
+        }       
     }
     public ngOnDestroy() {
-        if (this.componentRef) {
+        if (this.componentRef)
+        {            
             this.componentRef.destroy();
             this.componentRef = null;
         }
@@ -142,8 +135,9 @@ export class TestForm implements AfterViewInit, OnChanges, OnDestroy, OnInit {
             return Observable.merge(..._observers).map(_ => this.getModel());
         }
         let item = this.options._events[key];
-        if (item && item.field) {
-            let div = this._elementRef.nativeElement.nextSibling.firstChild;
+        if (item && item.field)
+        {           
+            const div = this._elementRef.nativeElement;
             switch (item.type) {
 
                 case 'juSelect':

@@ -332,6 +332,9 @@ var juGrid = (function () {
         else if (item.cellRenderer) {
             tpl.push(" [innerHTML]=\"config.columnDefs[" + index + "].cellRenderer(row,i,f, l)\">");
         }
+        else if (item.exp) {
+            tpl.push(">" + item.exp);
+        }
         else if (item.field) {
             tpl.push(">{{row." + item.field + "}}");
         }
@@ -386,11 +389,12 @@ var juGrid = (function () {
                 }
             }
             else if (item.field) {
+                var exp = item.exp ? item.exp : "{{" + row + "." + item.field + "}}";
                 if (index === 0) {
-                    tpl.push("><a *ngIf=\"" + row + ".hasChild||" + row + ".items\" href=\"javascript:;\" (click)=\"toggleChildView(" + row + ")\" title=\"Toggling for child view.\"><b class=\"fa fa-{{" + row + ".expand?'minus':'plus'}}-square-o\"></b></a>\n                        {{" + row + "." + item.field + "}}");
+                    tpl.push("><a *ngIf=\"" + row + ".hasChild||" + row + ".items\" href=\"javascript:;\" (click)=\"toggleChildView(" + row + ")\" title=\"Toggling for child view.\"><b class=\"fa fa-{{" + row + ".expand?'minus':'plus'}}-square-o\"></b></a>\n                        " + exp);
                 }
                 else {
-                    tpl.push(">{{" + row + "." + item.field + "}}");
+                    tpl.push(">" + exp);
                 }
             }
             else {
@@ -595,10 +599,9 @@ var juGrid = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: '.juGrid, [juGrid], juGrid',
-            templateUrl: './juGrid.html',
-            styleUrls: ['./juGrid.css'],
             encapsulation: core_1.ViewEncapsulation.None,
-            changeDetection: core_1.ChangeDetectionStrategy.Default
+            changeDetection: core_1.ChangeDetectionStrategy.Default,
+            template: "<div class=\"grid-toolbar\">\n        <div class=\"quickSearch\" *ngIf=\"options.quickSearch\">             \n                <div class=\"input-group stylish-input-group\">\n                    <input type=\"text\" class=\"form-control\" (keyup)=\"search($event.target.value)\" placeholder=\"Search\" >\n                    <span class=\"input-group-addon\">                        \n                            <span class=\"fa fa-search\"></span>                         \n                    </span>\n                </div>            \n        </div>\n\t</div>    \n    <juForm *ngIf=\"options.crud\" viewMode=\"popup\" title=\"Sample Form\" (onLoad)=\"onFormLoad($event)\" [options]=\"options.formDefs\">\n    </juForm>"
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, core_1.DynamicComponentLoader, core_1.ViewContainerRef])
     ], juGrid);
@@ -934,9 +937,6 @@ function getComponent(obj) {
 }
 function async_call(fx, time) {
     if (time === void 0) { time = 0; }
-    var tid = setTimeout(function () {
-        fx();
-        clearTimeout(tid);
-    }, time);
+    var tid = setTimeout(function () { fx(); clearTimeout(tid); }, time);
 }
 //# sourceMappingURL=juGrid.js.map

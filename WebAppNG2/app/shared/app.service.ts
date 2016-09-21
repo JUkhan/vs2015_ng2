@@ -1,5 +1,5 @@
 ﻿import {Injectable}   from '@angular/core';
-import {Http}         from '@angular/http';
+import {Http, Headers}         from '@angular/http';
 import {Observable, Subject}   from 'rxjs/Rx';
 
 declare var window: any;
@@ -10,9 +10,12 @@ export class AppService {
     overLayElement: any;
     private baseUrl: string = '';
     public notifier$: Subject<any>;
+    private headers: Headers;
     constructor(private http: Http) {
         this.notifier$ = new Subject();
-       
+        this.headers = new Headers();
+        this.headers.append('Content-Type', 'application/json');
+        this.headers.append('Accept', 'application/json');
     }
     private getBaseUrl() {
         if (this.baseUrl) {
@@ -55,8 +58,8 @@ export class AppService {
         return Observable.interval(interval).switchMap(res => this.get(url));
     }
     post(url, data): Observable<any> {
-        this.overlay(true);
-        return Observable.fromPromise(jQuery.post(this.getBaseUrl() + url, data))
+        this.overlay(true);        
+        return this.http.post(this.getBaseUrl() + url, JSON.stringify(data), { headers: this.headers })
             .do(this.hideOverlay.bind(this))
             .catch(this.errorHandler.bind(this));
     }
@@ -98,10 +101,7 @@ export class AppService {
                     }
                 }
             };
-            xhr.open('POST', url, true);
-            //xhr.setRequestHeader('Content-Type', 'application/json');    
-
-            //xhr.setRequestHeader('Authorization', 'Bearer api_token' + this.getToken());
+            xhr.open('POST', url, true);            
             xhr.send(formData);
 
         }));
@@ -116,44 +116,5 @@ export class AppService {
             this.overLayElement.hide();
         }
     }
-
-    // dummy data service   
-    get_d(url) {
-        return Observable.of(this.scholarList)
-    }
-    post_d(url, model) {
-        return Observable.of(model)
-    }
-    put_d(url, model) {
-        return Observable.of(model)
-    }
-    delete_d(url) {
-        return Observable.of(true);
-    }
-    scholarList: any[] = [
-        { id: 1, name: 'Abdulla', hasChild: true, education: 'CSE', address: 'Tangail', age: 23, description: 'Description..' },
-        { id: 2, name: 'Ariful', hasChild: true, education: 'BBA', address: 'Tangail', age: 27, description: 'Description..' },
-        { id: 3, name: 'Shofiqul', education: 'MBA', address: 'Tangail', age: 33, description: 'Description..' },
-        { id: 4, name: 'Siddika', education: 'CSE', address: 'Tangail', age: 35, description: 'Description..' }
-    ];
-    getChildData(row: any) {
-        return Observable.of([
-            { id: 3, name: 'child1', hasChild: true, education: 'MBA', address: 'Tangail', age: 33, description: 'Description..' },
-            { id: 4, name: 'child2', hasChild: true, education: 'CSE', address: 'Tangail', age: 35, description: 'Description..' }
-        ])
-    }
-
-    getUploadData(url: string) {
-        return Observable.of({
-            totalPage: 15, data: [...this.scholarList]
-        });
-    }
-    getEducations() {
-        return Observable.of([{ name: 'CSE', value: 'CSE' }, { name: 'BBA', value: 'BBA' }, { name: 'MBA', value: 'MBA' }]);
-    }
-    getEducations2() {
-        return [{ name: 'CSE', value: 'CSE' }, { name: 'BBA', value: 'BBA' }, { name: 'MBA', value: 'MBA' }];
-    }
-
     
 }

@@ -4,9 +4,22 @@ import {Observable, Subscription} from 'rxjs/Rx';
 @Component({
     moduleId: module.id,
     selector: 'child-window',
-    templateUrl: './juChildWindow.html',
+    //templateUrl: './juChildWindow.html',
     //inputs: ['title'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    template:`<div class="popup" #window (click)="onBodyClick()">
+    <div class="header" #header>
+        <span>{{title}}</span>
+        <span class="min-max-close">
+                    <a href="javascript:;" title="Minimize" (click)="minimizeWindow($event)"><b class="fa fa-minus"></b></a>
+                    <a href="javascript:;" title="{{isMax?'Maximize':'Normal'}}" (click)="expandWindow($event)"><b class="fa fa-{{isMax?'expand':'compress'}}"></b></a>
+                    <a href="javascript:;" title="Close" (click)="closeWindow($event)"><b class="fa fa-remove"></b></a>
+                </span>
+    </div>
+    <div class="popup-content" #placeholder>
+        
+    </div>
+</div>`
 })
 
 export class juChildWindow implements OnInit, OnDestroy, AfterViewInit {

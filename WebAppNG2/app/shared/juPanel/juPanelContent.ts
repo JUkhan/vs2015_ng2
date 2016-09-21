@@ -14,8 +14,7 @@ import {juPanel} from './juPanel';
 
 @Component({
     moduleId: module.id,
-    selector: 'content, [content]',
-    templateUrl: './juPanelContent.html',
+    selector: 'content, [content]',    
     inputs: ['title', 'active'],
     encapsulation: ViewEncapsulation.None,
     animations:[
@@ -25,7 +24,16 @@ import {juPanel} from './juPanel';
             transition('up => down', animate('300ms ease-in')),
             transition('down => up', animate('300ms ease-out'))
         ])
-    ]
+    ],
+    template: `<div [ngClass]="{'panel panel-default':panel.viewMode==='accordion', 'tab':panel.viewMode==='tab'}">
+    <div (click)="slideToggle()" *ngIf="panel.viewMode==='accordion'" class="panel-heading cursor">
+        <h3 class="panel-title">{{title}} <b class="pull-right fa fa-{{active?'minus':'plus'}}-circle"></b></h3>
+    </div>
+    <div [class.panel-body]="panel.viewMode==='accordion'" [@slide]="slideState">
+        <ng-content></ng-content>
+    </div>
+</div>
+`
 })
 
 export class juPanelContent implements OnInit, OnDestroy {

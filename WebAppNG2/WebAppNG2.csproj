@@ -186,6 +186,7 @@
   <ItemGroup>
     <Content Include="app\app.component.html" />
     <Content Include="app\home\home.component.html" />
+    <Content Include="app\shared\juComponents.css" />
     <Content Include="app\shared\juForm\juForm.css" />
     <Content Include="app\shared\juForm\juForm.html" />
     <Content Include="app\shared\juForm\juSelect.css" />

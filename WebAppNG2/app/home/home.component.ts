@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     myOptions: any;
     
     initForm() {
-
+        
         this.myOptions = {
             labelPos: 'left', title: 'Complex Form Example',
             labelSize: 2,
@@ -106,7 +106,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
 
-    myFormLoad(form: juForm) {
+    myFormLoad(form: juForm)
+    {
+        
         form.setData('country', [{ name: 'Bangladesh', value: 1 }, { name: 'India', value: 2 }])
             .setData('address1.country', [{ name: 'Bangladesh', value: 1 }, { name: 'India', value: 2 }])
             .setData('address2.country', [{ name: 'Bangladesh', value: 1 }, { name: 'India', value: 2 }]);

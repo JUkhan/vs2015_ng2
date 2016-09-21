@@ -16,7 +16,8 @@ import { FV}          from '../../shared/juForm/FV';
     moduleId: module.id,
     selector: 'test-component',
     template: `<div>  
-    <df [options]="formDefs"></df></div>
+                <df [options]="formDefs"></df>
+            </div>
     `,
    
     styles: [`
@@ -45,10 +46,10 @@ export class WindowComponent implements OnInit {
             labelSize: 3,
             inputs: [
                 { field: 'name', label: 'Name', type: 'text', validators: [FV.required, FV.minLength(5)] },
-                { field: 'education', width: 222, label: 'Education', type: 'datepicker', validators: FV.required },
+                { field: 'education', width: 222, label: 'Education', type: 'juSelect', validators: FV.required },
                 { field: 'address', label: 'Address', type: 'text', validators: FV.required },
                 { field: 'age', label: 'Age', type: 'text', validators: [FV.required, FV.regex(/^\d+$/, 'Age should be a number')] },
-                { field: 'description', label: 'Description', type: 'textarea' }
+                { field: 'description', label: 'Description', type: 'ckeditor' }
             ],
             buttons: {
                 'Save Change': { type: 'submit', cssClass: 'btn btn-success', click: this.submitScholar.bind(this) },

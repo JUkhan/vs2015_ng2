@@ -33,7 +33,7 @@ export class CrudExample implements OnInit {
         Observable.forkJoin(
             this.service.get('dummyData/getEducations'),
             this.service.get('dummyData/getAddress/1')
-        ).subscribe(res => {
+        ).subscribe(res => {          
             this.educationList = res[0];
             this.addressList = res[1]
         });

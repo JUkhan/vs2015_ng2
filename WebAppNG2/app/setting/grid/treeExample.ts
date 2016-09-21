@@ -6,7 +6,7 @@ import {AppService}   from '../../shared/app.service';
 @Component({
     moduleId: module.id,
     selector: 'tree',
-    template: `
+    template: ` 
                 <div 
                      juGrid 
                      panelMode="primary" 
@@ -43,7 +43,7 @@ export class TreeExample implements OnInit {
             enableTreeView: true,
             lazyLoad: this.getChildData.bind(this),            
             columnDefs: [
-                { headerName: 'Name', sort:true, field: 'name', width: 250 },
+                { headerName: 'Name', sort: true, field: 'name', width: 250 },
                 { headerName: 'Education', sort: true, field: 'education' },
                 { headerName: 'Age', sort: true, field: 'age'},
                 { headerName: 'Address', sort: true, field: 'address' },

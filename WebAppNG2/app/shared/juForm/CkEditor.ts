@@ -50,7 +50,7 @@ export class FileSelect {
         }
         this.model[this.propName] = filesName.join(';');
         this.model.FILES[this.propName]=files;
-         this.form.dynamicComponent.instance
+        this.form.componentRef.instance
                         .vlidate_input(filesName.join(';'), this.config);
     }
     hasValidExt(name: string) {

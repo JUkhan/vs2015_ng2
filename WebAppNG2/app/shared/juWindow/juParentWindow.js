@@ -92,10 +92,9 @@ var juParentWindow = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'pw, .pw',
-            templateUrl: './juParentWindow.html',
-            styleUrls: ['./juParentWindow.css'],
             encapsulation: core_1.ViewEncapsulation.None,
-            inputs: ['height']
+            inputs: ['height'],
+            template: "<div class=\"window\">    \n    <div class=\"wcontent\" #container></div>\n    <div class=\"footer\" #footer>\n        <ul class=\"list-group\">\n            <li class=\"list-group-item\" *ngFor=\"let item of minList\" [title]=\"item.title\">                 \n                <span>{{item.title}} </span>\n                <span class=\"\">\n                    <a href=\"javascript:;\" title=\"Open\" (click)=\"openWindow(item)\"><b class=\"fa fa-expand\"></b></a>\n                    <a href=\"javascript:;\" title=\"Close\" (click)=\"closeWindow(item)\"><b class=\"fa fa-remove\"></b></a>\n                 </span>\n                </li>\n            \n        </ul>\n    </div>\n</div>"
         }), 
         __metadata('design:paramtypes', [core_1.Renderer, core_1.DynamicComponentLoader, core_1.Injector, core_1.ApplicationRef, juWindowService_1.juWindowService])
     ], juParentWindow);

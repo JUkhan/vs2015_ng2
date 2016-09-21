@@ -6,10 +6,25 @@ import {Subscription}             from 'rxjs/Rx';
 @Component({
     moduleId: module.id,
     selector: 'pw, .pw',
-    templateUrl: './juParentWindow.html',
-    styleUrls: ['./juParentWindow.css'],    
+    //templateUrl: './juParentWindow.html',
+    //styleUrls: ['./juParentWindow.css'],    
     encapsulation: ViewEncapsulation.None,
-    inputs:['height']
+    inputs: ['height'],
+    template:`<div class="window">    
+    <div class="wcontent" #container></div>
+    <div class="footer" #footer>
+        <ul class="list-group">
+            <li class="list-group-item" *ngFor="let item of minList" [title]="item.title">                 
+                <span>{{item.title}} </span>
+                <span class="">
+                    <a href="javascript:;" title="Open" (click)="openWindow(item)"><b class="fa fa-expand"></b></a>
+                    <a href="javascript:;" title="Close" (click)="closeWindow(item)"><b class="fa fa-remove"></b></a>
+                 </span>
+                </li>
+            
+        </ul>
+    </div>
+</div>`
 })
 
 export class juParentWindow implements OnInit, OnDestroy {

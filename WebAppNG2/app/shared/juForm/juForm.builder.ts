@@ -3,10 +3,9 @@ import { CommonModule }  from "@angular/common";
 import { FormsModule }   from "@angular/forms";
 import {RuntimeCompiler} from '@angular/compiler';
 import {SharedModule} from '../../../app/shared/shared.module';
-import {juSelect} from '../../../app/shared/juForm/juSelect';
 import {Observable, Subject}   from 'rxjs/Rx';
 declare var jQuery: any;
-export interface IDynamicForm {    
+export interface IJUForm {    
     showMessage(message: string, messageCss?: string);
     focus();
     setModel(model: any);
@@ -23,11 +22,10 @@ export class juFormBuilder {
     private isTab: boolean = false;
     private isVertical: boolean;
     private activeTabs: any = {};
-    // wee need Dynamic component builder
-    constructor(protected compiler: RuntimeCompiler) { }
-    
-    // this object is singleton - so we can use this as a cache
-    //private _cacheOfFactories: { [templateKey: string]: ComponentFactory<IDynamicForm> } = {};
+   
+    constructor(protected compiler: RuntimeCompiler) { } 
+
+    //private _cacheOfFactories: { [templateKey: string]: ComponentFactory<IJUForm> } = {};
     private _cacheOfFactories: any = {};
     protected getTemplate() {
         var template: any[] = [], obj: any = {};
@@ -273,10 +271,7 @@ export class juFormBuilder {
         }
     }
     private _getGroupConfig(input: any) {
-        var group: any[] = [''];
-        //if (input.validators && input.validators.length >= 1) {
-        // group.push(Validators.compose(input.validators));
-        //}
+        var group: any[] = [''];         
         return group;
     }
     private _getDetailTemplate(fieldName: string, input: any, config: string) {
@@ -421,7 +416,7 @@ export class juFormBuilder {
     }
     //end of template
     public createComponentFactory(options: any)
-        : Promise<ComponentFactory<IDynamicForm>> {
+        : Promise<ComponentFactory<IJUForm>> {
         this.options = options;
         let tpl = this.getTemplate();
         options.isTab = this.isTab;
@@ -446,7 +441,7 @@ export class juFormBuilder {
                 .then((moduleWithFactories) => {
                     factory = _.find(moduleWithFactories.componentFactories, { componentType: type });
 
-                    this._cacheOfFactories[options] = factory;
+                    //this._cacheOfFactories[options] = factory;
 
                     resolve(factory);
                 });
@@ -458,11 +453,11 @@ export class juFormBuilder {
             selector: 'dynamic-form',
             template: tmpl,
         })
-        class DynamicFormComponent implements IDynamicForm {
+        class DynamicFormComponent implements IJUForm {
             form: any; model: any = {}; config: any = {}; buttons: any; active: any = ''; tabName: string = '';
             myForm: any = {};
             constructor(private el: ElementRef) {
-                //this.form = fb.group(obj.groupConfig);
+               
             }
             ngOnInit() {
                 if (this.config.viewMode === 'popup') {
@@ -536,40 +531,7 @@ export class juFormBuilder {
             valueChanges(key: string): Observable<string> {
                 return this.form.controls[key].valueChanges;
             }
-            //syncModel(type: string = 'set') {
-               
-            //    if (this.config.inputs) {
-            //        let item = getItem(this.config.inputs, (x: any) => x.type === 'ckeditor');
-            //        if (item) {
-            //            if (type == 'get') {
-            //                this.model[item.field] = item.api.getData();
-            //            } else {
-            //                let tid = setTimeout(() => {
-            //                    item.api.setData(this.model[item.field]);
-            //                    clearTimeout(tid);
-            //                }, 0);
-            //            }
-            //        }
-
-            //    }
-            //    else if (this.config.tabs) {
-            //        for (var tabName in this.config.tabs) {
-            //            let item = getItem(this.config.tabs[tabName], (x: any) => x.type === 'ckeditor');
-            //            if (item) {
-            //                if (type == 'get') {
-            //                    this.model[item.field] = item.api.getData();
-            //                } else {
-            //                    let tid = setTimeout(() => {
-            //                        item.api.setData(this.model[item.field]);
-            //                        clearTimeout(tid);
-            //                    }, 0);
-            //                }
-            //            }
-            //        }
-
-            //    }
-
-            //}
+            
             isTabEnable(tabName: string, tab?: any) {
 
                 if (tab) {
@@ -752,10 +714,10 @@ export class juFormBuilder {
     protected createComponentModule(componentType: any) {
         @NgModule({
             imports: [
-                CommonModule, FormsModule
+                CommonModule, FormsModule, SharedModule
             ],
             declarations: [
-                componentType, juSelect
+                componentType
             ],
         })
         class RuntimeComponentModuleForJuForm {

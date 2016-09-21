@@ -13,7 +13,7 @@ declare var jQuery: any;
     selector: 'juForm,[juForm],.juForm',
     encapsulation: ViewEncapsulation.None,
     template: '<div></div>',
-    styleUrls: ['./juForm.css'],
+    //styleUrls: ['./juForm.css'],
     changeDetection: ChangeDetectionStrategy.Default
 })
 export class juForm implements OnInit, OnDestroy, OnChanges {

@@ -23,9 +23,6 @@ var CellEditExample = (function () {
         this.service.get('dummydata/GetScholarList')
             .subscribe(function (res) { return _this.list = res; });
     };
-    CellEditExample.prototype.loadData = function (params) {
-        return this.service.getUploadData('scolar');
-    };
     CellEditExample.prototype.saveRecords = function () {
         console.log(this.gridOptions.api.grid.getUpdatedRecords());
     };
@@ -39,7 +36,7 @@ var CellEditExample = (function () {
             enableCellEditing: true,
             columnDefs: [
                 { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item"><b class="fa fa-plus-circle"></b> </a>', width: 40, cellRenderer: function (row, index) { return ++index; } },
-                { headerName: 'Name', field: 'name', filter: 'set', sort: true },
+                { headerName: 'Name', field: 'name', filter: 'set', sort: true, exp: '<b>{{row.name}}</b>' },
                 { headerName: 'Education', field: 'education', filter: 'set', sort: true, change: this.changeEducation.bind(this), validators: FV_1.FV.required, type: 'juSelect', width: 160 },
                 { headerName: 'Age', field: 'age', filter: 'number', sort: true, type: 'number', width: 100, validators: FV_1.FV.required },
                 { headerName: 'Birth Date', field: 'bdate', type: 'datepicker', width: 160, validators: FV_1.FV.required },

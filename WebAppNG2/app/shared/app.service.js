@@ -15,13 +15,10 @@ var AppService = (function () {
     function AppService(http) {
         this.http = http;
         this.baseUrl = '';
-        this.scholarList = [
-            { id: 1, name: 'Abdulla', hasChild: true, education: 'CSE', address: 'Tangail', age: 23, description: 'Description..' },
-            { id: 2, name: 'Ariful', hasChild: true, education: 'BBA', address: 'Tangail', age: 27, description: 'Description..' },
-            { id: 3, name: 'Shofiqul', education: 'MBA', address: 'Tangail', age: 33, description: 'Description..' },
-            { id: 4, name: 'Siddika', education: 'CSE', address: 'Tangail', age: 35, description: 'Description..' }
-        ];
         this.notifier$ = new Rx_1.Subject();
+        this.headers = new http_1.Headers();
+        this.headers.append('Content-Type', 'application/json');
+        this.headers.append('Accept', 'application/json');
     }
     AppService.prototype.getBaseUrl = function () {
         if (this.baseUrl) {
@@ -67,7 +64,7 @@ var AppService = (function () {
     };
     AppService.prototype.post = function (url, data) {
         this.overlay(true);
-        return Rx_1.Observable.fromPromise(jQuery.post(this.getBaseUrl() + url, data))
+        return this.http.post(this.getBaseUrl() + url, JSON.stringify(data), { headers: this.headers })
             .do(this.hideOverlay.bind(this))
             .catch(this.errorHandler.bind(this));
     };
@@ -122,35 +119,6 @@ var AppService = (function () {
         else {
             this.overLayElement.hide();
         }
-    };
-    AppService.prototype.get_d = function (url) {
-        return Rx_1.Observable.of(this.scholarList);
-    };
-    AppService.prototype.post_d = function (url, model) {
-        return Rx_1.Observable.of(model);
-    };
-    AppService.prototype.put_d = function (url, model) {
-        return Rx_1.Observable.of(model);
-    };
-    AppService.prototype.delete_d = function (url) {
-        return Rx_1.Observable.of(true);
-    };
-    AppService.prototype.getChildData = function (row) {
-        return Rx_1.Observable.of([
-            { id: 3, name: 'child1', hasChild: true, education: 'MBA', address: 'Tangail', age: 33, description: 'Description..' },
-            { id: 4, name: 'child2', hasChild: true, education: 'CSE', address: 'Tangail', age: 35, description: 'Description..' }
-        ]);
-    };
-    AppService.prototype.getUploadData = function (url) {
-        return Rx_1.Observable.of({
-            totalPage: 15, data: this.scholarList.slice()
-        });
-    };
-    AppService.prototype.getEducations = function () {
-        return Rx_1.Observable.of([{ name: 'CSE', value: 'CSE' }, { name: 'BBA', value: 'BBA' }, { name: 'MBA', value: 'MBA' }]);
-    };
-    AppService.prototype.getEducations2 = function () {
-        return [{ name: 'CSE', value: 'CSE' }, { name: 'BBA', value: 'BBA' }, { name: 'MBA', value: 'MBA' }];
     };
     AppService = __decorate([
         core_1.Injectable(), 
