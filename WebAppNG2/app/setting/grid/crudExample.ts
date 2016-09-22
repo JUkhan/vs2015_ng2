@@ -33,7 +33,7 @@ export class CrudExample implements OnInit {
         Observable.forkJoin(
             this.service.get('dummyData/getEducations'),
             this.service.get('dummyData/getAddress/1')
-        ).subscribe(res => {
+        ).subscribe(res => {          
             this.educationList = res[0];
             this.addressList = res[1]
         });
@@ -51,9 +51,14 @@ export class CrudExample implements OnInit {
     educationCellRender(row) {
         return this.educationList.find(_ => _.value == row.education).name;
     }
+    private getPagerData()
+    {
+        return Observable.of({ totalPage: 1234, data: this.scholarList})
+    }
     private initScholar() {
         this.scholarGridOptions = {
-            crud: true,
+            crud: true, quickSearch:true,
+            //sspFn: this.getPagerData.bind(this),
             columnDefs: [
                 { headerName: 'Name', field: 'name', sort: true, filter: 'set' },
                 {

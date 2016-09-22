@@ -37,10 +37,13 @@ var CrudExample = (function () {
     CrudExample.prototype.educationCellRender = function (row) {
         return this.educationList.find(function (_) { return _.value == row.education; }).name;
     };
+    CrudExample.prototype.getPagerData = function () {
+        return Rx_1.Observable.of({ totalPage: 1234, data: this.scholarList });
+    };
     CrudExample.prototype.initScholar = function () {
         var _this = this;
         this.scholarGridOptions = {
-            crud: true,
+            crud: true, quickSearch: true,
             columnDefs: [
                 { headerName: 'Name', field: 'name', sort: true, filter: 'set' },
                 {

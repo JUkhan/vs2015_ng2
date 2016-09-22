@@ -1,8 +1,6 @@
 ﻿import {Component, ComponentFactory, NgModule, Input, Injectable, ElementRef} from '@angular/core';
-import { CommonModule }  from "@angular/common";
-import { FormsModule }   from "@angular/forms";
 import {RuntimeCompiler} from '@angular/compiler';
-import {SharedModule} from '../../../app/shared/shared.module';
+import {SharedModule} from '../shared.module';
 import {Observable, Subject}   from 'rxjs/Rx';
 declare var jQuery: any;
 export interface IJUForm {    
@@ -12,6 +10,7 @@ export interface IJUForm {
     getModel();
     tabClick(tabName: string, e?: any, tab?: any);
     setConfig(options: any, form: any);
+    isValid(): boolean;
 }
 
 @Injectable()
@@ -24,9 +23,9 @@ export class juFormBuilder {
     private activeTabs: any = {};
    
     constructor(protected compiler: RuntimeCompiler) { } 
-
+       
     //private _cacheOfFactories: { [templateKey: string]: ComponentFactory<IJUForm> } = {};
-    private _cacheOfFactories: any = {};
+    
     protected getTemplate() {
         var template: any[] = [], obj: any = {};
         if (this.options.viewMode === 'panel') {
@@ -418,32 +417,18 @@ export class juFormBuilder {
     public createComponentFactory(options: any)
         : Promise<ComponentFactory<IJUForm>> {
         this.options = options;
-        let tpl = this.getTemplate();
+        const tpl = this.getTemplate();
         options.isTab = this.isTab;
         options.activeTabs = this.activeTabs;
-        let factory = this._cacheOfFactories[options];
-
-        if (factory) {
-            console.log("Module and Type are returned from cache")
-
-            return new Promise((resolve) => {
-                resolve(factory);
-            });
-        }
-
-        // unknown template ... let's create a Type for it
-        let type = this.createNewComponent(tpl);
-        let module = this.createComponentModule(type);       
+        
+        const type = this.createNewComponent(tpl);
+        const module = this.createComponentModule(type);       
 
         return new Promise((resolve) => {
             this.compiler
                 .compileModuleAndAllComponentsAsync(module)
                 .then((moduleWithFactories) => {
-                    factory = _.find(moduleWithFactories.componentFactories, { componentType: type });
-
-                    //this._cacheOfFactories[options] = factory;
-
-                    resolve(factory);
+                    resolve( _.find(moduleWithFactories.componentFactories, { componentType: type }));                    
                 });
         });
     }
@@ -714,7 +699,7 @@ export class juFormBuilder {
     protected createComponentModule(componentType: any) {
         @NgModule({
             imports: [
-                CommonModule, FormsModule, SharedModule
+                 SharedModule
             ],
             declarations: [
                 componentType

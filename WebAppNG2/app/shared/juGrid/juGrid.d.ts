@@ -21,8 +21,8 @@ export interface ColumnDefs{
     content?:string;
     viewMode?:'select'|'checkbox'|'radio';
     validators?:Function|Array<Function>;
-    search?:boolean;
-    
+    search?: boolean;
+    exp?: string;
 }
 export interface GridOptions{
     classNames?:string;

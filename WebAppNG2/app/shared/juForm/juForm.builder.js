@@ -9,17 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var common_1 = require("@angular/common");
-var forms_1 = require("@angular/forms");
 var compiler_1 = require('@angular/compiler');
-var shared_module_1 = require('../../../app/shared/shared.module');
+var shared_module_1 = require('../shared.module');
 var juFormBuilder = (function () {
     function juFormBuilder(compiler) {
         this.compiler = compiler;
         this.tabid = 0;
         this.isTab = false;
         this.activeTabs = {};
-        this._cacheOfFactories = {};
     }
     juFormBuilder.prototype.getTemplate = function () {
         var template = [], obj = {};
@@ -313,21 +310,13 @@ var juFormBuilder = (function () {
         var tpl = this.getTemplate();
         options.isTab = this.isTab;
         options.activeTabs = this.activeTabs;
-        var factory = this._cacheOfFactories[options];
-        if (factory) {
-            console.log("Module and Type are returned from cache");
-            return new Promise(function (resolve) {
-                resolve(factory);
-            });
-        }
         var type = this.createNewComponent(tpl);
         var module = this.createComponentModule(type);
         return new Promise(function (resolve) {
             _this.compiler
                 .compileModuleAndAllComponentsAsync(module)
                 .then(function (moduleWithFactories) {
-                factory = _.find(moduleWithFactories.componentFactories, { componentType: type });
-                resolve(factory);
+                resolve(_.find(moduleWithFactories.componentFactories, { componentType: type }));
             });
         });
     };
@@ -608,7 +597,7 @@ var juFormBuilder = (function () {
             RuntimeComponentModuleForJuForm = __decorate([
                 core_1.NgModule({
                     imports: [
-                        common_1.CommonModule, forms_1.FormsModule, shared_module_1.SharedModule
+                        shared_module_1.SharedModule
                     ],
                     declarations: [
                         componentType
