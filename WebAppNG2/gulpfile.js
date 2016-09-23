@@ -16,9 +16,9 @@ var ngPackageNames = [
     'http',
     'platform-browser',
     'platform-browser-dynamic',
-    'router',
-    'router-deprecated',
-    'upgrade',
+    'router'
+    //'router-deprecated',
+    //'upgrade',
 ];
 var angularLibsToMove = [
     paths.npmSrc + '/core-js/client/shim.min.js',
@@ -36,7 +36,7 @@ gulp.task('copy.libs', function () {
     ngPackageNames.forEach(_ => {
         gulp.src(`${paths.npmSrc}/@angular/${_}/bundles/*.min.js`).pipe(gulp.dest(`${paths.libTargetAngular2}/${_}/bundles/`));
     });
-    gulp.src(`${paths.npmSrc}/@angular/router/**/*.js`).pipe(gulp.dest(`${paths.libTargetAngular2}/router/`));
+    //gulp.src(`${paths.npmSrc}/@angular/router/**/*.js`).pipe(gulp.dest(`${paths.libTargetAngular2}/router/`));
     return true;
 });
 

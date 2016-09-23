@@ -187,12 +187,6 @@
     <Content Include="app\app.component.html" />
     <Content Include="app\home\home.component.html" />
     <Content Include="app\shared\juComponents.css" />
-    <Content Include="app\shared\juMenu\juMenu.css" />
-    <Content Include="app\shared\juMenu\juMenu.html" />
-    <Content Include="app\shared\juPager\juPager.html" />
-    <Content Include="app\shared\juPanel\juPanel.css" />
-    <Content Include="app\shared\juPanel\juPanel.html" />
-    <Content Include="app\shared\juPanel\juPanelContent.html" />
     <Content Include="app\shared\juWindow\juChildWindow.html" />
     <Content Include="app\shared\juWindow\juParentWindow.css" />
     <Content Include="app\shared\juWindow\juParentWindow.html" />
@@ -630,14 +624,12 @@
     <TypeScriptCompile Include="app\shared\juForm\juForm.builder.ts" />
     <TypeScriptCompile Include="app\shared\juForm\juSelect.ts" />
     <TypeScriptCompile Include="app\shared\juForm\juForm.ts" />
-    <TypeScriptCompile Include="app\shared\juGrid\juGrid.d.ts" />
     <TypeScriptCompile Include="app\shared\juGrid\juGrid.builder.ts" />
     <TypeScriptCompile Include="app\shared\juGrid\NumberFilter.ts" />
     <TypeScriptCompile Include="app\shared\juGrid\rowEditor.ts" />
     <TypeScriptCompile Include="app\shared\juGrid\SetFilter.ts" />
     <TypeScriptCompile Include="app\shared\juGrid\juGrid.ts" />
     <TypeScriptCompile Include="app\shared\juGrid\TextFilter.ts" />
-    <None Include="app\shared\juGrid\__juGrid.ts" />
     <TypeScriptCompile Include="app\shared\juMenu\juMenu.ts" />
     <TypeScriptCompile Include="app\shared\juPager\juPager.ts" />
     <TypeScriptCompile Include="app\shared\juPanel\juPanel.ts" />

@@ -32,15 +32,20 @@ var juGridBuilder = (function () {
         });
         return totalWidth + 25;
     };
+    juGridBuilder.prototype.getPager = function (isHeader) {
+        if (isHeader === void 0) { isHeader = false; }
+        var style = isHeader ? "style=\"position:absolute;top:7px;left:" + this.options.pagerLeftPos + "px\"" : '';
+        return "<div " + style + " [style.display]=\"viewList?.length?'block':'none'\" class=\"juPager\" [linkPages]=\"config.linkPages\" [enablePowerPage]=\"config.enablePowerPage\" [enablePageSearch]=\"config.enablePageSearch\" [pageSize]=\"config.pageSize\" [data]=\"data\" (onInit)=\"pagerInit($event)\" (pageChange)=\"onPageChange($event)\"></div>";
+    };
     juGridBuilder.prototype.renderTable = function (tpl) {
         tpl.push("<div [style.display]=\"config.message?'block':'none'\" [class]=\"config.messageCss\">{{config.message}}</div>");
         if (this.options.pagerPos === 'top') {
-            tpl.push("<div [style.display]=\"viewList?.length?'block':'none'\" class=\"juPager\" [linkPages]=\"config.linkPages\" [pageSize]=\"config.pageSize\" [data]=\"data\" (onInit)=\"pagerInit($event)\" (pageChange)=\"onPageChange($event)\"></div>");
+            tpl.push(this.getPager());
         }
         tpl.push("<div class=\"ju-grid\" [ngStyle]=\"getStyle(tc1, tc2)\">\n            <div style=\"overflow:hidden\" #headerDiv>\n                <div style=\"width:" + this.getTotalWidth() + "px;\">\n                    <table  class=\"" + this.options.classNames + " theader " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <thead>\n                            " + this.getHeader(this.options.columnDefs) + "\n                        </thead>\n                     </table>\n                </div>\n            </div>\n\n            <div #tc1 style=\"max-height:" + this.options.height + "px;overflow:auto;\" itemscope (scroll)=\"tblScroll($event, headerDiv)\">\n                <div #tc2 style=\"width:" + (this.getTotalWidth() - 22) + "px\">\n                    <table class=\"" + this.options.classNames + " tbody " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <tbody (click)=\"hideFilterWindow()\">\n                            " + (this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()) + "\n                        </tbody>\n                    </table>\n                </div>\n            </div>            \n        </div>");
         if (this.options.pagerPos === 'bottom') {
             tpl.push('<div style="height:5px;"></div>');
-            tpl.push("<div [style.display]=\"viewList?.length?'block':'none'\" class=\"juPager\" [linkPages]=\"config.linkPages\" [pageSize]=\"config.pageSize\" [data]=\"data\" (onInit)=\"pagerInit($event)\" (pageChange)=\"onPageChange($event)\"></div>");
+            tpl.push(this.getPager());
         }
     };
     juGridBuilder.prototype.getCellEditingView = function () {
@@ -348,7 +353,7 @@ var juGridBuilder = (function () {
         var tpl = [];
         if (this.options.viewMode && this.options.viewMode === "panel") {
             if (this.options.pagerPos === 'header') {
-                tpl.push("<div class=\"panel panel-" + this.options.panelMode + "\">\n            <div class=\"panel-heading\" style=\"position:relative\">\n                <h3 class=\"panel-title\">" + this.options.title + " <b style=\"cursor:pointer\" (click)=\"slideToggle()\" class=\"pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle\"></b></h3>\n                <div style=\"position:absolute;top:7px;left:" + this.options.pagerLeftPos + "px\" [style.display]=\"viewList?.length?'block':'none'\" class=\"juPager\" [linkPages]=\"config.linkPages\" [pageSize]=\"config.pageSize\" [data]=\"data\" (onInit)=\"pagerInit($event)\" (pageChange)=\"onPageChange($event)\"></div>\n                </div>\n            <div class=\"panel-body\" style=\"overflow:auto\">            \n            ");
+                tpl.push("<div class=\"panel panel-" + this.options.panelMode + "\">\n            <div class=\"panel-heading\" style=\"position:relative\">\n                <h3 class=\"panel-title\">" + this.options.title + " <b style=\"cursor:pointer\" (click)=\"slideToggle()\" class=\"pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle\"></b></h3>                \n                  " + this.getPager(true) + "\n                </div>\n            <div class=\"panel-body\" style=\"overflow:auto\">            \n            ");
             }
             else {
                 tpl.push("<div class=\"panel panel-" + this.options.panelMode + "\">\n            <div class=\"panel-heading\" style=\"cursor:pointer\" (click)=\"slideToggle()\">\n                <h3 class=\"panel-title\">" + this.options.title + " <b class=\"pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle\"></b></h3>\n            </div>\n            <div class=\"panel-body\" style=\"overflow:auto\">            \n            ");

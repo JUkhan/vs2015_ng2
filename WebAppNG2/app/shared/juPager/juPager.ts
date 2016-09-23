@@ -54,7 +54,7 @@ import {Observable} from 'rxjs/Rx';
     </li>
   </ul>
     <span [style.display]="enablePageSearch?'inline-block':'none'" style="position:relative;top:-8px" title="Enter Page Number">
-        <input #txtPageNo type="text" style="display:inline-block;width:50px;text-align:center" />
+        <input #txtPageNo type="text" style="display:inline-block;width:50px;text-align:center;color:#333;" />
     </span>
 </nav>`
 })

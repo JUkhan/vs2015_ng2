@@ -29,6 +29,7 @@ var CellEditExample = (function () {
     CellEditExample.prototype.initGrid = function () {
         var _this = this;
         this.gridOptions = {
+            viewMode: '!panel',
             quickSearch: true,
             pagerPos: 'bottom',
             colResize: false,
@@ -62,7 +63,7 @@ var CellEditExample = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'cellEdit',
-            template: "\n            <div \n                  class=\"juGrid\" \n                  title=\"Grid Cell Editable Example\"                  \n                  (onLoad)=\"gridLoad($event)\" \n                  [data]=\"list\" \n                  [options]=\"gridOptions\">\n\n             </div>\n            <button type=\"button\" class=\"btn btn-primary\" (click)=\"saveRecords()\">Save Records</button>\n            "
+            template: "\n            <div \n                  class=\"juGrid\"                                   \n                  (onLoad)=\"gridLoad($event)\" \n                  [data]=\"list\" \n                  [options]=\"gridOptions\">\n                   <template><button class=\"btn btn-primary\" (click)=\"saveRecords()\">Save Records</button></template>\n            </div>           \n            "
         }), 
         __metadata('design:paramtypes', [app_service_1.AppService])
     ], CellEditExample);

@@ -34,10 +34,8 @@ var rowEditor = (function () {
     };
     rowEditor.prototype.ngOnDestroy = function () {
         this.subsList.forEach(function (_) {
-            if (!_.isUnsubscribed) {
-                _.unsubscribe();
-                _.remove(_);
-            }
+            _.unsubscribe();
+            _.remove(_);
         });
     };
     rowEditor.prototype.isValid = function (fieldName) {

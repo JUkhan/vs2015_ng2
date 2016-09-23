@@ -31,9 +31,9 @@
       'http',
       'platform-browser',
       'platform-browser-dynamic',
-      'router',
-      'router-deprecated',
-      'upgrade',
+      'router'
+      //'router-deprecated',
+      //'upgrade'
     ];
 
     // Individual files (~300 requests):
@@ -53,7 +53,7 @@
     ngPackageNames.forEach(setPackageConfig);
 
     // No umd for router yet
-    packages['@angular/router'] = { main: 'index.js', defaultExtension: 'js' };   
+    //packages['@angular/router'] = { main: 'index.js', defaultExtension: 'js' };   
 
     var config = {
         map: map,

@@ -35,12 +35,17 @@ export class juGridBuilder
         });
         return totalWidth + 25;
     }
+    private getPager(isHeader=false)
+    {  
+        const style=isHeader? `style="position:absolute;top:7px;left:${this.options.pagerLeftPos}px"` :'';
+        return `<div ${style} [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [enablePowerPage]="config.enablePowerPage" [enablePageSearch]="config.enablePageSearch" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`;
+    }
     private renderTable(tpl: any[])
     {
         tpl.push(`<div [style.display]="config.message?'block':'none'" [class]="config.messageCss">{{config.message}}</div>`);
         if (this.options.pagerPos === 'top')
         {
-            tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
+            tpl.push(this.getPager());
         }
         tpl.push(`<div class="ju-grid" [ngStyle]="getStyle(tc1, tc2)">
             <div style="overflow:hidden" #headerDiv>
@@ -66,7 +71,7 @@ export class juGridBuilder
         if (this.options.pagerPos === 'bottom')
         {
             tpl.push('<div style="height:5px;"></div>');
-            tpl.push(`<div [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`);
+            tpl.push(this.getPager());
         }
     }
     private getCellEditingView()
@@ -485,8 +490,8 @@ export class juGridBuilder
             {
                 tpl.push(`<div class="panel panel-${this.options.panelMode}">
             <div class="panel-heading" style="position:relative">
-                <h3 class="panel-title">${this.options.title} <b style="cursor:pointer" (click)="slideToggle()" class="pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle"></b></h3>
-                <div style="position:absolute;top:7px;left:${this.options.pagerLeftPos}px" [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>
+                <h3 class="panel-title">${this.options.title} <b style="cursor:pointer" (click)="slideToggle()" class="pull-right fa fa-{{slideState==='down'?'minus':'plus'}}-circle"></b></h3>                
+                  ${this.getPager(true)}
                 </div>
             <div class="panel-body" style="overflow:auto">            
             `);
@@ -925,36 +930,7 @@ export class juGridBuilder
                     this.currentFilter.filterCss = { 'icon-hide': true, 'icon-show': false };
                 }
             }
-            //public search(val: any)
-            //{
-            //    if (this.config.sspFn)
-            //    {
-            //        this.pager.search(val);
-            //        return;
-            //    }
-            //    if (!val)
-            //    {
-            //        this._searchInActive = false;
-            //        this.data = this.data;
-            //        return;
-            //    }
-            //    this._searchInActive = true;
-            //    val = val.toLowerCase();
-            //    let res: any[] = [];
-            //    let len = this.options.columnDefs.length;
-            //    this.data.forEach((item) =>
-            //    {
-            //        for (var index = 0; index < len; index++)
-            //        {
-            //            let item2 = this.options.columnDefs[index];
-            //            if (item2.field && item[item2.field] && item[item2.field].toString().toLowerCase().indexOf(val) != -1)
-            //            {
-            //                res.push(item); break;
-            //            }
-            //        }
-            //    });
-            //    this.componentRef.instance.data = res;
-            //}
+            
         }
 
         return DynamicGridComponent;

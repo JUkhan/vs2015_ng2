@@ -23,8 +23,6 @@ var CkEditor_1 = require('./juForm/CkEditor');
 var Datetimepicker_1 = require('./juForm/Datetimepicker');
 var juGrid_1 = require('./juGrid/juGrid');
 var rowEditor_1 = require('./juGrid/rowEditor');
-var juParentWindow_1 = require('./juWindow/juParentWindow');
-var juChildWindow_1 = require('./juWindow/juChildWindow');
 var juWindowService_1 = require('./juWindow/juWindowService');
 var ui_service_1 = require('./ui.service');
 var app_service_1 = require('./app.service');
@@ -55,8 +53,6 @@ var SharedModule = (function () {
                 Datetimepicker_1.Datetimepicker,
                 juGrid_1.juGrid,
                 rowEditor_1.rowEditor,
-                juParentWindow_1.juParentWindow,
-                juChildWindow_1.juChildWindow
             ],
             exports: [
                 common_1.CommonModule,
@@ -72,8 +68,6 @@ var SharedModule = (function () {
                 Datetimepicker_1.Datetimepicker,
                 juGrid_1.juGrid,
                 rowEditor_1.rowEditor,
-                juParentWindow_1.juParentWindow,
-                juChildWindow_1.juChildWindow
             ],
             providers: [compiler_1.COMPILER_PROVIDERS]
         }), 

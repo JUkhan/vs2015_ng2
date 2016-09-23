@@ -1,4 +1,4 @@
-import {BaseFilter} from './juGrid.d';
+import {BaseFilter} from './juGrid';
 import {Observable, Subscription} from 'rxjs/Rx';
 
 export class SetFilter implements BaseFilter {
@@ -30,10 +30,10 @@ export class SetFilter implements BaseFilter {
     destroy() {
         this.unsubscribeCkhList();
         this.subsList.forEach(_=>{
-            if(_ && !_.isUnsubscribed){
+            
                 _.unsubscribe();
                 _.remove(_);
-            }
+           
         });      
     }
     //internal
@@ -103,10 +103,10 @@ export class SetFilter implements BaseFilter {
     private chkSubscriptionList: Subscription[] = [];
     private unsubscribeCkhList() {
         this.chkSubscriptionList.forEach(it => {
-            if (it && !it.isUnsubscribed) {               
+                          
                 it.unsubscribe();
                 it.remove(it);
-            }
+            
         })
     }    
     private removeItems(){

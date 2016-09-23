@@ -1,4 +1,4 @@
-import {BaseFilter} from './juGrid.d';
+import {BaseFilter} from './juGrid';
 import {Observable, Subscription} from 'rxjs/Rx';
 export class TextFilter implements BaseFilter {
     private _isActive: boolean = false;
@@ -43,10 +43,10 @@ export class TextFilter implements BaseFilter {
     }
     destroy() {
         this.subsList.forEach(_=>{
-            if(_ && !_.isUnsubscribed){
+           
                 _.unsubscribe();
                 _.remove(_);
-            }
+            
         });
     }
     //internal

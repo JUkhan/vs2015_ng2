@@ -38,8 +38,8 @@ import {juGridBuilder} from './juGrid/juGrid.builder';
         Datetimepicker,
         juGrid,
         rowEditor,
-        juParentWindow,
-        juChildWindow
+        //juParentWindow,
+        //juChildWindow
     ],
     exports: [
         CommonModule,
@@ -55,8 +55,8 @@ import {juGridBuilder} from './juGrid/juGrid.builder';
         Datetimepicker,
         juGrid,
         rowEditor,
-        juParentWindow,
-        juChildWindow
+        //juParentWindow,
+        //juChildWindow
     ],
     providers: [COMPILER_PROVIDERS]
 })

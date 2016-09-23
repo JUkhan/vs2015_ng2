@@ -39,6 +39,12 @@ var juGrid = (function () {
         this.options.linkPages = this.options.linkPages || 10;
         this.options.pageSize = this.options.pageSize || 10;
         this.options.confirmMessage = this.options.confirmMessage || 'Are you sure to remove this item?';
+        if (!('enablePowerPage' in this.options)) {
+            this.options.enablePowerPage = false;
+        }
+        if (!('enablePageSearch' in this.options)) {
+            this.options.enablePageSearch = true;
+        }
         if (!('colResize' in this.options)) {
             this.options.colResize = false;
         }
@@ -235,13 +241,17 @@ var juGrid = (function () {
         core_1.ViewChild('dynamicContentPlaceHolder', { read: core_1.ViewContainerRef }), 
         __metadata('design:type', core_1.ViewContainerRef)
     ], juGrid.prototype, "dynamicComponentTarget", void 0);
+    __decorate([
+        core_1.ContentChild(core_1.TemplateRef), 
+        __metadata('design:type', core_1.TemplateRef)
+    ], juGrid.prototype, "toolbar", void 0);
     juGrid = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: '.juGrid, [juGrid], juGrid',
             encapsulation: core_1.ViewEncapsulation.None,
             changeDetection: core_1.ChangeDetectionStrategy.Default,
-            template: "<div class=\"grid-toolbar\">\n                    <div class=\"quickSearch\" *ngIf=\"options.quickSearch\">             \n                            <div class=\"input-group stylish-input-group\">\n                                <input type=\"text\" class=\"form-control\" (keyup)=\"search($event.target.value)\" placeholder=\"Search\" >\n                                <span class=\"input-group-addon\">                        \n                                        <span class=\"fa fa-search\"></span>                         \n                                </span>\n                            </div>            \n                    </div>\n\t            </div> \n                <div #dynamicContentPlaceHolder></div>  \n                <div class=\"juForm\" *ngIf=\"options.crud\" (onLoad)=\"onFormLoad($event)\" [options]=\"options.formDefs\"></div>"
+            template: "<div class=\"grid-toolbar\">\n                    <div class=\"quickSearch\" *ngIf=\"options.quickSearch\">             \n                            <div class=\"input-group stylish-input-group\">\n                                <input type=\"text\" class=\"form-control\" (keyup)=\"search($event.target.value)\" placeholder=\"Search\">\n                                <span class=\"input-group-addon\">                        \n                                        <span class=\"fa fa-search\"></span>                         \n                                </span>\n                            </div>            \n                    </div>\n                  <div [style.left.px]=\"options.quickSearch?144:0\" class=\"tool-items\"><template [ngTemplateOutlet]=\"toolbar\"></template></div>\n\t            </div> \n                <div *ngIf=\"options.quickSearch||toolbar\" style=\"height:33px\">&nbsp;</div> \n                <div #dynamicContentPlaceHolder></div>  \n                <div class=\"juForm\" *ngIf=\"options.crud\" (onLoad)=\"onFormLoad($event)\" [options]=\"options.formDefs\"></div>"
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, juGrid_builder_1.juGridBuilder, core_1.ViewContainerRef])
     ], juGrid);

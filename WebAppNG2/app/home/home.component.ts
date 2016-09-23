@@ -13,11 +13,12 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.initForm();
     }
     ngOnDestroy() { }
-    myOptions: any;
+    myOptions: FormOptions;
     
     initForm() {
         
         this.myOptions = {
+            viewMode:'panel', panelMode:'primary',
             labelPos: 'left', title: 'Complex Form Example',
             labelSize: 2,
             refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {} },           

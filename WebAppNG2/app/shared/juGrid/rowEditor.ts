@@ -33,11 +33,10 @@ export class rowEditor implements OnInit {
 
     }
     ngOnDestroy() {        
-        this.subsList.forEach(_ => {
-            if (!_.isUnsubscribed) {
+        this.subsList.forEach(_ => {           
                 _.unsubscribe();
                 _.remove(_);
-            }
+           
         })
     }
     isValid(fieldName:string){         

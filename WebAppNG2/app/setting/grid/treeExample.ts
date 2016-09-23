@@ -1,6 +1,5 @@
 ﻿import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {juGrid}       from '../../shared/juGrid/juGrid';
-import {GridOptions}  from '../../shared/juGrid/juGrid.d';
+import {juGrid, GridOptions}       from '../../shared/juGrid/juGrid'; 
 import {Observable}   from 'rxjs/Rx';
 import {AppService}   from '../../shared/app.service';
 @Component({
@@ -8,10 +7,7 @@ import {AppService}   from '../../shared/app.service';
     selector: 'tree',
     template: ` 
                 <div 
-                     juGrid 
-                     panelMode="primary" 
-                     viewMode="panel" 
-                     title="Tree View Example" 
+                     juGrid                     
                      (onLoad)="onLoad($event)" 
                      [data]="scholarList" 
                      [options]="scholarGridOptions">
@@ -36,9 +32,8 @@ export class TreeExample implements OnInit {
         return this.service.get('dummydata/GetScholarList');
     }
     private initScholar() {
-        this.scholarGridOptions = {
-            //level: 10, default level is 5
-            scroll: true,
+        this.scholarGridOptions = {             
+            title:'Tree view Example',
             colResize: true,
             enableTreeView: true,
             lazyLoad: this.getChildData.bind(this),            

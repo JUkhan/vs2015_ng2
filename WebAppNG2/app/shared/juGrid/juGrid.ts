@@ -1,7 +1,7 @@
-﻿import { DynamicComponentLoader,
+﻿import { 
     Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter, ComponentRef,
     ViewContainerRef, ViewChild, ElementRef, ComponentFactory,
-    ChangeDetectionStrategy,
+    ChangeDetectionStrategy, ContentChild, TemplateRef,
     ViewEncapsulation}      from '@angular/core';
 import {juForm}             from '../juForm/juForm';
 import {juPager}            from '../juPager/juPager';
@@ -23,13 +23,15 @@ declare var jQuery: any;
     template: `<div class="grid-toolbar">
                     <div class="quickSearch" *ngIf="options.quickSearch">             
                             <div class="input-group stylish-input-group">
-                                <input type="text" class="form-control" (keyup)="search($event.target.value)" placeholder="Search" >
+                                <input type="text" class="form-control" (keyup)="search($event.target.value)" placeholder="Search">
                                 <span class="input-group-addon">                        
                                         <span class="fa fa-search"></span>                         
                                 </span>
                             </div>            
                     </div>
+                  <div [style.left.px]="options.quickSearch?144:0" class="tool-items"><template [ngTemplateOutlet]="toolbar"></template></div>
 	            </div> 
+                <div *ngIf="options.quickSearch||toolbar" style="height:33px">&nbsp;</div> 
                 <div #dynamicContentPlaceHolder></div>  
                 <div class="juForm" *ngIf="options.crud" (onLoad)="onFormLoad($event)" [options]="options.formDefs"></div>`
 })
@@ -47,7 +49,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
     protected componentRef: ComponentRef<any>;
     @ViewChild('dynamicContentPlaceHolder', { read: ViewContainerRef })
     protected dynamicComponentTarget: ViewContainerRef;   
-    
+    @ContentChild(TemplateRef) public toolbar: TemplateRef<any>;
     constructor(
         private _elementRef: ElementRef,
         protected typeBuilder: juGridBuilder,
@@ -70,6 +72,15 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
         this.options.linkPages = this.options.linkPages || 10;
         this.options.pageSize = this.options.pageSize || 10;
         this.options.confirmMessage = this.options.confirmMessage || 'Are you sure to remove this item?';
+
+        if (!('enablePowerPage' in this.options))
+        {
+            this.options.enablePowerPage = false;
+        }
+        if (!('enablePageSearch' in this.options))
+        {
+            this.options.enablePageSearch = true;
+        }
 
         if (!('colResize' in this.options))
         {
@@ -309,4 +320,78 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
 function async_call(fx: Function, time = 0)
 {
     let tid = setTimeout(() => { fx(); clearTimeout(tid); }, time);
+}
+
+/*interface*/ 
+import { FormOptions} from '../juForm/juForm';
+
+export interface ColumnDefs
+{
+    type?: 'select' | 'html' | 'juSelect' | 'datepicker' | string;
+    width?: number;
+    headerName?: string;
+    field?: string;
+    tdClass?: (row: any, index: number, isFirst: boolean, isLast: boolean) => {};
+    cellRenderer?: (row: any, index: number, isFirst: boolean, isLast: boolean) => any;
+    action?: [{ title: string, icon: string, click: (row: any) => void }];
+    children?: ColumnDefs[];
+    sort?: boolean;
+    comparator?: (a: any, b: any) => boolean;
+    filter?: 'set' | 'text' | 'number' | any;
+    params?: { cellRenderer?: (row: any, index?: number) => any, apply?: boolean, valueGetter?: (row: any) => any, value?: string[] };
+    dataSrc?: any[] | any;
+    change?: (row: any, index?: number) => void;
+    content?: string;
+    viewMode?: 'select' | 'checkbox' | 'radio';
+    validators?: Function | Array<Function>;
+    search?: boolean;
+    exp?: string;
+}
+export interface GridOptions
+{
+    title?:string;
+    panelMode?: 'default' |'primary'|'success'|'info'|'warning'|'danger';
+    viewMode? : 'panel'|string;
+    pagerPos?:'top'|'bottom'|'header';
+    pagerLeftPos?:number;
+    height?: number;
+    rowHeight?: number;
+    headerHeight?: number;
+    classNames?: string;
+    enablePowerPage?: boolean;
+    enablePageSearch?: boolean;
+    linkPages?: number;
+    pageSize?: number;
+    confirmMessage?: number;
+    crud?: boolean;
+    create?: boolean;
+    update?: boolean;
+    remove?: boolean;
+    quickSearch?: boolean;
+    update_CB?: (form: juForm, model: any) => void;
+    insert_CB?: (form: juForm) => void;
+    trClass?: (row: any, index: number, isFirst: boolean, isLast: boolean) => {};
+    formDefs?: FormOptions;
+    columnDefs?: ColumnDefs[];
+    removeItem?: (data: any) => void;
+    api?: { form: juForm, grid: juGrid, pager: juPager };
+    sspFn?: (params: { pageSize: number, pageNo: number, searchText: string, sort: string, filter: any[] }) => Observable<{ totalPage: number, data: any[] }>;
+    onFormLoad?: (form: juForm) => void;
+    trackBy?: string;
+    enableTreeView?: boolean;
+    lazyLoad?: (row: any) => Observable<Array<any>>;
+    level?: number;
+    enableCellEditing?: boolean;
+    [key: string]: any;
+
+}
+export interface BaseFilter
+{
+    init: (params: any) => void;
+    getGui: () => HTMLElement | Node | string;
+    isFilterActive: () => boolean;
+    doesFilterPass: (item: any) => boolean;
+    destroy: () => void;
+    searchText: string;
+    searchCategory: string;
 }

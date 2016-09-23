@@ -44,10 +44,8 @@ var TextFilter = (function () {
     };
     TextFilter.prototype.destroy = function () {
         this.subsList.forEach(function (_) {
-            if (_ && !_.isUnsubscribed) {
-                _.unsubscribe();
-                _.remove(_);
-            }
+            _.unsubscribe();
+            _.remove(_);
         });
     };
     TextFilter.prototype.setupGui = function (params) {

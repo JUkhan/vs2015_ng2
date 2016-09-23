@@ -1,9 +1,6 @@
 ﻿import {Component, OnInit}        from '@angular/core';
-
-import {juGrid}                   from '../../shared/juGrid/juGrid';
+import {juGrid, GridOptions}                   from '../../shared/juGrid/juGrid';
 import { FV}                      from '../../shared/juForm/FV';
-import {FormOptions, FormElement} from '../../shared/juForm/juForm.d';
-import {GridOptions}              from '../../shared/juGrid/juGrid.d';
 import {Observable}               from 'rxjs/Rx';
 import {AppService}               from '../../shared/app.service';
 
@@ -12,14 +9,12 @@ import {AppService}               from '../../shared/app.service';
     selector: 'cellEdit',
     template: `
             <div 
-                  class="juGrid" 
-                  title="Grid Cell Editable Example"                  
+                  class="juGrid"                                   
                   (onLoad)="gridLoad($event)" 
                   [data]="list" 
                   [options]="gridOptions">
-
-             </div>
-            <button type="button" class="btn btn-primary" (click)="saveRecords()">Save Records</button>
+                   <template><button class="btn btn-primary" (click)="saveRecords()">Save Records</button></template>
+            </div>           
             `
 })
 
@@ -40,7 +35,8 @@ export class CellEditExample implements OnInit {
     }
 
     private initGrid() {
-        this.gridOptions = {
+        this.gridOptions = {           
+            viewMode:'!panel',
             quickSearch: true,
             pagerPos: 'bottom',
             colResize: false,

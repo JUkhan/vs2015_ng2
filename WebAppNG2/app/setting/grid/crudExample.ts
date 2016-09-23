@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {juGrid}       from '../../shared/juGrid/juGrid';
+import {juGrid, GridOptions}       from '../../shared/juGrid/juGrid';
 import { FV}          from '../../shared/juForm/FV';
-import {GridOptions}  from '../../shared/juGrid/juGrid.d';
 import {Observable}   from 'rxjs/Rx';
 import {AppService}   from '../../shared/app.service';
 @Component({
@@ -9,14 +8,11 @@ import {AppService}   from '../../shared/app.service';
     selector: 'crud',
     template: `
                 <div 
-                     juGrid 
-                     panelMode="primary" 
-                     viewMode="panel" 
-                     title="CRUD Example" 
+                     juGrid                      
                      (onLoad)="onLoad($event)" 
                      [data]="scholarList" 
                      [options]="scholarGridOptions">
-
+                        
                 </div>`,
 
     encapsulation: ViewEncapsulation.None
@@ -39,7 +35,11 @@ export class CrudExample implements OnInit {
         });
 
     }
-    private onLoad(grid: juGrid) {
+    doSmth(){
+    alert('assddd')
+    }
+    private onLoad(grid: juGrid)
+    {         
         this.service.get('dummydata/GetScholarList')
             .subscribe(list => {
                 this.scholarGridOptions.api.form
@@ -57,7 +57,7 @@ export class CrudExample implements OnInit {
     }
     private initScholar() {
         this.scholarGridOptions = {
-            crud: true, quickSearch:true,
+            title:'Crud Example', crud: true, pagerPos:'header',
             //sspFn: this.getPagerData.bind(this),
             columnDefs: [
                 { headerName: 'Name', field: 'name', sort: true, filter: 'set' },

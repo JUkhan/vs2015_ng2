@@ -281,12 +281,22 @@ legend {
 
 .grid-toolbar {
     padding-bottom: 3px;
+    position:relative;
 }
 
+.tool-items{
+    position:absolute;
+    top:0px;
+    left: 144px;
+}
 .quickSearch {
     width: 140px;
+    display:inline-block;
+    position:absolute;
 }
-
+ .grid-placeholder{
+     height:45px;
+ }
 .level-1 {
     padding-left: 28px !important;
 }

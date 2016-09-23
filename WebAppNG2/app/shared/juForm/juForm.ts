@@ -292,6 +292,8 @@ export interface FormElement
 
 export interface FormOptions
 {
+    viewMode?:'form'|'panel'|'popup';
+    panelMode?: 'default' |'primary'|'success'|'info'|'warning'|'danger';
     title?: string;
     labelPos?: 'left' | 'top';
     labelSize?: number;
