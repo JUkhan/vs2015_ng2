@@ -17,7 +17,10 @@ var juPager = (function () {
         this.onInit = new core_1.EventEmitter();
         this.linkPages = 10;
         this.pageSize = 10;
+        this.enablePowerPage = false;
+        this.enablePageSearch = true;
         this.powerList = [];
+        this.powerListBW = [];
         this.totalPage = 0;
         this.activePage = 1;
         this.list = [];
@@ -25,6 +28,8 @@ var juPager = (function () {
         this._sort = '';
         this._filter = [];
         this.groupNumber = 1;
+        this._pbdiff = 20;
+        this._pbtimes = 5;
     }
     juPager.prototype.ngAfterViewInit = function () {
         var _this = this;
@@ -36,21 +41,9 @@ var juPager = (function () {
             .filter(function (_) { return _ > 0 && _ <= _this.getTotalPage(); })
             .subscribe(function (_) { return _this.powerAction(_); });
     };
-    juPager.prototype.changePageSize = function (size) {
-        this.pageSize = +size;
-        this.groupNumber = 1;
-        this.activePage = 1;
-        this.sspFn ?
-            this.firePageChange()
-            : this.calculatePagelinkes();
-    };
-    juPager.prototype.set_sspFn = function (callback) {
-        this.sspFn = callback;
-        this.firePageChange();
-    };
     juPager.prototype.ngOnChanges = function (changes) {
         if (this.data) {
-            this.calculatePagelinkes();
+            this.firePageChange();
         }
     };
     juPager.prototype.ngOnInit = function () {
@@ -58,9 +51,19 @@ var juPager = (function () {
         this.linkPages = +this.linkPages;
         this.groupNumber = +this.groupNumber;
         this.onInit.next(this);
-        this.calculatePagelinkes();
+        this.firePageChange();
     };
     juPager.prototype.ngOnDestroy = function () { };
+    juPager.prototype.changePageSize = function (size) {
+        this.pageSize = +size;
+        this.groupNumber = 1;
+        this.activePage = 1;
+        this.firePageChange();
+    };
+    juPager.prototype.set_sspFn = function (callback) {
+        this.sspFn = callback;
+        this.firePageChange();
+    };
     juPager.prototype.isDisabledPrev = function () {
         if (this.sspFn) {
             return !(this.groupNumber > 1);
@@ -82,7 +85,7 @@ var juPager = (function () {
     juPager.prototype.clickNext = function () {
         if (this.hasNext()) {
             this.groupNumber++;
-            this.calculatePagelinkes();
+            this.firePageChange();
         }
     };
     juPager.prototype.clickPrev = function () {
@@ -91,19 +94,21 @@ var juPager = (function () {
             this.groupNumber++;
         }
         else {
-            this.calculatePagelinkes();
+            this.firePageChange();
         }
     };
     juPager.prototype.clickStart = function () {
         if (this.groupNumber > 1) {
             this.groupNumber = 1;
-            this.calculatePagelinkes();
+            this.activePage = 1;
+            this.firePageChange();
         }
     };
     juPager.prototype.clickEnd = function () {
         if (this.hasNext()) {
             this.groupNumber = parseInt((this.totalPage / this.linkPages).toString()) + ((this.totalPage % this.linkPages) ? 1 : 0);
-            this.calculatePagelinkes();
+            this.activePage = this.getTotalPage();
+            this.firePageChange();
         }
     };
     juPager.prototype.clickPage = function (index) {
@@ -116,7 +121,7 @@ var juPager = (function () {
         this.firePageChange();
     };
     juPager.prototype.sort = function (sortProp, isAsc) {
-        this._sort = sortProp + '_' + (isAsc ? 'desc' : 'asc');
+        this._sort = sortProp + '|' + (isAsc ? 'desc' : 'asc');
         this.firePageChange();
     };
     juPager.prototype.filter = function (filterArr) {
@@ -124,19 +129,11 @@ var juPager = (function () {
         this.groupNumber = 1;
         this.activePage = 1;
         this.firePageChange();
-        this.calculatePagelinkes();
     };
-    juPager.prototype.calculatePowerList = function () {
-        this.powerList = [];
-        var curPos = this.groupNumber * this.linkPages + 1, restPages = this.getTotalPage() - curPos, totalPage = this.getTotalPage();
-        if (restPages > 30) {
-            var index = curPos + 30, times = 5;
-            while (index < totalPage && times > 0) {
-                this.powerList.push(index);
-                index += 30;
-                times--;
-            }
-        }
+    juPager.prototype.refresh = function () {
+        this.groupNumber = 1;
+        this.activePage = 1;
+        this.firePageChange();
     };
     juPager.prototype.firePageChange = function (isFire) {
         var _this = this;
@@ -145,11 +142,8 @@ var juPager = (function () {
             this.sspFn({ pageSize: this.pageSize, pageNo: this.activePage, searchText: this.searchText, sort: this._sort, filter: this._filter })
                 .subscribe(function (res) {
                 _this.totalPage = res.totalPage;
-                _this.calculatePowerList();
                 _this.pageChange.next(res.data);
-                if (_this.activePage == 1 || isFire) {
-                    _this.calculatePagelinkes(false);
-                }
+                _this.calculatePager();
             });
         }
         else {
@@ -157,18 +151,48 @@ var juPager = (function () {
                 return;
             var startIndex = (this.activePage - 1) * this.pageSize;
             this.pageChange.next(this.data.slice(startIndex, startIndex + this.pageSize));
-            this.calculatePowerList();
+            this.calculatePager();
         }
     };
-    juPager.prototype.calculatePagelinkes = function (isFire) {
-        if (isFire === void 0) { isFire = true; }
-        var start = 1, end = 0;
+    juPager.prototype.calculatePager = function () {
+        if (this.enablePowerPage) {
+            this.calculateBackwordPowerList();
+            this.calculateForwordPowerList();
+        }
+        this.calculatePagelinkes();
+        this.cd.markForCheck();
+    };
+    juPager.prototype.calculateBackwordPowerList = function () {
+        this.powerListBW = [];
+        var curPos = this.groupNumber * this.linkPages + 1;
+        if (curPos > this._pbdiff) {
+            var index = curPos - this._pbdiff, times = this._pbtimes;
+            while (index > 0 && times > 0) {
+                this.powerListBW.push(index);
+                index -= this._pbdiff;
+                times--;
+            }
+            this.powerListBW.reverse();
+        }
+    };
+    juPager.prototype.calculateForwordPowerList = function () {
+        this.powerList = [];
+        var curPos = this.groupNumber * this.linkPages + 1, restPages = this.getTotalPage() - curPos, totalPage = this.getTotalPage();
+        if (restPages > this._pbdiff) {
+            var index = curPos + this._pbdiff, times = this._pbtimes;
+            while (index < totalPage && times > 0) {
+                this.powerList.push(index);
+                index += this._pbdiff;
+                times--;
+            }
+        }
+    };
+    juPager.prototype.calculatePagelinkes = function () {
+        var start = 1;
         if (this.groupNumber > 1) {
             start = (this.groupNumber - 1) * this.linkPages + 1;
         }
-        this.activePage = start;
-        end = this.groupNumber * this.linkPages;
-        var totalPage = this.getTotalPage();
+        var end = this.groupNumber * this.linkPages, totalPage = this.getTotalPage();
         if (end > totalPage) {
             end = totalPage;
         }
@@ -176,14 +200,9 @@ var juPager = (function () {
         for (var index = start; index <= end; index++) {
             this.list.push(index);
         }
-        this.cd.markForCheck();
-        if (isFire) {
-            this.firePageChange(isFire);
-        }
     };
     juPager.prototype.powerAction = function (pageNo) {
         this.groupNumber = Math.ceil(pageNo / this.linkPages);
-        this.calculatePagelinkes(false);
         this.activePage = pageNo;
         this.firePageChange();
     };
@@ -229,6 +248,14 @@ var juPager = (function () {
     ], juPager.prototype, "pageSize", void 0);
     __decorate([
         core_1.Input(), 
+        __metadata('design:type', Boolean)
+    ], juPager.prototype, "enablePowerPage", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Boolean)
+    ], juPager.prototype, "enablePageSearch", void 0);
+    __decorate([
+        core_1.Input(), 
         __metadata('design:type', Object)
     ], juPager.prototype, "data", void 0);
     __decorate([
@@ -242,7 +269,7 @@ var juPager = (function () {
             styles: ['.juPager select{height:26px;padding:2px;}'],
             encapsulation: core_1.ViewEncapsulation.None,
             changeDetection: core_1.ChangeDetectionStrategy.OnPush,
-            template: "<nav [style.display]=\"list.length?'block':'none'\">\n    <span style=\"position:relative;top:-8px\">\n        <span>Page Size </span>\n        <select style=\"display:inline-block;width:52px;color:#333\" #psize [ngModel]=\"pageSize\" (change)=\"changePageSize(psize.value)\">\n            <option value=\"5\">5</option>\n            <option value=\"10\">10</option>\n            <option value=\"20\">20</option>\n            <option value=\"30\">30</option>\n            <option value=\"40\">40</option>\n            <option value=\"50\">50</option>\n            <option value=\"100\">100</option>\n        </select>\n    </span>\n    <span style=\"position:relative;top:-8px\">Page {{activePage}} of {{getTotalPage()}}</span>\n  <ul class=\"pagination\">\n     <li class=\"page-item\" [class.disabled]=\"isDisabledPrev()\">\n      <a class=\"page-link\" href=\"javascript:;\" (click)=\"clickStart()\" aria-label=\"Previous\">\n        <span>Start</span>       \n      </a>\n    </li>\n    <li class=\"page-item\" [class.disabled]=\"isDisabledPrev()\">\n      <a class=\"page-link\" href=\"javascript:;\" (click)=\"clickPrev()\" aria-label=\"Previous\">\n        <span>&laquo;</span>       \n      </a>\n    </li>\n    <li class=\"page-item\" [class.active]=\"ax==activePage\" *ngFor=\"let ax of list\">\n      <a class=\"page-link\" (click)=\"clickPage(ax)\" href=\"javascript:;\">{{ax}}</a>\n    </li> \n\n     <li class=\"page-item\" *ngFor=\"let pi of powerList\">\n          <a class=\"page-link\" (click)=\"powerAction(pi)\" href=\"javascript:;\">{{pi}}</a>\n     </li> \n        \n    <li class=\"page-item\" [class.disabled]=\"isDisabledNext()\">\n      <a class=\"page-link\" href=\"javascript:;\" (click)=\"clickNext()\" aria-label=\"Next\">\n        <span>&raquo;</span>       \n      </a>\n    </li>\n     <li class=\"page-item\" [class.disabled]=\"isDisabledNext()\">\n      <a class=\"page-link\" href=\"javascript:;\" (click)=\"clickEnd()\" aria-label=\"Next\">\n        <span>End</span>       \n      </a>\n    </li>\n  </ul>\n    <span style=\"position:relative;top:-8px\" title=\"Enter Page Number\">\n        <input #txtPageNo type=\"text\" style=\"display:inline-block;width:50px;text-align:center\" />\n    </span>\n</nav>"
+            template: "<nav [style.display]=\"list.length?'block':'none'\">\n    <span style=\"position:relative;top:-8px\">\n        <span>Page Size </span>\n        <select style=\"display:inline-block;width:52px;color:#333\" #psize [ngModel]=\"pageSize\" (change)=\"changePageSize(psize.value)\">\n            <option value=\"5\">5</option>\n            <option value=\"10\">10</option>\n            <option value=\"20\">20</option>\n            <option value=\"30\">30</option>\n            <option value=\"40\">40</option>\n            <option value=\"50\">50</option>\n            <option value=\"100\">100</option>\n        </select>\n    </span>\n    <span style=\"position:relative;top:-8px\">Page {{activePage}} of {{getTotalPage()}}</span>\n  <ul class=\"pagination\">\n     <li class=\"page-item\" [class.disabled]=\"isDisabledPrev()\">\n      <a class=\"page-link\" href=\"javascript:;\" (click)=\"clickStart()\" aria-label=\"Previous\">\n        <span>Start</span>       \n      </a>\n    </li>\n    <li class=\"page-item\" [class.disabled]=\"isDisabledPrev()\">\n      <a class=\"page-link\" href=\"javascript:;\" (click)=\"clickPrev()\" aria-label=\"Previous\">\n        <span>&laquo;</span>       \n      </a>\n    </li>\n    <li class=\"page-item\" *ngFor=\"let pib of powerListBW\">\n          <a class=\"page-link\" (click)=\"powerAction(pib)\" href=\"javascript:;\">{{pib}}</a>\n   </li> \n    <li class=\"page-item\" [class.active]=\"ax==activePage\" *ngFor=\"let ax of list\">\n      <a class=\"page-link\" (click)=\"clickPage(ax)\" href=\"javascript:;\">{{ax}}</a>\n    </li> \n\n     <li class=\"page-item\" *ngFor=\"let pi of powerList\">\n          <a class=\"page-link\" (click)=\"powerAction(pi)\" href=\"javascript:;\">{{pi}}</a>\n     </li> \n        \n    <li class=\"page-item\" [class.disabled]=\"isDisabledNext()\">\n      <a class=\"page-link\" href=\"javascript:;\" (click)=\"clickNext()\" aria-label=\"Next\">\n        <span>&raquo;</span>       \n      </a>\n    </li>\n     <li class=\"page-item\" [class.disabled]=\"isDisabledNext()\">\n      <a class=\"page-link\" href=\"javascript:;\" (click)=\"clickEnd()\" aria-label=\"Next\">\n        <span>End</span>       \n      </a>\n    </li>\n  </ul>\n    <span [style.display]=\"enablePageSearch?'inline-block':'none'\" style=\"position:relative;top:-8px\" title=\"Enter Page Number\">\n        <input #txtPageNo type=\"text\" style=\"display:inline-block;width:50px;text-align:center;color:#333;\" />\n    </span>\n</nav>"
         }), 
         __metadata('design:paramtypes', [core_1.ChangeDetectorRef])
     ], juPager);

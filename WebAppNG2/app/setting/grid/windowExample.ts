@@ -15,10 +15,7 @@ import { FV}          from '../../shared/juForm/FV';
 @Component({
     moduleId: module.id,
     selector: 'test-component',
-    template: `<div>  
-                <df [options]="formDefs"></df>
-            </div>
-    `,
+    template: `<div juForm [options]="formDefs"></div>`,
    
     styles: [`
           .wnav{margin-top:1px;}  

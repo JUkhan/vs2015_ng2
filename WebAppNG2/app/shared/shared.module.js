@@ -23,21 +23,19 @@ var CkEditor_1 = require('./juForm/CkEditor');
 var Datetimepicker_1 = require('./juForm/Datetimepicker');
 var juGrid_1 = require('./juGrid/juGrid');
 var rowEditor_1 = require('./juGrid/rowEditor');
-var juParentWindow_1 = require('./juWindow/juParentWindow');
-var juChildWindow_1 = require('./juWindow/juChildWindow');
 var juWindowService_1 = require('./juWindow/juWindowService');
-var TestForm_1 = require('./juForm/TestForm');
 var ui_service_1 = require('./ui.service');
 var app_service_1 = require('./app.service');
 var canDeactivateGuard_service_1 = require('./canDeactivateGuard.service');
 var juForm_builder_1 = require('./juForm/juForm.builder');
+var juGrid_builder_1 = require('./juGrid/juGrid.builder');
 var SharedModule = (function () {
     function SharedModule() {
     }
     SharedModule.forRoot = function () {
         return {
             ngModule: SharedModule,
-            providers: [app_service_1.AppService, ui_service_1.UiService, canDeactivateGuard_service_1.CanDeactivateGuard, juWindowService_1.juWindowService, juForm_builder_1.juFormBuilder]
+            providers: [app_service_1.AppService, ui_service_1.UiService, canDeactivateGuard_service_1.CanDeactivateGuard, juWindowService_1.juWindowService, juForm_builder_1.juFormBuilder, juGrid_builder_1.juGridBuilder]
         };
     };
     SharedModule = __decorate([
@@ -55,9 +53,6 @@ var SharedModule = (function () {
                 Datetimepicker_1.Datetimepicker,
                 juGrid_1.juGrid,
                 rowEditor_1.rowEditor,
-                juParentWindow_1.juParentWindow,
-                juChildWindow_1.juChildWindow,
-                TestForm_1.TestForm
             ],
             exports: [
                 common_1.CommonModule,
@@ -73,9 +68,6 @@ var SharedModule = (function () {
                 Datetimepicker_1.Datetimepicker,
                 juGrid_1.juGrid,
                 rowEditor_1.rowEditor,
-                juParentWindow_1.juParentWindow,
-                juChildWindow_1.juChildWindow,
-                TestForm_1.TestForm
             ],
             providers: [compiler_1.COMPILER_PROVIDERS]
         }), 

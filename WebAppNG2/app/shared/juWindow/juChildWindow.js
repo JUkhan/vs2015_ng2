@@ -28,10 +28,8 @@ var juChildWindow = (function () {
     };
     juChildWindow.prototype.ngOnDestroy = function () {
         this.subList.forEach(function (_) {
-            if (!_.isUnsubscribed) {
-                _.unsubscribe();
-                _.remove(_);
-            }
+            _.unsubscribe();
+            _.remove(_);
         });
         this.compRef.destroy();
     };
@@ -153,7 +151,7 @@ var juChildWindow = (function () {
             encapsulation: core_1.ViewEncapsulation.None,
             template: "<div class=\"popup\" #window (click)=\"onBodyClick()\">\n    <div class=\"header\" #header>\n        <span>{{title}}</span>\n        <span class=\"min-max-close\">\n                    <a href=\"javascript:;\" title=\"Minimize\" (click)=\"minimizeWindow($event)\"><b class=\"fa fa-minus\"></b></a>\n                    <a href=\"javascript:;\" title=\"{{isMax?'Maximize':'Normal'}}\" (click)=\"expandWindow($event)\"><b class=\"fa fa-{{isMax?'expand':'compress'}}\"></b></a>\n                    <a href=\"javascript:;\" title=\"Close\" (click)=\"closeWindow($event)\"><b class=\"fa fa-remove\"></b></a>\n                </span>\n    </div>\n    <div class=\"popup-content\" #placeholder>\n        \n    </div>\n</div>"
         }), 
-        __metadata('design:paramtypes', [juWindowService_1.juWindowService, core_1.DynamicComponentLoader, core_1.Injector, core_1.ApplicationRef, core_1.Renderer])
+        __metadata('design:paramtypes', [juWindowService_1.juWindowService, Object, core_1.Injector, core_1.ApplicationRef, core_1.Renderer])
     ], juChildWindow);
     return juChildWindow;
 }());

@@ -24,6 +24,9 @@ var CrudExample = (function () {
             _this.addressList = res[1];
         });
     };
+    CrudExample.prototype.doSmth = function () {
+        alert('assddd');
+    };
     CrudExample.prototype.onLoad = function (grid) {
         var _this = this;
         this.service.get('dummydata/GetScholarList')
@@ -37,10 +40,13 @@ var CrudExample = (function () {
     CrudExample.prototype.educationCellRender = function (row) {
         return this.educationList.find(function (_) { return _.value == row.education; }).name;
     };
+    CrudExample.prototype.getPagerData = function () {
+        return Rx_1.Observable.of({ totalPage: 1234, data: this.scholarList });
+    };
     CrudExample.prototype.initScholar = function () {
         var _this = this;
         this.scholarGridOptions = {
-            crud: true,
+            title: 'Crud Example', crud: true, pagerPos: 'header',
             columnDefs: [
                 { headerName: 'Name', field: 'name', sort: true, filter: 'set' },
                 {
@@ -94,7 +100,7 @@ var CrudExample = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'crud',
-            template: "\n                <div \n                     juGrid \n                     panelMode=\"primary\" \n                     viewMode=\"panel\" \n                     title=\"CRUD Example\" \n                     (onLoad)=\"onLoad($event)\" \n                     [data]=\"scholarList\" \n                     [options]=\"scholarGridOptions\">\n\n                </div>",
+            template: "\n                <div \n                     juGrid                      \n                     (onLoad)=\"onLoad($event)\" \n                     [data]=\"scholarList\" \n                     [options]=\"scholarGridOptions\">\n                        \n                </div>",
             encapsulation: core_1.ViewEncapsulation.None
         }), 
         __metadata('design:paramtypes', [app_service_1.AppService])

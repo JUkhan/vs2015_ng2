@@ -17,13 +17,12 @@ import {rowEditor}              from './juGrid/rowEditor';
 import {juParentWindow}         from './juWindow/juParentWindow';
 import {juChildWindow}          from './juWindow/juChildWindow';
 import {juWindowService}        from './juWindow/juWindowService';
-import {TestForm}        from './juForm/TestForm';
 
 import {UiService}              from './ui.service';
 import {AppService}             from './app.service';
 import {CanDeactivateGuard} from './canDeactivateGuard.service';
 import {juFormBuilder} from './juForm/juForm.builder';
-
+import {juGridBuilder} from './juGrid/juGrid.builder';
 
 @NgModule({
     imports: [CommonModule, RouterModule, FormsModule],
@@ -39,9 +38,8 @@ import {juFormBuilder} from './juForm/juForm.builder';
         Datetimepicker,
         juGrid,
         rowEditor,
-        juParentWindow,
-        juChildWindow,
-        TestForm 
+        //juParentWindow,
+        //juChildWindow
     ],
     exports: [
         CommonModule,
@@ -57,9 +55,8 @@ import {juFormBuilder} from './juForm/juForm.builder';
         Datetimepicker,
         juGrid,
         rowEditor,
-        juParentWindow,
-        juChildWindow,
-        TestForm  
+        //juParentWindow,
+        //juChildWindow
     ],
     providers: [COMPILER_PROVIDERS]
 })
@@ -68,7 +65,7 @@ export class SharedModule {
     static forRoot(): ModuleWithProviders {
         return {
             ngModule: SharedModule,
-            providers: [AppService, UiService, CanDeactivateGuard, juWindowService, juFormBuilder]
+            providers: [AppService, UiService, CanDeactivateGuard, juWindowService, juFormBuilder, juGridBuilder]
         };
     }
 }

@@ -21,6 +21,7 @@ var HomeComponent = (function () {
     HomeComponent.prototype.initForm = function () {
         var _this = this;
         this.myOptions = {
+            viewMode: 'panel', panelMode: 'primary',
             labelPos: 'left', title: 'Complex Form Example',
             labelSize: 2,
             refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {} },

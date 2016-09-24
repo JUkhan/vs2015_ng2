@@ -1,7 +1,7 @@
 ﻿import {Component, OnInit, OnDestroy} from '@angular/core';
-import {juForm} from '../shared/juForm/juForm';
+import {juForm, FormElement, FormOptions} from '../shared/juForm/juForm';
 import {FV} from '../shared/juForm/FV';
-import {FormOptions, FormElement} from '../shared/juForm/juForm.d';
+
 @Component({
     moduleId: module.id,
     selector: 'my-home',
@@ -13,11 +13,12 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.initForm();
     }
     ngOnDestroy() { }
-    myOptions: any;
+    myOptions: FormOptions;
     
     initForm() {
         
         this.myOptions = {
+            viewMode:'panel', panelMode:'primary',
             labelPos: 'left', title: 'Complex Form Example',
             labelSize: 2,
             refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {} },           

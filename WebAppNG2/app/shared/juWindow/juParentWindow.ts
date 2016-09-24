@@ -1,4 +1,4 @@
-import {Component, ViewChild, Renderer, ViewEncapsulation, ApplicationRef, ComponentRef, ElementRef, OnInit, OnDestroy, AfterViewInit, DynamicComponentLoader, Injector} from '@angular/core';
+import {Component, ViewChild, Renderer, ViewEncapsulation, ApplicationRef, ComponentRef, ElementRef, OnInit, OnDestroy, AfterViewInit, Injector} from '@angular/core';
 import {juChildWindow}            from './juChildWindow';
 import {juWindowService}          from './juWindowService';
 import {Subscription}             from 'rxjs/Rx';
@@ -34,7 +34,7 @@ export class juParentWindow implements OnInit, OnDestroy {
     private subsList: Subscription[] = [];
     private height:number=500;
     constructor(private renderer: Renderer,
-        private dcl: DynamicComponentLoader,
+        private dcl: any,
         private injector: Injector,
         private appRef: ApplicationRef,
         private service: juWindowService) { }

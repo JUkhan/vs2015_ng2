@@ -43,7 +43,7 @@ var WindowComponent = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'test-component',
-            template: "<div>  \n                <df [options]=\"formDefs\"></df>\n            </div>\n    ",
+            template: "<div juForm [options]=\"formDefs\"></div>",
             styles: ["\n          .wnav{margin-top:1px;}  \n    "],
             encapsulation: core_1.ViewEncapsulation.None
         }), 

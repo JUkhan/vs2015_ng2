@@ -47,10 +47,8 @@ var NumberFilter = (function () {
     };
     NumberFilter.prototype.destroy = function () {
         this.subsList.forEach(function (_) {
-            if (_ && !_.isUnsubscribed) {
-                _.unsubscribe();
-                _.remove(_);
-            }
+            _.unsubscribe();
+            _.remove(_);
         });
     };
     NumberFilter.prototype.setupGui = function (params) {

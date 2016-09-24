@@ -12,8 +12,8 @@ var core_1 = require('@angular/core');
 var juForm_builder_1 = require('./juForm.builder');
 var Rx_1 = require('rxjs/Rx');
 var _ = require('lodash');
-var TestForm = (function () {
-    function TestForm(typeBuilder, _elementRef) {
+var JuForm = (function () {
+    function JuForm(typeBuilder, _elementRef) {
         this.typeBuilder = typeBuilder;
         this._elementRef = _elementRef;
         this.options = {};
@@ -22,9 +22,9 @@ var TestForm = (function () {
         this.isUpdate = false;
         this.wasViewInitialized = false;
     }
-    TestForm.prototype.ngOnInit = function () {
+    JuForm.prototype.ngOnInit = function () {
     };
-    TestForm.prototype.initOptions = function () {
+    JuForm.prototype.initOptions = function () {
         var _this = this;
         this.options.viewMode = this.options.viewMode || 'panel';
         this.options.panelMode = this.options.panelMode || 'primary';
@@ -52,7 +52,7 @@ var TestForm = (function () {
         }
         this.options.api = this;
     };
-    TestForm.prototype.refreshContent = function () {
+    JuForm.prototype.refreshContent = function () {
         var _this = this;
         this.initOptions();
         if (this.componentRef) {
@@ -89,22 +89,22 @@ var TestForm = (function () {
             async_call(function () { _this.onLoad.emit(_this); });
         });
     };
-    TestForm.prototype.ngAfterViewInit = function () {
+    JuForm.prototype.ngAfterViewInit = function () {
         this.wasViewInitialized = true;
         this.refreshContent();
     };
-    TestForm.prototype.ngOnChanges = function (changes) {
+    JuForm.prototype.ngOnChanges = function (changes) {
         if (this.wasViewInitialized) {
             return;
         }
     };
-    TestForm.prototype.ngOnDestroy = function () {
+    JuForm.prototype.ngOnDestroy = function () {
         if (this.componentRef) {
             this.componentRef.destroy();
             this.componentRef = null;
         }
     };
-    TestForm.prototype.valueChanges = function (key) {
+    JuForm.prototype.valueChanges = function (key) {
         var _this = this;
         if (key === 'form') {
             var _observers = [];
@@ -131,31 +131,27 @@ var TestForm = (function () {
         }
         return Rx_1.Observable.empty();
     };
-    TestForm.prototype.disabled = function (key, value) {
+    JuForm.prototype.disabled = function (key, value) {
         this.options._events[key].field.disabled = value;
     };
-    Object.defineProperty(TestForm.prototype, "valid", {
+    Object.defineProperty(JuForm.prototype, "valid", {
         get: function () {
-            for (var prop in this.options._events) {
-                if (!this.options._events[prop].hideMsg) {
-                    return false;
-                }
-            }
-            return true;
+            return this.componentRef.instance.isValid();
         },
         enumerable: true,
         configurable: true
     });
-    TestForm.prototype.showMessage = function (message, messageCss) {
+    JuForm.prototype.showMessage = function (message, messageCss) {
         if (messageCss === void 0) { messageCss = 'alert alert-info'; }
         this.componentRef.instance.showMessage(message, messageCss);
+        return this;
     };
-    TestForm.prototype.refresh = function () {
+    JuForm.prototype.refresh = function () {
         this.setModel(this.options.refreshBy || {});
         this.isUpdate = false;
         return this;
     };
-    TestForm.prototype.showModal = function (isDisplayed) {
+    JuForm.prototype.showModal = function (isDisplayed) {
         if (isDisplayed === void 0) { isDisplayed = true; }
         jQuery(this._elementRef.nativeElement.nextSibling.firstChild).modal(isDisplayed ? 'show' : 'hide');
         if (isDisplayed) {
@@ -163,26 +159,26 @@ var TestForm = (function () {
         }
         return this;
     };
-    TestForm.prototype.setModel = function (model) {
+    JuForm.prototype.setModel = function (model) {
         this.componentRef.instance.setModel(_.cloneDeep(model));
         return this;
     };
-    TestForm.prototype.getModel = function () {
+    JuForm.prototype.getModel = function () {
         return this.componentRef.instance.getModel();
     };
-    TestForm.prototype.setActiveTab = function (tabName) {
+    JuForm.prototype.setActiveTab = function (tabName) {
         this.componentRef.instance.tabClick(tabName);
         return this;
     };
-    TestForm.prototype.setData = function (key, data) {
+    JuForm.prototype.setData = function (key, data) {
         var item = this.options._events[key];
         if (item && item.field) {
             item.field.data = data;
         }
         return this;
     };
-    TestForm.prototype.setDetilData = function (key, data) {
-        TestForm.FORM_LIST.forEach(function (options) {
+    JuForm.prototype.setDetilData = function (key, data) {
+        JuForm.FORM_LIST.forEach(function (options) {
             var item = options._events[key];
             if (item && item.field) {
                 item.field.data = data;
@@ -190,35 +186,35 @@ var TestForm = (function () {
         });
         return this;
     };
-    TestForm.prototype.getSelectApi = function (key) {
+    JuForm.prototype.getSelectApi = function (key) {
         var item = this.options._events[key];
         if (item && item.field) {
             return item.field.api;
         }
         return null;
     };
-    TestForm.FORM_LIST = new Map();
+    JuForm.FORM_LIST = new Map();
     __decorate([
         core_1.ViewChild('dynamicContentPlaceHolder', { read: core_1.ViewContainerRef }), 
         __metadata('design:type', core_1.ViewContainerRef)
-    ], TestForm.prototype, "dynamicComponentTarget", void 0);
+    ], JuForm.prototype, "dynamicComponentTarget", void 0);
     __decorate([
         core_1.Input('options'), 
         __metadata('design:type', Object)
-    ], TestForm.prototype, "options", void 0);
+    ], JuForm.prototype, "options", void 0);
     __decorate([
         core_1.Input('model'), 
         __metadata('design:type', Object)
-    ], TestForm.prototype, "model", void 0);
+    ], JuForm.prototype, "model", void 0);
     __decorate([
         core_1.Output('onModalClose'), 
         __metadata('design:type', Object)
-    ], TestForm.prototype, "onModalClose", void 0);
+    ], JuForm.prototype, "onModalClose", void 0);
     __decorate([
         core_1.Output('onLoad'), 
         __metadata('design:type', Object)
-    ], TestForm.prototype, "onLoad", void 0);
-    TestForm = __decorate([
+    ], JuForm.prototype, "onLoad", void 0);
+    JuForm = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: 'df',
@@ -226,10 +222,10 @@ var TestForm = (function () {
             changeDetection: core_1.ChangeDetectionStrategy.Default
         }), 
         __metadata('design:paramtypes', [juForm_builder_1.juFormBuilder, core_1.ElementRef])
-    ], TestForm);
-    return TestForm;
+    ], JuForm);
+    return JuForm;
 }());
-exports.TestForm = TestForm;
+exports.JuForm = JuForm;
 function async_call(fx, time) {
     if (time === void 0) { time = 0; }
     var tid = setTimeout(function () { fx(); clearTimeout(tid); }, time);

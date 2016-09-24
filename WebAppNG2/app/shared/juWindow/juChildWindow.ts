@@ -1,4 +1,4 @@
-import {Component, Renderer, DynamicComponentLoader, Injector, ApplicationRef, ViewChild, ElementRef, OnInit, OnDestroy, ViewEncapsulation, AfterViewInit } from '@angular/core';
+import {Component, Renderer, Injector, ApplicationRef, ViewChild, ElementRef, OnInit, OnDestroy, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import {juWindowService} from './juWindowService';
 import {Observable, Subscription} from 'rxjs/Rx';
 @Component({
@@ -33,7 +33,7 @@ export class juChildWindow implements OnInit, OnDestroy, AfterViewInit {
     private subList:Subscription[]=[];
     windowId: string;
     constructor(private service: juWindowService,
-        private dcl: DynamicComponentLoader,
+        private dcl: any,
         private injector: Injector,
         private appRef: ApplicationRef,
         private renderer: Renderer) { }
@@ -47,10 +47,10 @@ export class juChildWindow implements OnInit, OnDestroy, AfterViewInit {
     }
     ngOnDestroy() {
         this.subList.forEach(_=>{
-            if(!_.isUnsubscribed){
+           
                 _.unsubscribe();
                 _.remove(_);
-            }
+           
         });
         this.compRef.destroy();
     }

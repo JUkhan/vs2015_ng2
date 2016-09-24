@@ -34,10 +34,8 @@ var SetFilter = (function () {
     SetFilter.prototype.destroy = function () {
         this.unsubscribeCkhList();
         this.subsList.forEach(function (_) {
-            if (_ && !_.isUnsubscribed) {
-                _.unsubscribe();
-                _.remove(_);
-            }
+            _.unsubscribe();
+            _.remove(_);
         });
     };
     SetFilter.prototype.setupGui = function () {
@@ -102,10 +100,8 @@ var SetFilter = (function () {
     };
     SetFilter.prototype.unsubscribeCkhList = function () {
         this.chkSubscriptionList.forEach(function (it) {
-            if (it && !it.isUnsubscribed) {
-                it.unsubscribe();
-                it.remove(it);
-            }
+            it.unsubscribe();
+            it.remove(it);
         });
     };
     SetFilter.prototype.removeItems = function () {
