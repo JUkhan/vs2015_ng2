@@ -13,9 +13,25 @@ var FV_1 = require('../shared/juForm/FV');
 var HomeComponent = (function () {
     function HomeComponent() {
         this.msg = 'say:Hello World...';
+        this.dataList = [
+            { text: 'Beautiful Bangladesg', value: 1, disabled: !true },
+            { text: 'Pakistan', value: 2, style: 'label label-danger label-important' },
+            { text: 'India', value: 3 },
+            { text: 'Barma', value: 4 },
+            { text: 'China', value: 5, subText: 'kungfu', description: 'Seven start mantis kungfu' },
+            { text: 'Japan', value: 6, icon: 'film' },
+            { text: 'South Kowria', value: 7, icon: 'heart' },
+            { text: 'USA', value: 8 },
+            { text: 'UK', value: 9 },
+            { text: 'Austrlia', value: 10 }
+        ];
     }
     HomeComponent.prototype.ngOnInit = function () {
         this.initForm();
+        this.mySelectOptions = {
+            title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: !true,
+            height: 250, multiselect: !true, selectedTextFormat: 'count', maxOptions: 3
+        };
     };
     HomeComponent.prototype.ngOnDestroy = function () { };
     HomeComponent.prototype.initForm = function () {

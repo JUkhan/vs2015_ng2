@@ -10,6 +10,7 @@ import {juMenu}                 from './juMenu/juMenu';
 import {juPager}                from './juPager/juPager';
 import {juForm}                 from './juForm/juForm';
 import {juSelect}               from './juForm/juSelect';
+import {juSelectNew}            from './juForm/juSelectNew';
 import {CkEditor, FileSelect}   from './juForm/CkEditor';
 import {Datetimepicker}         from './juForm/Datetimepicker';
 import {juGrid}                 from './juGrid/juGrid';
@@ -32,7 +33,7 @@ import {juGridBuilder} from './juGrid/juGrid.builder';
         juMenu,
         juPager,
         juForm,
-        juSelect,
+        juSelect, juSelectNew,
         CkEditor,
         FileSelect,
         Datetimepicker,
@@ -49,7 +50,7 @@ import {juGridBuilder} from './juGrid/juGrid.builder';
         juMenu,
         juPager,
         juForm,
-        juSelect,
+        juSelect, juSelectNew,
         CkEditor,
         FileSelect,
         Datetimepicker,

@@ -3,15 +3,6 @@ import {RuntimeCompiler} from '@angular/compiler';
 import {SharedModule} from '../shared.module';
 import {Observable, Subject}   from 'rxjs/Rx';
 declare var jQuery: any;
-export interface IJUForm {    
-    showMessage(message: string, messageCss?: string);
-    focus();
-    setModel(model: any);
-    getModel();
-    tabClick(tabName: string, e?: any, tab?: any);
-    setConfig(options: any, form: any);
-    isValid(): boolean;
-}
 
 @Injectable()
 export class juFormBuilder {
@@ -415,7 +406,7 @@ export class juFormBuilder {
     }
     //end of template
     public createComponentFactory(options: any)
-        : Promise<ComponentFactory<IJUForm>> {
+        : Promise<ComponentFactory<any>> {
         this.options = options;
         const tpl = this.getTemplate();
         options.isTab = this.isTab;
@@ -438,7 +429,7 @@ export class juFormBuilder {
             selector: 'dynamic-form',
             template: tmpl,
         })
-        class DynamicFormComponent implements IJUForm {
+        class DynamicFormComponent {
             form: any; model: any = {}; config: any = {}; buttons: any; active: any = ''; tabName: string = '';
             myForm: any = {};
             constructor(private el: ElementRef) {

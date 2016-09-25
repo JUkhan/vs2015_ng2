@@ -1,7 +1,7 @@
 ﻿import {Component, OnInit, OnDestroy} from '@angular/core';
 import {juForm, FormElement, FormOptions} from '../shared/juForm/juForm';
 import {FV} from '../shared/juForm/FV';
-
+import {SelectOptions} from '../shared/juForm/juSelectNew';
 @Component({
     moduleId: module.id,
     selector: 'my-home',
@@ -9,8 +9,25 @@ import {FV} from '../shared/juForm/FV';
 })
 export class HomeComponent implements OnInit, OnDestroy {
     msg = 'say:Hello World...';
+    dataList = [
+        { text: 'Beautiful Bangladesg', value: 1, disabled: !true },
+        { text: 'Pakistan', value: 2, style:'label label-danger label-important'},
+        { text: 'India', value: 3 },
+        { text: 'Barma', value: 4 },
+        { text: 'China', value: 5, subText:'kungfu', description:'Seven start mantis kungfu'},
+        { text: 'Japan', value: 6, icon:'film' },
+        { text: 'South Kowria', value: 7, icon:'heart' },
+        { text: 'USA', value: 8 },
+        { text: 'UK', value: 9 },
+        { text: 'Austrlia', value: 10 }
+    ];
+    mySelectOptions: SelectOptions ;
     ngOnInit() {
         this.initForm();
+        this.mySelectOptions = {
+            title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: !true,
+            height: 250, multiselect: !true, selectedTextFormat: 'count', maxOptions:3
+        };
     }
     ngOnDestroy() { }
     myOptions: FormOptions;

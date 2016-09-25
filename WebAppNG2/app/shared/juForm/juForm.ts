@@ -2,7 +2,7 @@
 import { AfterViewInit, OnInit, OnDestroy}          from '@angular/core';
 import { OnChanges, SimpleChange, ComponentFactory} from '@angular/core';
 
-import {IJUForm, juFormBuilder} from './juForm.builder';
+import {juFormBuilder} from './juForm.builder';
 import {juSelect}              from './juSelect';
 import {Datetimepicker}        from './Datetimepicker';
 import {CkEditor, FileSelect}  from './CkEditor';
@@ -21,7 +21,7 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
     
     @ViewChild('dynamicContentPlaceHolder', { read: ViewContainerRef })
     protected dynamicComponentTarget: ViewContainerRef;    
-    protected componentRef: ComponentRef<IJUForm>;
+    protected componentRef: ComponentRef<any>;
 
     @Input('options')           options: any = {};
     @Input('model')             model: any;
@@ -78,7 +78,7 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         }
         this.typeBuilder
             .createComponentFactory(this.options)
-            .then((factory: ComponentFactory<IJUForm>) => {                
+            .then((factory: ComponentFactory<any>) => {                
                 this.componentRef = this
                     .dynamicComponentTarget
                     .createComponent(factory);               

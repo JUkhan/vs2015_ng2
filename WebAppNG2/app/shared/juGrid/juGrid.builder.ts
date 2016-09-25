@@ -14,12 +14,6 @@ import {rowEditor}              from './rowEditor';
 
 declare var jQuery: any;
 
-
-export interface IJUGrid
-{
-
-}
-
 @Injectable()
 export class juGridBuilder
 {
@@ -530,7 +524,7 @@ export class juGridBuilder
         return tpl.join('');
     }
     public createComponentFactory(options: any)
-        : Promise<ComponentFactory<IJUGrid>>
+        : Promise<ComponentFactory<any>>
     {
         this.options = options;
         const tpl = this.getTemplate();
@@ -556,7 +550,7 @@ export class juGridBuilder
             template: tmpl,
             encapsulation: ViewEncapsulation.None
         })
-        class DynamicGridComponent implements IJUGrid
+        class DynamicGridComponent 
         {
 
             data: any[] = [];
