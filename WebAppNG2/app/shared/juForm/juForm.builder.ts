@@ -3,15 +3,6 @@ import {RuntimeCompiler} from '@angular/compiler';
 import {SharedModule} from '../shared.module';
 import {Observable, Subject}   from 'rxjs/Rx';
 declare var jQuery: any;
-export interface IJUForm {    
-    showMessage(message: string, messageCss?: string);
-    focus();
-    setModel(model: any);
-    getModel();
-    tabClick(tabName: string, e?: any, tab?: any);
-    setConfig(options: any, form: any);
-    isValid(): boolean;
-}
 
 @Injectable()
 export class juFormBuilder {
@@ -303,19 +294,31 @@ export class juFormBuilder {
         let labelSize = input.labelSize || this.options.labelSize || 3,
             labelPos = input.labelPos || this.options.labelPos || 'top',
             cfield = fieldName.split('.').join('_'),
-            element = `<juSelect
+            //element = `<juSelect
+            //        [myForm]="myForm"
+            //        [config]="${config}"                     
+            //        #${cfield}select 
+            //        (option-change)="${config}.change($event)"                                
+            //        [disabled]="${config}.disabled"
+            //        [hide-search]="${input.search ? 'false' : 'true'}" 
+            //        method="${input.method || 'getValues'}" 
+            //        [model]="model"                     
+            //        property-name="${fieldName}" 
+            //        view-mode="${input.viewMode || 'select'}" 
+            //        [data-src]="${config}.data">
+            //    </juSelect>                
+            //    <div *ngIf="${cfield}select.hasError()" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
+                element = `<juSelectNew
                     [myForm]="myForm"
                     [config]="${config}"                     
                     #${cfield}select 
-                    (option-change)="${config}.change($event)"                                
-                    [disabled]="${config}.disabled"
-                    [hide-search]="${input.search ? 'false' : 'true'}" 
-                    method="${input.method || 'getValues'}" 
+                    (option-change)="${config}.change($event)"
                     [model]="model"                     
-                    property-name="${fieldName}" 
-                    view-mode="${input.viewMode || 'select'}" 
-                    [data-src]="${config}.data">
-                </juSelect>                
+                    property-name="${fieldName}"
+                    [data]="${config}.data" 
+                    [options]="${config}.options||{}"                   
+                    >
+                </juSelectNew>                
                 <div *ngIf="${cfield}select.hasError()" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
         return this.getHtml(input, element, fieldName, labelPos, labelSize);
     }
@@ -415,7 +418,7 @@ export class juFormBuilder {
     }
     //end of template
     public createComponentFactory(options: any)
-        : Promise<ComponentFactory<IJUForm>> {
+        : Promise<ComponentFactory<any>> {
         this.options = options;
         const tpl = this.getTemplate();
         options.isTab = this.isTab;
@@ -438,7 +441,7 @@ export class juFormBuilder {
             selector: 'dynamic-form',
             template: tmpl,
         })
-        class DynamicFormComponent implements IJUForm {
+        class DynamicFormComponent {
             form: any; model: any = {}; config: any = {}; buttons: any; active: any = ''; tabName: string = '';
             myForm: any = {};
             constructor(private el: ElementRef) {
@@ -476,11 +479,16 @@ export class juFormBuilder {
                             model[prop] = dmodel || '';
                         }
                     }
+                    //else if (field.type === 'juSelect') {
+                    //    if (typeof dmodel === 'undefined') {
+                    //        async_call(() => { field.api.checkAll(false); });
+                    //    } else {
+                    //        async_call(() => { field.api.value = dmodel; });
+                    //    }
+                    //}
                     else if (field.type === 'juSelect') {
-                        if (typeof dmodel === 'undefined') {
-                            async_call(() => { field.api.checkAll(false); });
-                        } else {
-                            async_call(() => { field.api.value = dmodel; });
+                        if (field.api) {
+                            async_call(() => { field.api.setValue(dmodel); });
                         }
                     }
                     else if (field.type === 'datepicker' && dmodel) {

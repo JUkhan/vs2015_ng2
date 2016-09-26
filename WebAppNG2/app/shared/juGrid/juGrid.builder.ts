@@ -14,12 +14,6 @@ import {rowEditor}              from './rowEditor';
 
 declare var jQuery: any;
 
-
-export interface IJUGrid
-{
-
-}
-
 @Injectable()
 export class juGridBuilder
 {
@@ -42,6 +36,7 @@ export class juGridBuilder
     }
     private renderTable(tpl: any[])
     {
+        this.options.width = this.getTotalWidth();
         tpl.push(`<div [style.display]="config.message?'block':'none'" [class]="config.messageCss">{{config.message}}</div>`);
         if (this.options.pagerPos === 'top')
         {
@@ -49,7 +44,7 @@ export class juGridBuilder
         }
         tpl.push(`<div class="ju-grid" [ngStyle]="getStyle(tc1, tc2)">
             <div style="overflow:hidden" #headerDiv>
-                <div style="width:${this.getTotalWidth()}px;">
+                <div [style.width.px]="config.width">
                     <table  class="${this.options.classNames} theader ${this.options.colResize ? 'tbl-resize' : ''}">
                         <thead>
                             ${this.getHeader(this.options.columnDefs)}
@@ -59,7 +54,7 @@ export class juGridBuilder
             </div>
 
             <div #tc1 style="max-height:${this.options.height}px;overflow:auto;" itemscope (scroll)="tblScroll($event, headerDiv)">
-                <div #tc2 style="width:${this.getTotalWidth() - 22}px">
+                <div #tc2 [style.width.px]="config.width - 22">
                     <table class="${this.options.classNames} tbody ${this.options.colResize ? 'tbl-resize' : ''}">
                         <tbody (click)="hideFilterWindow()">
                             ${this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()}
@@ -529,7 +524,7 @@ export class juGridBuilder
         return tpl.join('');
     }
     public createComponentFactory(options: any)
-        : Promise<ComponentFactory<IJUGrid>>
+        : Promise<ComponentFactory<any>>
     {
         this.options = options;
         const tpl = this.getTemplate();
@@ -555,7 +550,7 @@ export class juGridBuilder
             template: tmpl,
             encapsulation: ViewEncapsulation.None
         })
-        class DynamicGridComponent implements IJUGrid
+        class DynamicGridComponent 
         {
 
             data: any[] = [];
@@ -618,14 +613,68 @@ export class juGridBuilder
             {
                 headerDiv.scrollLeft = e.target.scrollLeft;
             }
-            private columnResizing()
-            {
+            private columnResizing() {
 
                 let thList: any[] = this.el.nativeElement.querySelectorAll('table thead tr th'),
 
                     mousemove$ = Observable.fromEvent(document, 'mousemove'),
                     mouseup$ = Observable.fromEvent(document, 'mouseup'),
-                    startX = 0, w1 = 0, w2 = 0, not_mousedown = true;
+                    startX = 0, w1 = 0, w2 = 0, not_mousedown = true, tblWidth = this.config.width, activeIndex=1;
+                
+                for (let index = 0; index < thList.length; index++) {
+                    let th = thList[index];
+                    Observable.fromEvent(th, 'mousemove')
+                        .filter(_ => index !== 0 /*&& index + 1 !== thList.length*/)
+                        .filter((e: any) => {
+                            if (e.target.tagName === 'TH') {
+                                if (Math.abs(e.x - jQuery(e.target).offset().left) < 7) {
+                                    e.target.style.cursor = 'col-resize';
+                                    return true;
+                                }
+                                if (not_mousedown) {
+                                    e.target.style.cursor = 'default';
+                                }
+                                return false;
+                            }
+                            return false;
+                        })
+                        .flatMap((e: any) => {
+                            return Observable.fromEvent(e.target, 'mousedown')
+                                .do((e: any) => {
+                                    document.body.style.cursor = 'col-resize';
+                                    not_mousedown = false;
+                                    activeIndex = index;
+                                    startX = e.x;
+                                    tblWidth = this.config.width;
+                                    w1 = this.config.columnDefs[index - 1].width;
+                                    w2 = this.config.columnDefs[index].width;
+                                });
+                        })
+                        .subscribe();
+                        
+                }
+                mouseup$.subscribe(e => {
+                    document.body.style.cursor = 'default';
+                    not_mousedown = true
+                });
+                mousemove$
+                    .map((e: any) => e.x - startX)
+                    .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } })                   
+                    .filter(e => !not_mousedown)
+                    .filter(e =>  w1 + e > 20)
+                    .subscribe(e => {
+                        this.config.columnDefs[activeIndex - 1].width = w1 + e;
+                        this.config.width = tblWidth + e;
+                    });                    
+            }
+            private columnResizing_backup()
+            {
+                
+                let thList: any[] = this.el.nativeElement.querySelectorAll('table thead tr th'),
+
+                    mousemove$ = Observable.fromEvent(document, 'mousemove'),
+                    mouseup$ = Observable.fromEvent(document, 'mouseup'),
+                    startX = 0, w1 = 0, w2 = 0, not_mousedown = true, tblWidth = this.config.width;
                 //thList.forEach((th, index) => 
                 for (let index = 0; index < thList.length; index++)
                 {
@@ -634,6 +683,10 @@ export class juGridBuilder
                         .filter(_ => index !== 0 /*&& index + 1 !== thList.length*/)
                         .filter((e: any) =>
                         {
+                            if (!not_mousedown) {
+                                console.log('......', index)
+                                return true;
+                            }
                             if (e.target.tagName === 'TH')
                             {
                                 if (Math.abs(e.x - jQuery(e.target).offset().left) < 7)
@@ -656,6 +709,7 @@ export class juGridBuilder
                                 {
                                     not_mousedown = false;
                                     startX = e.x;
+                                    tblWidth = this.config.width;
                                     w1 = this.config.columnDefs[index - 1].width;
                                     w2 = this.config.columnDefs[index].width;
                                 });
@@ -669,7 +723,9 @@ export class juGridBuilder
                         .subscribe(e =>
                         {
                             this.config.columnDefs[index - 1].width = w1 + e;
-                            this.config.columnDefs[index].width = w2 - e;
+                            //this.config.columnDefs[index].width = w2 - e;
+                            this.config.width = tblWidth+e;                           
+                            
                         });
                 }
             }

@@ -38,7 +38,7 @@ var CrudExample = (function () {
         });
     };
     CrudExample.prototype.educationCellRender = function (row) {
-        return this.educationList.find(function (_) { return _.value == row.education; }).name;
+        return this.educationList.find(function (_) { return _.value == row.education; }).text;
     };
     CrudExample.prototype.getPagerData = function () {
         return Rx_1.Observable.of({ totalPage: 1234, data: this.scholarList });
@@ -55,7 +55,7 @@ var CrudExample = (function () {
                     cellRenderer: this.educationCellRender.bind(this)
                 },
                 { headerName: 'Age', field: 'age', filter: 'number', sort: true },
-                { headerName: 'Address', field: 'address', cellRenderer: function (row) { return _this.addressList.find(function (_) { return _.value == row.address; }).name; } },
+                { headerName: 'Address', field: 'address', cellRenderer: function (row) { return _this.addressList.find(function (_) { return _.value == row.address; }).text; } },
                 { headerName: 'Description', width: 300, field: 'description' }
             ],
             formDefs: {
@@ -86,6 +86,7 @@ var CrudExample = (function () {
         var _this = this;
         this.service.post('dummydata/create_update_scholar', this.scholarGridOptions.api.form.getModel())
             .subscribe(function (res) {
+            console.log(res);
             if (_this.scholarGridOptions.api.form.isUpdate) {
                 _this.scholarGridOptions.api.grid.updateItem(_this.scholarGridOptions.api.form.getModel());
             }

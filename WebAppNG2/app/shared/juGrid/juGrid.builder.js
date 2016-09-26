@@ -38,11 +38,12 @@ var juGridBuilder = (function () {
         return "<div " + style + " [style.display]=\"viewList?.length?'block':'none'\" class=\"juPager\" [linkPages]=\"config.linkPages\" [enablePowerPage]=\"config.enablePowerPage\" [enablePageSearch]=\"config.enablePageSearch\" [pageSize]=\"config.pageSize\" [data]=\"data\" (onInit)=\"pagerInit($event)\" (pageChange)=\"onPageChange($event)\"></div>";
     };
     juGridBuilder.prototype.renderTable = function (tpl) {
+        this.options.width = this.getTotalWidth();
         tpl.push("<div [style.display]=\"config.message?'block':'none'\" [class]=\"config.messageCss\">{{config.message}}</div>");
         if (this.options.pagerPos === 'top') {
             tpl.push(this.getPager());
         }
-        tpl.push("<div class=\"ju-grid\" [ngStyle]=\"getStyle(tc1, tc2)\">\n            <div style=\"overflow:hidden\" #headerDiv>\n                <div style=\"width:" + this.getTotalWidth() + "px;\">\n                    <table  class=\"" + this.options.classNames + " theader " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <thead>\n                            " + this.getHeader(this.options.columnDefs) + "\n                        </thead>\n                     </table>\n                </div>\n            </div>\n\n            <div #tc1 style=\"max-height:" + this.options.height + "px;overflow:auto;\" itemscope (scroll)=\"tblScroll($event, headerDiv)\">\n                <div #tc2 style=\"width:" + (this.getTotalWidth() - 22) + "px\">\n                    <table class=\"" + this.options.classNames + " tbody " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <tbody (click)=\"hideFilterWindow()\">\n                            " + (this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()) + "\n                        </tbody>\n                    </table>\n                </div>\n            </div>            \n        </div>");
+        tpl.push("<div class=\"ju-grid\" [ngStyle]=\"getStyle(tc1, tc2)\">\n            <div style=\"overflow:hidden\" #headerDiv>\n                <div [style.width.px]=\"config.width\">\n                    <table  class=\"" + this.options.classNames + " theader " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <thead>\n                            " + this.getHeader(this.options.columnDefs) + "\n                        </thead>\n                     </table>\n                </div>\n            </div>\n\n            <div #tc1 style=\"max-height:" + this.options.height + "px;overflow:auto;\" itemscope (scroll)=\"tblScroll($event, headerDiv)\">\n                <div #tc2 [style.width.px]=\"config.width - 22\">\n                    <table class=\"" + this.options.classNames + " tbody " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <tbody (click)=\"hideFilterWindow()\">\n                            " + (this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()) + "\n                        </tbody>\n                    </table>\n                </div>\n            </div>            \n        </div>");
         if (this.options.pagerPos === 'bottom') {
             tpl.push('<div style="height:5px;"></div>');
             tpl.push(this.getPager());
@@ -437,7 +438,7 @@ var juGridBuilder = (function () {
             };
             DynamicGridComponent.prototype.columnResizing = function () {
                 var _this = this;
-                var thList = this.el.nativeElement.querySelectorAll('table thead tr th'), mousemove$ = Rx_1.Observable.fromEvent(document, 'mousemove'), mouseup$ = Rx_1.Observable.fromEvent(document, 'mouseup'), startX = 0, w1 = 0, w2 = 0, not_mousedown = true;
+                var thList = this.el.nativeElement.querySelectorAll('table thead tr th'), mousemove$ = Rx_1.Observable.fromEvent(document, 'mousemove'), mouseup$ = Rx_1.Observable.fromEvent(document, 'mouseup'), startX = 0, w1 = 0, w2 = 0, not_mousedown = true, tblWidth = this.config.width, activeIndex = 1;
                 var _loop_1 = function(index) {
                     var th = thList[index];
                     Rx_1.Observable.fromEvent(th, 'mousemove')
@@ -458,8 +459,66 @@ var juGridBuilder = (function () {
                         .flatMap(function (e) {
                         return Rx_1.Observable.fromEvent(e.target, 'mousedown')
                             .do(function (e) {
+                            document.body.style.cursor = 'col-resize';
+                            not_mousedown = false;
+                            activeIndex = index;
+                            startX = e.x;
+                            tblWidth = _this.config.width;
+                            w1 = _this.config.columnDefs[index - 1].width;
+                            w2 = _this.config.columnDefs[index].width;
+                        });
+                    })
+                        .subscribe();
+                };
+                for (var index = 0; index < thList.length; index++) {
+                    _loop_1(index);
+                }
+                mouseup$.subscribe(function (e) {
+                    document.body.style.cursor = 'default';
+                    not_mousedown = true;
+                });
+                mousemove$
+                    .map(function (e) { return e.x - startX; })
+                    .do(function (diff) { if (Math.abs(diff) > 0) {
+                    _this.isColResize = true;
+                } })
+                    .filter(function (e) { return !not_mousedown; })
+                    .filter(function (e) { return w1 + e > 20; })
+                    .subscribe(function (e) {
+                    _this.config.columnDefs[activeIndex - 1].width = w1 + e;
+                    _this.config.width = tblWidth + e;
+                });
+            };
+            DynamicGridComponent.prototype.columnResizing_backup = function () {
+                var _this = this;
+                var thList = this.el.nativeElement.querySelectorAll('table thead tr th'), mousemove$ = Rx_1.Observable.fromEvent(document, 'mousemove'), mouseup$ = Rx_1.Observable.fromEvent(document, 'mouseup'), startX = 0, w1 = 0, w2 = 0, not_mousedown = true, tblWidth = this.config.width;
+                var _loop_2 = function(index) {
+                    var th = thList[index];
+                    Rx_1.Observable.fromEvent(th, 'mousemove')
+                        .filter(function (_) { return index !== 0; })
+                        .filter(function (e) {
+                        if (!not_mousedown) {
+                            console.log('......', index);
+                            return true;
+                        }
+                        if (e.target.tagName === 'TH') {
+                            if (Math.abs(e.x - jQuery(e.target).offset().left) < 7) {
+                                e.target.style.cursor = 'col-resize';
+                                return true;
+                            }
+                            if (not_mousedown) {
+                                e.target.style.cursor = 'default';
+                            }
+                            return false;
+                        }
+                        return false;
+                    })
+                        .flatMap(function (e) {
+                        return Rx_1.Observable.fromEvent(e.target, 'mousedown')
+                            .do(function (e) {
                             not_mousedown = false;
                             startX = e.x;
+                            tblWidth = _this.config.width;
                             w1 = _this.config.columnDefs[index - 1].width;
                             w2 = _this.config.columnDefs[index].width;
                         });
@@ -474,11 +533,11 @@ var juGridBuilder = (function () {
                         .filter(function (e) { return e < 0 ? w1 + e > 20 : w2 - e > 20; })
                         .subscribe(function (e) {
                         _this.config.columnDefs[index - 1].width = w1 + e;
-                        _this.config.columnDefs[index].width = w2 - e;
+                        _this.config.width = tblWidth + e;
                     });
                 };
                 for (var index = 0; index < thList.length; index++) {
-                    _loop_1(index);
+                    _loop_2(index);
                 }
             };
             DynamicGridComponent.prototype.findPosX = function (obj) {

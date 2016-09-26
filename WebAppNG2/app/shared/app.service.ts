@@ -60,6 +60,7 @@ export class AppService {
     post(url, data): Observable<any> {
         this.overlay(true);        
         return this.http.post(this.getBaseUrl() + url, JSON.stringify(data), { headers: this.headers })
+            .map(res => res.json())
             .do(this.hideOverlay.bind(this))
             .catch(this.errorHandler.bind(this));
     }

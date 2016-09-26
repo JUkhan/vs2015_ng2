@@ -19,6 +19,7 @@ var juMenu_1 = require('./juMenu/juMenu');
 var juPager_1 = require('./juPager/juPager');
 var juForm_1 = require('./juForm/juForm');
 var juSelect_1 = require('./juForm/juSelect');
+var juSelectNew_1 = require('./juForm/juSelectNew');
 var CkEditor_1 = require('./juForm/CkEditor');
 var Datetimepicker_1 = require('./juForm/Datetimepicker');
 var juGrid_1 = require('./juGrid/juGrid');
@@ -47,7 +48,7 @@ var SharedModule = (function () {
                 juMenu_1.juMenu,
                 juPager_1.juPager,
                 juForm_1.juForm,
-                juSelect_1.juSelect,
+                juSelect_1.juSelect, juSelectNew_1.juSelectNew,
                 CkEditor_1.CkEditor,
                 CkEditor_1.FileSelect,
                 Datetimepicker_1.Datetimepicker,
@@ -62,7 +63,7 @@ var SharedModule = (function () {
                 juMenu_1.juMenu,
                 juPager_1.juPager,
                 juForm_1.juForm,
-                juSelect_1.juSelect,
+                juSelect_1.juSelect, juSelectNew_1.juSelectNew,
                 CkEditor_1.CkEditor,
                 CkEditor_1.FileSelect,
                 Datetimepicker_1.Datetimepicker,
