@@ -14,11 +14,19 @@ var juSelectNew = (function () {
     function juSelectNew(renderer) {
         this.renderer = renderer;
         this.options = {};
+        this.model = {};
+        this.config = {};
+        this.onChange = new core_1.EventEmitter();
         this.selectedItem = {};
         this.hasSerchResult = true;
         this.maxOptionsVisibility = 'hidden';
+        this.focusToValidate = false;
+        this.notifyRowEditor = new Rx_1.Subject();
+        this.valueChanges = new Rx_1.Subject();
+        this.previousValue = null;
     }
     juSelectNew.prototype.ngOnInit = function () {
+        this.config.api = this;
         this.options.textProp = this.options.textProp || 'text';
         this.options.valueProp = this.options.valueProp || 'value';
         this.options.subTextProp = this.options.subTextProp || 'subText';
@@ -55,8 +63,12 @@ var juSelectNew = (function () {
         }
     };
     juSelectNew.prototype.ngOnChanges = function (changes) {
-        if (this.options.liveSearch)
-            this.dataList_bckup = this.dataList.slice(0);
+        if (changes.dataList) {
+            if (this.options.liveSearch && changes.dataList.currentValue !== changes.dataList.previousValue)
+                this.dataList_bckup = this.dataList.slice(0);
+            if (changes.dataList.currentValue !== changes.dataList.previousValue) {
+            }
+        }
     };
     juSelectNew.prototype.ngAfterViewInit = function () {
         var _this = this;
@@ -68,6 +80,15 @@ var juSelectNew = (function () {
         }
     };
     juSelectNew.prototype.ngOnDestroy = function () {
+    };
+    juSelectNew.prototype.setFocusToValidate = function (e) {
+        this.focusToValidate = true;
+    };
+    juSelectNew.prototype.checkAll = function (checked) {
+        if (this.dataList === undefined)
+            return;
+        this.dataList.forEach(function (_) { return _.selected = checked; });
+        this.setModelValue(checked ? this.getValue() : '');
     };
     juSelectNew.prototype.liveSearch = function (val) {
         var _this = this;
@@ -86,6 +107,8 @@ var juSelectNew = (function () {
     };
     juSelectNew.prototype.getFormatedText = function () {
         if (this.options.multiselect) {
+            if (!this.dataList)
+                return this.options.title;
             var slist = this.dataList.filter(function (_) { return _.selected; });
             if (slist.length == 0)
                 return this.options.title;
@@ -123,6 +146,7 @@ var juSelectNew = (function () {
                     return false;
                 }
             }
+            this.setModelValue(this.getValue());
             return false;
         }
         if (!!item[this.options.disabledItemProp])
@@ -132,6 +156,7 @@ var juSelectNew = (function () {
             this.selectedItem.selected = false;
         }
         this.selectedItem = item;
+        this.setModelValue(item[this.options.valueProp]);
     };
     juSelectNew.prototype.getBtnStyle = function () {
         return (_a = {}, _a[this.options.btnStyle] = true, _a);
@@ -149,6 +174,71 @@ var juSelectNew = (function () {
         return this.options.iconRenderer ? this.options.iconRenderer(item) :
             item[this.options.iconProp] ? 'glyphicon glyphicon-' + item[this.options.iconProp] : '';
     };
+    juSelectNew.prototype.setValue = function (value) {
+        var _this = this;
+        this.checkAll(false);
+        if (!value) {
+            this.selectedItem = {};
+            return;
+        }
+        if (this.options.multiselect) {
+            if (this.dataList && this.dataList.length == 0)
+                return;
+            value.toString().split(this.options.multipleSeparator).forEach(function (val) {
+                var item = _this.dataList.find(function (_) { return _[_this.options.valueProp].toString() === val; });
+                if (item)
+                    item.selected = true;
+            });
+        }
+        else {
+            var item = this.dataList.find(function (_) { return _[_this.options.valueProp].toString() === value.toString(); });
+            if (item)
+                item.selected = true;
+            this.selectedItem = item;
+        }
+        this.setModelValue(value);
+    };
+    juSelectNew.prototype.getValue = function () {
+        var _this = this;
+        if (this.dataList === undefined)
+            return '';
+        return this.dataList.filter(function (_) { return _.selected; }).map(function (_) { return _[_this.options.valueProp]; }).join(this.options.multipleSeparator);
+    };
+    juSelectNew.prototype.getValueFromModel = function () {
+        var props = this.propertyName.split('.');
+        if (props.length > 1) {
+            var obj_1 = this.model;
+            props.forEach(function (prop) { return obj_1 = obj_1[prop]; });
+            return obj_1;
+        }
+        return this.model[this.propertyName];
+    };
+    juSelectNew.prototype.setModelValue = function (val) {
+        if (!this.propertyName)
+            return;
+        var props = this.propertyName.split('.');
+        if (props.length > 1) {
+            var obj = this.model;
+            var len = props.length - 1;
+            for (var index = 0; index < len; index++) {
+                obj = obj[props[index]];
+            }
+            obj[props[index]] = val;
+        }
+        else {
+            this.model[this.propertyName] = val;
+        }
+        if (val !== this.previousValue) {
+            this.notifyRowEditor.next({});
+            this.onChange.next({ value: val, sender: this, form: this.myForm, index: this.index });
+            this.valueChanges.next({ value: val, sender: this, form: this.myForm, index: this.index });
+        }
+        this.previousValue = val;
+    };
+    juSelectNew.prototype.hasError = function () {
+        this.myForm.componentRef.instance.vlidate_input(this.getValue(), this.config, !this.focusToValidate);
+        return !this.config.hideMsg;
+    };
     __decorate([
         core_1.Input('data'), 
         __metadata('design:type', Array)
@@ -157,6 +247,30 @@ var juSelectNew = (function () {
         core_1.Input(), 
         __metadata('design:type', Object)
     ], juSelectNew.prototype, "options", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], juSelectNew.prototype, "model", void 0);
+    __decorate([
+        core_1.Input('property-name'), 
+        __metadata('design:type', Object)
+    ], juSelectNew.prototype, "propertyName", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], juSelectNew.prototype, "config", void 0);
+    __decorate([
+        core_1.Input('myForm'), 
+        __metadata('design:type', Object)
+    ], juSelectNew.prototype, "myForm", void 0);
+    __decorate([
+        core_1.Output('option-change'), 
+        __metadata('design:type', Object)
+    ], juSelectNew.prototype, "onChange", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Number)
+    ], juSelectNew.prototype, "index", void 0);
     __decorate([
         core_1.ViewChild('searchEl'), 
         __metadata('design:type', core_1.ElementRef)
@@ -167,7 +281,7 @@ var juSelectNew = (function () {
             selector: 'juSelectNew, .juSelectNew, [juSelectNew]',
             encapsulation: core_1.ViewEncapsulation.None,
             changeDetection: core_1.ChangeDetectionStrategy.Default,
-            template: "\n    <div [ngClass]=\"getDropdownStyle()\" class=\"btn-group bootstrap-select\" [style.width]=\"options.width\">\n        <button [disabled]=\"options.disabled\" type=\"button\" [ngClass]=\"getBtnStyle()\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" [title]=\"getFormatedText()\" aria-expanded=\"false\" >\n            <span class=\"filter-option pull-left\"> \n                <i *ngIf=\"selectedItem[options.iconProp]||options.iconRenderer\" [class]=\"getSelectedIconStyle()\"></i>               \n                <span class=\"{{options.multiselect?'':selectedItem[options.styleProp]}}\">{{getFormatedText()}}</span>\n            </span>&nbsp;\n            <span class=\"bs-caret\">\n                <span class=\"caret\"></span>\n            </span>\n        </button>\n        <div class=\"dropdown-menu open\" role=\"combobox\" [style.max-height.px]=\"options.height?options.height:'none'\" style=\"overflow: hidden; min-height: 0px;\">            \n            <div class=\"search-checkall\" *ngIf=\"options.liveSearch||(options.multiselect && options.checkAll)\">\n                <label *ngIf=\"options.checkAll\"><input type=\"checkbox\">Select All</label>\n                <input #searchEl *ngIf=\"options.liveSearch\" [style.width.%]=\"options.checkAll?50:100\" autofocus type=\"text\" class=\"form-control\" role=\"textbox\" placeholder=\"Search...\">\n            </div>\n            <ul class=\"dropdown-menu inner\" role=\"listbox\" aria-expanded=\"false\" [style.max-height.px]=\"options.height?options.height-46:'none'\" style=\"overflow-y: auto; min-height: 0px;\" >\n                <li [ngClass]=\"getItemClasses(item)\" *ngFor=\"let item of dataList\">\n                    <a role=\"option\" (click)=\"selectItem(item, $event)\" role=\"option\">\n                        <span *ngIf=\"item[options.iconProp]||options.iconRenderer\" [class]=\"getIconStyle(item)\"></span>\n                        <span class=\"{{item[options.styleProp]||'text'}}\">{{item[options.textProp]}}<small class=\"text-muted\">{{item[options.subTextProp]}}</small>\n                        <div *ngIf=\"item[options.descriptionProp]\"><small class=\"text-muted\">{{item[options.descriptionProp]}}</small></div>\n                        </span>\n                        <span class=\"glyphicon glyphicon-ok check-mark\"></span>\n                    </a>\n                </li> \n                <li *ngIf=\"!hasSerchResult\" class=\"no-results\" style=\"display: list-item;\">\n                    No results matched \"{{livesearchText}}\"\n                </li>                         \n            </ul>\n            <div [style.visibility]=\"maxOptionsVisibility\" class=\"notify\">{{options.maxOptionsText}}</div>\n        </div>\n\n    </div>"
+            template: "\n    <div [ngClass]=\"getDropdownStyle()\" class=\"btn-group bootstrap-select\" [style.width]=\"options.width\">\n        <button [disabled]=\"options.disabled\" type=\"button\" [ngClass]=\"getBtnStyle()\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" [title]=\"getFormatedText()\" aria-expanded=\"false\" (click)=\"setFocusToValidate($event)\">\n            <span class=\"filter-option pull-left\"> \n                <i *ngIf=\"selectedItem[options.iconProp]||options.iconRenderer\" [class]=\"getSelectedIconStyle()\"></i>               \n                <span class=\"{{options.multiselect?'':selectedItem[options.styleProp]}}\">{{getFormatedText()}}</span>\n            </span>&nbsp;\n            <span class=\"bs-caret\">\n                <span class=\"caret\"></span>\n            </span>\n        </button>\n        <div class=\"dropdown-menu open\" role=\"combobox\" [style.max-height.px]=\"options.height?options.height:'none'\" style=\"overflow: hidden; min-height: 0px;\">            \n            <div class=\"search-checkall\" *ngIf=\"options.liveSearch||(options.multiselect && options.checkAll)\">\n                <label (click)=\"$event.stopPropagation()\" *ngIf=\"options.checkAll\"><input (click)=\"checkAll(chkAll.checked)\" #chkAll type=\"checkbox\">Select All</label>\n                <input #searchEl *ngIf=\"options.liveSearch\" [style.width.%]=\"options.checkAll?50:100\" autofocus type=\"text\" class=\"form-control\" role=\"textbox\" placeholder=\"Search...\">\n            </div>\n            <ul class=\"dropdown-menu inner\" role=\"listbox\" aria-expanded=\"false\" [style.max-height.px]=\"options.height?options.height-46:'none'\" style=\"overflow-y: auto; min-height: 0px;\" >\n                <li [ngClass]=\"getItemClasses(item)\" *ngFor=\"let item of dataList\">\n                    <a role=\"option\" (click)=\"selectItem(item, $event)\" role=\"option\">\n                        <span *ngIf=\"item[options.iconProp]||options.iconRenderer\" [class]=\"getIconStyle(item)\"></span>\n                        <span class=\"{{item[options.styleProp]||'text'}}\">{{item[options.textProp]}}<small class=\"text-muted\">{{item[options.subTextProp]}}</small>\n                        <div *ngIf=\"item[options.descriptionProp]\"><small class=\"text-muted\">{{item[options.descriptionProp]}}</small></div>\n                        </span>\n                        <span class=\"glyphicon glyphicon-ok check-mark\"></span>\n                    </a>\n                </li> \n                <li *ngIf=\"!hasSerchResult\" class=\"no-results\" style=\"display: list-item;\">\n                    No results matched \"{{livesearchText}}\"\n                </li>                         \n            </ul>\n            <div [style.visibility]=\"maxOptionsVisibility\" class=\"notify\">{{options.maxOptionsText}}</div>\n        </div>\n\n    </div>"
         }), 
         __metadata('design:paramtypes', [core_1.Renderer])
     ], juSelectNew);

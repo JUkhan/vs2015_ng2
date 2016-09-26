@@ -804,6 +804,7 @@ select.selectpicker {
 }
 .search-checkall {
     padding:0 3px;
+    padding-bottom:3px;
 }
 .search-checkall label{
     cursor:pointer;

@@ -49,7 +49,7 @@ export class CrudExample implements OnInit {
             });
     }
     educationCellRender(row) {
-        return this.educationList.find(_ => _.value == row.education).name;
+        return this.educationList.find(_ => _.value == row.education).text;
     }
     private getPagerData()
     {
@@ -67,7 +67,7 @@ export class CrudExample implements OnInit {
                     cellRenderer: this.educationCellRender.bind(this)
                 },
                 { headerName: 'Age', field: 'age', filter: 'number', sort: true },
-                { headerName: 'Address', field: 'address', cellRenderer: row => this.addressList.find(_ => _.value == row.address).name },
+                { headerName: 'Address', field: 'address', cellRenderer: row => this.addressList.find(_ => _.value == row.address).text },
                 { headerName: 'Description', width: 300, field: 'description' }
             ],
             formDefs: {
@@ -96,7 +96,9 @@ export class CrudExample implements OnInit {
     }
     private submitScholar(e: any) {
         this.service.post('dummydata/create_update_scholar', this.scholarGridOptions.api.form.getModel())
-            .subscribe(res => {
+            .subscribe(res =>
+            {
+                console.log(res);
                 if (this.scholarGridOptions.api.form.isUpdate) {
                     this.scholarGridOptions.api.grid.updateItem(this.scholarGridOptions.api.form.getModel());
                 } else {

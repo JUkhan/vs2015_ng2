@@ -65,6 +65,7 @@ var AppService = (function () {
     AppService.prototype.post = function (url, data) {
         this.overlay(true);
         return this.http.post(this.getBaseUrl() + url, JSON.stringify(data), { headers: this.headers })
+            .map(function (res) { return res.json(); })
             .do(this.hideOverlay.bind(this))
             .catch(this.errorHandler.bind(this));
     };

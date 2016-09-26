@@ -1,9 +1,9 @@
 ﻿import {Component, Renderer, ViewChild, ElementRef, AfterViewInit,
     OnInit, OnDestroy, OnChanges,
-    ViewEncapsulation, ChangeDetectionStrategy,
-    Input, Output
+    ViewEncapsulation, ChangeDetectionStrategy, SimpleChange,
+    Input, Output, EventEmitter
 } from '@angular/core'
-import {Observable} from 'rxjs/Rx';
+import {Observable, Subject} from 'rxjs/Rx';
 @Component({
     moduleId: module.id,
     selector: 'juSelectNew, .juSelectNew, [juSelectNew]',
@@ -11,7 +11,7 @@ import {Observable} from 'rxjs/Rx';
     changeDetection: ChangeDetectionStrategy.Default,
     template: `
     <div [ngClass]="getDropdownStyle()" class="btn-group bootstrap-select" [style.width]="options.width">
-        <button [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" >
+        <button [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" (click)="setFocusToValidate($event)">
             <span class="filter-option pull-left"> 
                 <i *ngIf="selectedItem[options.iconProp]||options.iconRenderer" [class]="getSelectedIconStyle()"></i>               
                 <span class="{{options.multiselect?'':selectedItem[options.styleProp]}}">{{getFormatedText()}}</span>
@@ -22,7 +22,7 @@ import {Observable} from 'rxjs/Rx';
         </button>
         <div class="dropdown-menu open" role="combobox" [style.max-height.px]="options.height?options.height:'none'" style="overflow: hidden; min-height: 0px;">            
             <div class="search-checkall" *ngIf="options.liveSearch||(options.multiselect && options.checkAll)">
-                <label *ngIf="options.checkAll"><input type="checkbox">Select All</label>
+                <label (click)="$event.stopPropagation()" *ngIf="options.checkAll"><input (click)="checkAll(chkAll.checked)" #chkAll type="checkbox">Select All</label>
                 <input #searchEl *ngIf="options.liveSearch" [style.width.%]="options.checkAll?50:100" autofocus type="text" class="form-control" role="textbox" placeholder="Search...">
             </div>
             <ul class="dropdown-menu inner" role="listbox" aria-expanded="false" [style.max-height.px]="options.height?options.height-46:'none'" style="overflow-y: auto; min-height: 0px;" >
@@ -47,6 +47,13 @@ import {Observable} from 'rxjs/Rx';
 export class juSelectNew implements OnInit, OnChanges, AfterViewInit {
     @Input('data') dataList: any[];
     @Input() options: SelectOptions = <SelectOptions>{};
+    @Input() model: any = {};
+    @Input('property-name') propertyName: any;
+    @Input() config: any = {};
+    @Input('myForm') myForm: any;
+    @Output('option-change') onChange = new EventEmitter();
+    @Input() index:number;
+
     @ViewChild('searchEl') searchEl: ElementRef;
 
     private selectedItem: any = {};
@@ -54,9 +61,14 @@ export class juSelectNew implements OnInit, OnChanges, AfterViewInit {
     private livesearchText: string;
     private hasSerchResult: boolean = true;
     private maxOptionsVisibility: string = 'hidden';
-    constructor(private renderer: Renderer) { }
+    private focusToValidate: boolean = false;
+    notifyRowEditor: Subject<any> = new Subject();
+    valueChanges: Subject<any> = new Subject();
+
+    constructor(private renderer: Renderer) {  }
 
     public ngOnInit() {
+        this.config.api = this;        
         this.options.textProp = this.options.textProp || 'text';
         this.options.valueProp = this.options.valueProp || 'value';
         this.options.subTextProp = this.options.subTextProp || 'subText';
@@ -93,9 +105,14 @@ export class juSelectNew implements OnInit, OnChanges, AfterViewInit {
             this.options.showMenuArrow = false;
         }
     }
-    public ngOnChanges(changes) {
-        if (this.options.liveSearch)
-        this.dataList_bckup = this.dataList.slice(0);
+    public ngOnChanges(changes: any) {
+         if(changes.dataList){
+            if (this.options.liveSearch && changes.dataList.currentValue !== changes.dataList.previousValue)
+                this.dataList_bckup = this.dataList.slice(0);
+            if (changes.dataList.currentValue !== changes.dataList.previousValue)
+            {                
+            }
+        }
     }
     public ngAfterViewInit() {
         if (this.options.liveSearch) {
@@ -107,6 +124,15 @@ export class juSelectNew implements OnInit, OnChanges, AfterViewInit {
     }
     public ngOnDestroy() {
 
+    }
+    private setFocusToValidate(e:any){
+          this.focusToValidate = true;
+    }
+    private checkAll(checked)
+    {
+        if(this.dataList ===undefined)return;
+        this.dataList.forEach(_ => _.selected = checked); 
+        this.setModelValue(checked?this.getValue():'');      
     }
     private liveSearch(val: string) {
         this.livesearchText = val;
@@ -123,6 +149,7 @@ export class juSelectNew implements OnInit, OnChanges, AfterViewInit {
     }
     private getFormatedText() {
         if (this.options.multiselect) {
+            if(!this.dataList) return this.options.title;
             const slist = this.dataList.filter(_ => _.selected);           
             if (slist.length == 0) return this.options.title;
             if (this.options.selectedTextFormat === 'values')
@@ -154,24 +181,25 @@ export class juSelectNew implements OnInit, OnChanges, AfterViewInit {
                     this.maxOptionsVisibility = 'visible';
                     let tid = setTimeout(() => { this.maxOptionsVisibility = 'hidden'; clearTimeout(tid); }, 1500);
                     return false;
-                }
+                }                
             }
+            this.setModelValue(this.getValue());
             return false;
         }
         if (!!item[this.options.disabledItemProp]) return;
         item.selected = true;
         if (item !== this.selectedItem && this.selectedItem.selected) {
             this.selectedItem.selected = false;
-        }
+        }  
         this.selectedItem = item;
+        this.setModelValue(item[this.options.valueProp]);
     }
     private getBtnStyle() {
         return { [this.options.btnStyle]: true };
     }
     private getDropdownStyle() {
         return { 'dropup': this.options.dropup, 'form-control': this.options.fitWidth || this.options.width, 'fit-width': this.options.fitWidth, 'show-menu-arrow': this.options.showMenuArrow, 'show-tick': this.options.multiselect };
-    }
-
+    } 
     private getSelectedIconStyle() {
         if (this.options.multiselect) return '';
         return this.selectedItem[this.options.textProp] ? this.getIconStyle(this.selectedItem) : '';
@@ -180,7 +208,73 @@ export class juSelectNew implements OnInit, OnChanges, AfterViewInit {
         return this.options.iconRenderer ? this.options.iconRenderer(item) :
             item[this.options.iconProp] ? 'glyphicon glyphicon-' + item[this.options.iconProp] : '';
     }
-
+    /*model communication*/
+    public setValue(value: any)
+    {  
+        this.checkAll(false);
+        if(!value){
+        this.selectedItem={};
+         return;  }
+        if (this.options.multiselect)
+        {
+            if (this.dataList && this.dataList.length == 0) return;            
+            value.toString().split(this.options.multipleSeparator).forEach(val =>
+            {
+                let item = this.dataList.find(_ => _[this.options.valueProp].toString() === val);
+                if (item) item.selected = true;
+            });
+        } else
+        {
+            let item = this.dataList.find(_ => _[this.options.valueProp].toString() === value.toString());
+            if (item) item.selected = true;
+            this.selectedItem=item;
+        }
+        this.setModelValue(value);
+    }
+    public getValue()
+    {
+        if(this.dataList ===undefined)return '';
+        return this.dataList.filter(_ => _.selected).map(_ => _[this.options.valueProp]).join(this.options.multipleSeparator);
+    }
+    private getValueFromModel()
+    {
+        let props: Array<string> = this.propertyName.split('.');
+        if (props.length > 1)
+        {
+            let obj = this.model;
+            props.forEach(prop => obj = obj[prop]);
+            return obj;
+        }
+        return this.model[this.propertyName];
+    }
+    private previousValue:any=null;
+    private setModelValue(val: any)
+    {
+        if(!this.propertyName)return;
+        let props: Array<string> = this.propertyName.split('.');
+        if (props.length > 1)
+        {
+            let obj = this.model;
+            let len = props.length - 1;
+            for (var index = 0; index < len; index++)
+            {
+                obj = obj[props[index]];
+            }
+            obj[props[index]] = val;
+        }
+        else { this.model[this.propertyName] = val; }
+        //subscribing
+        if(val!==this.previousValue){
+        this.notifyRowEditor.next({});
+        this.onChange.next({ value: val, sender: this, form: this.myForm, index: this.index });
+        this.valueChanges.next({ value: val, sender: this, form: this.myForm, index: this.index });
+        }
+        this.previousValue=val;
+    }
+    public hasError() { 
+        this.myForm.componentRef.instance.vlidate_input( this.getValue(), this.config, !this.focusToValidate);        
+        return !this.config.hideMsg;
+    }
 }
 export interface SelectOptions {
     textProp?: string;
@@ -207,5 +301,5 @@ export interface SelectOptions {
     height?: number;
     fitWidth?: boolean;
     showMenuArrow?: boolean;
-    multipleSeparator?: string;
+    multipleSeparator?: string;    
 }

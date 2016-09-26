@@ -48,10 +48,10 @@ namespace WebAppNG2.Controllers
         {
             var list = new List<NameValue>
             {
-                new NameValue { name="CSE", value=1 },
-                new NameValue { name="BBA", value=2 },
-                new NameValue { name="MBA", value=3 },
-                new NameValue { name="EEE", value=4 },
+                new NameValue { text="CSE", value=1 },
+                new NameValue { text="BBA", value=2 },
+                new NameValue { text="MBA", value=3 },
+                new NameValue { text="EEE", value=4 },
             };
             return Json(list, JsonRequestBehavior.AllowGet);
         }
@@ -60,10 +60,10 @@ namespace WebAppNG2.Controllers
         {
             var list = new List<NameValue>
             {
-                new NameValue { name="Address-1", value=101 },
-                new NameValue { name="Address-2", value=102 },
-                new NameValue { name="Address-3", value=103 },
-                new NameValue { name="Address-4", value=104 },
+                new NameValue { text="Address-1", value=101 },
+                new NameValue { text="Address-2", value=102 },
+                new NameValue { text="Address-3", value=103 },
+                new NameValue { text="Address-4", value=104 },
             };
             return Json(list, JsonRequestBehavior.AllowGet);
         }
@@ -72,7 +72,7 @@ namespace WebAppNG2.Controllers
     public class NameValue
     {
         public int value { get; set; }
-        public string name { get; set; }
+        public string text { get; set; }
     }
     
     public class Scholar

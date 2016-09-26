@@ -294,19 +294,31 @@ export class juFormBuilder {
         let labelSize = input.labelSize || this.options.labelSize || 3,
             labelPos = input.labelPos || this.options.labelPos || 'top',
             cfield = fieldName.split('.').join('_'),
-            element = `<juSelect
+            //element = `<juSelect
+            //        [myForm]="myForm"
+            //        [config]="${config}"                     
+            //        #${cfield}select 
+            //        (option-change)="${config}.change($event)"                                
+            //        [disabled]="${config}.disabled"
+            //        [hide-search]="${input.search ? 'false' : 'true'}" 
+            //        method="${input.method || 'getValues'}" 
+            //        [model]="model"                     
+            //        property-name="${fieldName}" 
+            //        view-mode="${input.viewMode || 'select'}" 
+            //        [data-src]="${config}.data">
+            //    </juSelect>                
+            //    <div *ngIf="${cfield}select.hasError()" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
+                element = `<juSelectNew
                     [myForm]="myForm"
                     [config]="${config}"                     
                     #${cfield}select 
-                    (option-change)="${config}.change($event)"                                
-                    [disabled]="${config}.disabled"
-                    [hide-search]="${input.search ? 'false' : 'true'}" 
-                    method="${input.method || 'getValues'}" 
+                    (option-change)="${config}.change($event)"
                     [model]="model"                     
-                    property-name="${fieldName}" 
-                    view-mode="${input.viewMode || 'select'}" 
-                    [data-src]="${config}.data">
-                </juSelect>                
+                    property-name="${fieldName}"
+                    [data]="${config}.data" 
+                    [options]="${config}.options||{}"                   
+                    >
+                </juSelectNew>                
                 <div *ngIf="${cfield}select.hasError()" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
         return this.getHtml(input, element, fieldName, labelPos, labelSize);
     }
@@ -467,11 +479,16 @@ export class juFormBuilder {
                             model[prop] = dmodel || '';
                         }
                     }
+                    //else if (field.type === 'juSelect') {
+                    //    if (typeof dmodel === 'undefined') {
+                    //        async_call(() => { field.api.checkAll(false); });
+                    //    } else {
+                    //        async_call(() => { field.api.value = dmodel; });
+                    //    }
+                    //}
                     else if (field.type === 'juSelect') {
-                        if (typeof dmodel === 'undefined') {
-                            async_call(() => { field.api.checkAll(false); });
-                        } else {
-                            async_call(() => { field.api.value = dmodel; });
+                        if (field.api) {
+                            async_call(() => { field.api.setValue(dmodel); });
                         }
                     }
                     else if (field.type === 'datepicker' && dmodel) {
