@@ -488,7 +488,8 @@ export class juFormBuilder {
                     //}
                     else if (field.type === 'juSelect') {
                         if (field.api) {
-                            async_call(() => { field.api.setValue(dmodel); });
+                            field.api.setValue(dmodel);
+                            //async_call(() => { field.api.setValue(dmodel); });
                         }
                     }
                     else if (field.type === 'datepicker' && dmodel) {

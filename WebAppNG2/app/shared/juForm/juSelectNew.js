@@ -177,8 +177,10 @@ var juSelectNew = (function () {
     juSelectNew.prototype.setValue = function (value) {
         var _this = this;
         this.checkAll(false);
+        this.selectedItem = {};
         if (!value) {
-            this.selectedItem = {};
+            this.setModelValue('');
+            this.focusToValidate = false;
             return;
         }
         if (this.options.multiselect) {

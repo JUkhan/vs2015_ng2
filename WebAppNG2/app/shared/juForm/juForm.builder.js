@@ -369,7 +369,7 @@ var juFormBuilder = (function () {
                     }
                     else if (field.type === 'juSelect') {
                         if (field.api) {
-                            async_call(function () { field.api.setValue(dmodel); });
+                            field.api.setValue(dmodel);
                         }
                     }
                     else if (field.type === 'datepicker' && dmodel) {

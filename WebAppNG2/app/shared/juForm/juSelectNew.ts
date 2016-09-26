@@ -126,7 +126,8 @@ export class juSelectNew implements OnInit, OnChanges, AfterViewInit {
 
     }
     private setFocusToValidate(e:any){
-          this.focusToValidate = true;
+        this.focusToValidate = true;
+        //this.hasError();
     }
     private checkAll(checked)
     {
@@ -210,11 +211,14 @@ export class juSelectNew implements OnInit, OnChanges, AfterViewInit {
     }
     /*model communication*/
     public setValue(value: any)
-    {  
+    { 
         this.checkAll(false);
-        if(!value){
-        this.selectedItem={};
-         return;  }
+        this.selectedItem = {};       
+        if (!value) {            
+            this.setModelValue('');
+            this.focusToValidate = false;
+            return;
+        }
         if (this.options.multiselect)
         {
             if (this.dataList && this.dataList.length == 0) return;            
@@ -263,11 +267,11 @@ export class juSelectNew implements OnInit, OnChanges, AfterViewInit {
             obj[props[index]] = val;
         }
         else { this.model[this.propertyName] = val; }
-        //subscribing
+        //subscribing...
         if(val!==this.previousValue){
-        this.notifyRowEditor.next({});
-        this.onChange.next({ value: val, sender: this, form: this.myForm, index: this.index });
-        this.valueChanges.next({ value: val, sender: this, form: this.myForm, index: this.index });
+            this.notifyRowEditor.next({});
+            this.onChange.next({ value: val, sender: this, form: this.myForm, index: this.index });
+            this.valueChanges.next({ value: val, sender: this, form: this.myForm, index: this.index });
         }
         this.previousValue=val;
     }

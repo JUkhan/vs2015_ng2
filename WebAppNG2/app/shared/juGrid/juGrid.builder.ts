@@ -108,22 +108,29 @@ export class juGridBuilder
             header = item.headerName.replace(/(<([^>]+)>)/ig, '');
             switch (item.type)
             {
+                   //<juSelectNew
+                   // [myForm]="myForm"
+                   // [config]="${config}"                     
+                   // #${cfield}select 
+                   // (option-change)="${config}.change($event)"
+                   // [model]="model"                     
+                   // property-name="${fieldName}"
+                   // [data]="${config}.data" 
+                   // [options]="${config}.options||{}"                   
+                   // >
                 case 'juSelect':
                     change = item.change ? ` (option-change)="${config}.change($event)"` : '';
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
-                    <juSelect 
+                    <juSelectNew 
                         ${change} 
-                        [config]="${config}" 
-                        [disabled]="${config}.disabled"
-                        [hide-search]="${item.search ? 'false' : 'true'}"
-                        method="${item.method || 'getValues'}"
+                        [config]="${config}"
                         [model]="row"                        
-                        property-name="${item.field}"
-                        view-mode="${item.viewMode || 'select'}"
-                        [data-src]="${this.getDataExpression(item, config)}"
-                        [index]="i"
+                        property-name="${item.field}"                       
+                        [data]="${this.getDataExpression(item, config)}"
+                        [options]="${config}.options||{}"
+                        [index]="i"                        
                     >
-                    </juSelect></div>`);
+                    </juSelectNew></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;

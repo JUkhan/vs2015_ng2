@@ -154,8 +154,11 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         }
         return Observable.empty();
     }
-    public disabled(key: string, value: boolean) {
+    public disabled(key: string, value: boolean) {        
         this.options._events[key].field.disabled = value;
+        if (this.options._events[key].type === "juSelect") {
+            this.options._events[key].field.api.options.disabled = value;
+        }
     }
     public get valid(): boolean
     {
@@ -191,7 +194,7 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         return this;
     }
     public setData(key: string, data: any[]): juForm {
-        let item = this.options._events[key];
+        let item = this.options._events[key]; 
         if (item && item.field) {
             item.field.data = data;
         }
@@ -213,6 +216,12 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
             return item.field.api;
         }
         return null;
+    }
+    public setSelectValue(key: string, value: any): juForm {
+        const sapi = <any>this.getSelectApi(key);
+        if (sapi)
+            sapi.setValue(value);
+        return this;
     }
 }
 function async_call(fx: Function, time = 0) {

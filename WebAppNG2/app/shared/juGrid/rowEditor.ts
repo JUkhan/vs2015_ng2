@@ -50,7 +50,7 @@ export class rowEditor implements OnInit {
         return this.validationMsg[fieldName];
     } 
     setJuSelectData(key: string, value: any[]){
-       try{
+       try{console.log(this.juSelectList.toArray());
           this.juSelectList.toArray().find(_=>_.propertyName===key).dataSrc=value;
        }catch(er){
            console.error(`Did not find the field name '${key}'`);           

@@ -134,6 +134,9 @@ var juForm = (function () {
     };
     juForm.prototype.disabled = function (key, value) {
         this.options._events[key].field.disabled = value;
+        if (this.options._events[key].type === "juSelect") {
+            this.options._events[key].field.api.options.disabled = value;
+        }
     };
     Object.defineProperty(juForm.prototype, "valid", {
         get: function () {
@@ -193,6 +196,12 @@ var juForm = (function () {
             return item.field.api;
         }
         return null;
+    };
+    juForm.prototype.setSelectValue = function (key, value) {
+        var sapi = this.getSelectApi(key);
+        if (sapi)
+            sapi.setValue(value);
+        return this;
     };
     juForm.FORM_LIST = new Map();
     __decorate([

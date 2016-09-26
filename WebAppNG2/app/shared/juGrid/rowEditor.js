@@ -50,6 +50,7 @@ var rowEditor = (function () {
     };
     rowEditor.prototype.setJuSelectData = function (key, value) {
         try {
+            console.log(this.juSelectList.toArray());
             this.juSelectList.toArray().find(function (_) { return _.propertyName === key; }).dataSrc = value;
         }
         catch (er) {

@@ -135,6 +135,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         //.subscribe(res=>console.log(res));
         form.valueChanges('form').filter(_ => form.valid)
             .subscribe(res => console.log(res));
+        //form.disabled('address1.country', true);
     }
 
     changeThana(e) {

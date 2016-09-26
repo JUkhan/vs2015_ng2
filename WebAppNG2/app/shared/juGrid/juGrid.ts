@@ -324,7 +324,7 @@ function async_call(fx: Function, time = 0)
 
 /*interface*/ 
 import { FormOptions} from '../juForm/juForm';
-
+import { SelectOptions} from '../juForm/juSelectNew';
 export interface ColumnDefs
 {
     type?: 'select' | 'html' | 'juSelect' | 'datepicker' | string;
@@ -346,6 +346,7 @@ export interface ColumnDefs
     validators?: Function | Array<Function>;
     search?: boolean;
     exp?: string;
+    options?:SelectOptions;
 }
 export interface GridOptions
 {
