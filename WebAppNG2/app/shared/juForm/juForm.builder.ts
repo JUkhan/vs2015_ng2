@@ -448,11 +448,13 @@ export class juFormBuilder {
                 jQuery(this.el.nativeElement).find('.panel-body').slideToggle();
                 this.slideState = this.slideState === 'down' ? 'up' : 'down';
             }
-            setModel(model: any) {
-                this.model = model;
-                for (let prop in this.config._events) {
-                    let dmodel = model, arr = prop.split('.');
-                    let field = this.config._events[prop].field;
+            setModel(model: any)
+            {                 
+                this.model = model; 
+                for (let prop in this.config._events)
+                {                    
+                    let dmodel = model, arr = prop.split('.');                    
+                    let field = this.config._events[prop].field; 
                     arr.forEach(it => dmodel = dmodel[it]);
                     if (field.type === 'select' && typeof dmodel === 'undefined') {
                         if (arr.length > 1) {
@@ -467,18 +469,22 @@ export class juFormBuilder {
                     }                    
                     else if (field.type === 'juSelect') {
                         if (field.api) {
-                            field.api.setValue(dmodel);                            
+                            async_call(() => { field.api.setValue(dmodel); }, 100);                           
                         }
                     }
-                    else if (field.type === 'datepicker' && dmodel) {
-                        async_call(() => { field.api.setDate(dmodel); });
+                    else if (field.type === 'datepicker' && dmodel)
+                    {                                               
+                        async_call(() => { field.api.setDate(dmodel); },200);
                     }
-                    else if (field.type === 'ckeditor' && dmodel) {
-                        async_call(() => { field.api.setData(dmodel); });
+                    else if (field.type === 'ckeditor' && dmodel)
+                    {                                                
+                        async_call(() => { field.api.setData(dmodel); },300);
                     }
-
-                    this.vlidate_input(dmodel, field, true);
-                }
+                    if (prop !== 'undefined')
+                    {                        
+                        this.vlidate_input(dmodel, field, true);
+                    }
+                } 
             }
             getModel() {
                 for (var prop in this._sh) {

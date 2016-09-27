@@ -183,7 +183,7 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         return this;
     }
     public setModel(model: any): juForm {
-        this.componentRef.instance.setModel(_.cloneDeep(model));
+        this.componentRef.instance.setModel(_.cloneDeep(model));        
         return this
     }
     public getModel() {        

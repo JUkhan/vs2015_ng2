@@ -40,7 +40,7 @@ var HomeComponent = (function () {
             viewMode: 'panel', panelMode: 'primary',
             labelPos: 'left', title: 'Complex Form Example',
             labelSize: 2,
-            refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {} },
+            refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {}, aboutMe: 'I love c#' },
             tabs: {
                 'Tab-1': [
                     {

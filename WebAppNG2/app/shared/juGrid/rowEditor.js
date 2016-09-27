@@ -50,7 +50,7 @@ var rowEditor = (function () {
     };
     rowEditor.prototype.setJuSelectData = function (key, value) {
         try {
-            this.juSelectList.toArray().find(function (_) { return _.propertyName === key; }).dataList = value;
+            this.juSelectList.toArray().find(function (_) { return _.propertyName === key; }).setData(value);
         }
         catch (er) {
             console.error("Did not find the field name '" + key + "'");

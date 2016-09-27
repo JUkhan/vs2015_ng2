@@ -52,17 +52,21 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     @Input() config: any = {};
     @Input('myForm') myForm: any;
     @Output('option-change') onChange = new EventEmitter();
-    @Input() index:number;
-    @Input() set value(val:any){console.log(val); if(val)this.setValue(val);}
+    @Input() index: number;
+    @Input() set value(val: any)
+    { 
+         this.previousValue = val;
+    }
 
-    @ViewChild('searchEl') searchEl: ElementRef;
+    @ViewChild('searchEl') private searchEl: ElementRef;
 
+    private previousValue: any = '';
     private selectedItem: any = {};
     private dataList_bckup: any[];
     private livesearchText: string;
     private hasSerchResult: boolean = true;
     private maxOptionsVisibility: string = 'hidden';
-    private focusToValidate: boolean = false;
+    private focusToValidate: boolean = false;    
     notifyRowEditor: Subject<any> = new Subject();
     valueChanges: Subject<any> = new Subject();
 
@@ -110,8 +114,20 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         if (changes.dataList && changes.dataList.currentValue && changes.dataList.currentValue !== changes.dataList.previousValue)
         {
             this.dataList = changes.dataList.currentValue.map(item => Object.assign({}, item, { selected: false }));
-            this.dataList_bckup = this.dataList;     
+            this.dataList_bckup = this.dataList;
+            if (this.previousValue && this.dataList && this.dataList.length>0)
+            {               
+                this.setValue(this.previousValue);
+            }  
         }       
+    }
+    public setData(data: any)
+    {
+        this.dataList = data;
+        if (this.previousValue)
+        {           
+            this.setValue(this.previousValue);
+        }  
     }
     public ngAfterViewInit() {
         if (this.options.liveSearch) {
@@ -209,7 +225,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     }
     /*model communication*/
     public setValue(value: any)
-    { 
+    {       
         this.checkAll(false);
         this.selectedItem = {};       
         if (!value) {            
@@ -228,8 +244,11 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         } else
         {
             let item = this.dataList.find(_ => _[this.options.valueProp].toString() === value.toString());
-            if (item) item.selected = true;
-            this.selectedItem=item;
+            if (item)
+            {
+                item.selected = true;
+                this.selectedItem = item;
+            }
         }
         this.setModelValue(value);
     }
@@ -249,7 +268,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         }
         return this.model[this.propertyName];
     }
-    private previousValue:any=null;
+    
     private setModelValue(val: any)
     {
         if(!this.propertyName)return;

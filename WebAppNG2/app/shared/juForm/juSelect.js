@@ -17,17 +17,18 @@ var juSelect = (function () {
         this.model = {};
         this.config = {};
         this.onChange = new core_1.EventEmitter();
+        this.previousValue = '';
         this.selectedItem = {};
         this.hasSerchResult = true;
         this.maxOptionsVisibility = 'hidden';
         this.focusToValidate = false;
         this.notifyRowEditor = new Rx_1.Subject();
         this.valueChanges = new Rx_1.Subject();
-        this.previousValue = null;
     }
     Object.defineProperty(juSelect.prototype, "value", {
-        set: function (val) { console.log(val); if (val)
-            this.setValue(val); },
+        set: function (val) {
+            this.previousValue = val;
+        },
         enumerable: true,
         configurable: true
     });
@@ -72,6 +73,15 @@ var juSelect = (function () {
         if (changes.dataList && changes.dataList.currentValue && changes.dataList.currentValue !== changes.dataList.previousValue) {
             this.dataList = changes.dataList.currentValue.map(function (item) { return Object.assign({}, item, { selected: false }); });
             this.dataList_bckup = this.dataList;
+            if (this.previousValue && this.dataList && this.dataList.length > 0) {
+                this.setValue(this.previousValue);
+            }
+        }
+    };
+    juSelect.prototype.setData = function (data) {
+        this.dataList = data;
+        if (this.previousValue) {
+            this.setValue(this.previousValue);
         }
     };
     juSelect.prototype.ngAfterViewInit = function () {
@@ -198,9 +208,10 @@ var juSelect = (function () {
         }
         else {
             var item = this.dataList.find(function (_) { return _[_this.options.valueProp].toString() === value.toString(); });
-            if (item)
+            if (item) {
                 item.selected = true;
-            this.selectedItem = item;
+                this.selectedItem = item;
+            }
         }
         this.setModelValue(value);
     };
