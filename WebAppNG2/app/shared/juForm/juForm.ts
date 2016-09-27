@@ -69,7 +69,9 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         }
         this.options.api = this;
     }
-
+    public render() {
+        this.refreshContent();
+    }
     protected refreshContent() {       
         this.initOptions();
        

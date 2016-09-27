@@ -129,6 +129,9 @@ var juGrid = (function () {
             this.componentRef = null;
         }
     };
+    juGrid.prototype.render = function () {
+        this.refreshContent();
+    };
     juGrid.prototype.refreshContent = function () {
         var _this = this;
         if (this.componentRef) {

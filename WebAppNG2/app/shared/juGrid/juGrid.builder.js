@@ -27,6 +27,8 @@ var juGridBuilder = (function () {
     juGridBuilder.prototype.getTotalWidth = function () {
         var totalWidth = 0;
         this.options.columnDefs.forEach(function (_) {
+            if (_.hide)
+                return;
             _.width = _.width || 120;
             totalWidth += _.width;
         });
@@ -54,6 +56,8 @@ var juGridBuilder = (function () {
         var tpl = [];
         tpl.push("<tr " + this.options.rowEvents + " [ngClass]=\"config.trClass(row, i, f, l)\" [model]=\"row\" [config]=\"config\" class=\"row-editor\" *ngFor=\"let row of viewList;" + (this.options.trackBy ? 'trackBy:trackByResolver();' : '') + "let i = index;let f=first;let l = last\">");
         this.options.columnDefs.forEach(function (item, index) {
+            if (item.hide)
+                return;
             _this.getCell(item, "config.columnDefs[" + index + "]", tpl, index);
         });
         tpl.push('</tr>');
@@ -123,6 +127,8 @@ var juGridBuilder = (function () {
         var tpl = [];
         tpl.push("<tr " + this.options.rowEvents + " [ngClass]=\"config.trClass(row, i, f, l)\" *ngFor=\"let row of viewList;" + (this.options.trackBy ? 'trackBy:trackByResolver();' : '') + "let i = index;let f=first;let l = last\">");
         this.options.columnDefs.forEach(function (item, index) {
+            if (item.hide)
+                return;
             tpl.push(_this.getNormalTD(item, index));
         });
         tpl.push('</tr>');
@@ -181,6 +187,8 @@ var juGridBuilder = (function () {
         }
         tpl.push("<tr " + this.options.rowEvents + " [ngClass]=\"config.trClass(" + this.getParams(row, level) + ")\">");
         this.options.columnDefs.forEach(function (item, index) {
+            if (item.hide)
+                return;
             tpl.push("<td [style.width.px]=\"config.columnDefs[" + index + "].width\" " + _this.getLevel(index, level));
             if (item.tdClass) {
                 tpl.push("[ngClass]=\"config.columnDefs[" + index + "].tdClass(" + _this.getParams(row, level) + ")\"");
@@ -250,7 +258,10 @@ var juGridBuilder = (function () {
             this.headerHtml[i] = [];
             i++;
         }
-        hederDef.forEach(function (it) {
+        hederDef.forEach(function (it, i) {
+            _this._colIndex = i;
+            if (it.hide)
+                return;
             _this.traverseCell(it, rc, 0, colDef);
         });
         if (rc > 1) {
@@ -282,6 +293,7 @@ var juGridBuilder = (function () {
                 this.headerHtml[headerRowFlag].push(" valign=\"bottom\" rowspan=\"" + rs + "\"");
             }
             if (cell.width) {
+                console.log();
                 this.headerHtml[headerRowFlag].push(" [style.width.px]=\"config.columnDefs[" + this._colIndex + "].width\"");
             }
             if (cell.sort) {
@@ -308,7 +320,6 @@ var juGridBuilder = (function () {
                 }
                 this.headerHtml[headerRowFlag].push('</th>');
             }
-            this._colIndex++;
         }
     };
     juGridBuilder.prototype.row_count = function (hederDef) {

@@ -53,6 +53,9 @@ var juForm = (function () {
         }
         this.options.api = this;
     };
+    juForm.prototype.render = function () {
+        this.refreshContent();
+    };
     juForm.prototype.refreshContent = function () {
         var _this = this;
         this.initOptions();

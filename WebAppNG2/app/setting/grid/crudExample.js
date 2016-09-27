@@ -24,8 +24,9 @@ var CrudExample = (function () {
             _this.addressList = res[1];
         });
     };
-    CrudExample.prototype.doSmth = function () {
-        alert('assddd');
+    CrudExample.prototype.hideCol = function () {
+        this.scholarGridOptions.columnDefs[3].hide = true;
+        this.scholarGridOptions.api.grid.render();
     };
     CrudExample.prototype.onLoad = function (grid) {
         var _this = this;
@@ -54,7 +55,7 @@ var CrudExample = (function () {
                     params: { valueGetter: this.educationCellRender.bind(this) },
                     cellRenderer: this.educationCellRender.bind(this)
                 },
-                { headerName: 'Age', field: 'age', filter: 'number', sort: true },
+                { headerName: 'Age', field: 'age', filter: 'number', sort: true, hide: false },
                 { headerName: 'Address', field: 'address', cellRenderer: function (row) { return _this.addressList.find(function (_) { return _.value == row.address; }).text; } },
                 { headerName: 'Description', width: 300, field: 'description' }
             ],
@@ -101,7 +102,7 @@ var CrudExample = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'crud',
-            template: "\n                <div \n                     juGrid                      \n                     (onLoad)=\"onLoad($event)\" \n                     [data]=\"scholarList\" \n                     [options]=\"scholarGridOptions\">\n                        \n                </div>",
+            template: "\n                <div \n                     juGrid                      \n                     (onLoad)=\"onLoad($event)\" \n                     [data]=\"scholarList\" \n                     [options]=\"scholarGridOptions\">\n                        \n                </div>\n                <button class=\"btn btn-primary\" (click)=\"hideCol()\">Hide Age Column</button>",
             encapsulation: core_1.ViewEncapsulation.None
         }), 
         __metadata('design:paramtypes', [app_service_1.AppService])

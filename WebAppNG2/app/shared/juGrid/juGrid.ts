@@ -190,6 +190,9 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
             this.componentRef = null;
         }
     }
+    public render() {
+        this.refreshContent();
+    }
     protected refreshContent()
     {        
         if (this.componentRef)
@@ -346,7 +349,8 @@ export interface ColumnDefs
     validators?: Function | Array<Function>;
     search?: boolean;
     exp?: string;
-    options?:SelectOptions;
+    options?: SelectOptions;
+    hide?: boolean;
 }
 export interface GridOptions
 {

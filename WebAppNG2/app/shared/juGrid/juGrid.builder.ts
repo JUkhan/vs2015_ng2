@@ -24,6 +24,7 @@ export class juGridBuilder
         let totalWidth = 0;
         this.options.columnDefs.forEach(_ =>
         {
+            if (_.hide) return;
             _.width = _.width || 120
             totalWidth += _.width;
         });
@@ -75,6 +76,7 @@ export class juGridBuilder
         tpl.push(`<tr ${this.options.rowEvents} [ngClass]="config.trClass(row, i, f, l)" [model]="row" [config]="config" class="row-editor" *ngFor="let row of viewList;${this.options.trackBy ? 'trackBy:trackByResolver();' : ''}let i = index;let f=first;let l = last">`);
         this.options.columnDefs.forEach((item, index) =>
         {
+            if (item.hide) return;
             this.getCell(item, `config.columnDefs[${index}]`, tpl, index);
         });
         tpl.push('</tr>');
@@ -173,6 +175,7 @@ export class juGridBuilder
         tpl.push(`<tr ${this.options.rowEvents} [ngClass]="config.trClass(row, i, f, l)" *ngFor="let row of viewList;${this.options.trackBy ? 'trackBy:trackByResolver();' : ''}let i = index;let f=first;let l = last">`);
         this.options.columnDefs.forEach((item, index) =>
         {
+            if (item.hide) return;
             tpl.push(this.getNormalTD(item, index));
         });
         tpl.push('</tr>');
@@ -247,6 +250,7 @@ export class juGridBuilder
         tpl.push(`<tr ${this.options.rowEvents} [ngClass]="config.trClass(${this.getParams(row, level)})">`);
         this.options.columnDefs.forEach((item, index) =>
         {
+            if (item.hide) return;
             tpl.push(`<td [style.width.px]="config.columnDefs[${index}].width" ${this.getLevel(index, level)}`);
             if (item.tdClass)
             {
@@ -335,15 +339,17 @@ export class juGridBuilder
     private headerHtml: any[] = [];
     private getHeader(hederDef)
     {
-        this._colIndex = 0;
+        this._colIndex =0;
         var colDef = [], rc = this.row_count(hederDef), i = 0;
         while (i < rc)
         {
             this.headerHtml[i] = [];
             i++;
         }
-        hederDef.forEach(it =>
+        hederDef.forEach((it:any, i:number) =>
         {
+            this._colIndex = i;         
+            if (it.hide) return;          
             this.traverseCell(it, rc, 0, colDef);
         });
         if (rc > 1)
@@ -356,7 +362,7 @@ export class juGridBuilder
     private _colIndex: number = 0;
     private traverseCell(cell, rs, headerRowFlag, colDef: any[])
     {
-
+       
         if (cell.children)
         {
 
@@ -387,6 +393,7 @@ export class juGridBuilder
             }
             if (cell.width)
             {
+                console.log()
                 this.headerHtml[headerRowFlag].push(` [style.width.px]="config.columnDefs[${this._colIndex}].width"`);
             }
             if (cell.sort)
@@ -420,14 +427,14 @@ export class juGridBuilder
                 }
                 this.headerHtml[headerRowFlag].push('</th>');
             }
-            this._colIndex++;
+            //this._colIndex++;
         }
     }
     private row_count(hederDef)
     {
         var max = 0;
         for (var i = 0; i < hederDef.length; i++)
-        {
+        {            
             max = Math.max(max, this.cal_header_row(hederDef[i], 1));
         }
         return max;
@@ -439,7 +446,7 @@ export class juGridBuilder
         {
             row_count++;
             for (var i = 0; i < cell.children.length; i++)
-            {
+            {               
                 max = Math.max(max, this.cal_header_row(cell.children[i], row_count));
             }
         }
