@@ -1,7 +1,7 @@
 ﻿import {Component, OnInit, OnDestroy} from '@angular/core';
 import {juForm, FormElement, FormOptions} from '../shared/juForm/juForm';
 import {FV} from '../shared/juForm/FV';
-import {SelectOptions} from '../shared/juForm/juSelectNew';
+import {SelectOptions} from '../shared/juForm/juSelect';
 @Component({
     moduleId: module.id,
     selector: 'my-home',
@@ -28,6 +28,10 @@ export class HomeComponent implements OnInit, OnDestroy {
             title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: true,
             height: 250, multiselect: true, selectedTextFormat: 'count>2'
         };
+        for (var i = 11; i < 1600; i++)
+        {
+            this.dataList.push({ text: 'text' + i, value: i });
+        }
     }
     ngOnDestroy() { }
     myOptions: FormOptions;
@@ -135,6 +139,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         //.subscribe(res=>console.log(res));
         form.valueChanges('form').filter(_ => form.valid)
             .subscribe(res => console.log(res));
+        //form.disabled('address1.country', true);
     }
 
     changeThana(e) {

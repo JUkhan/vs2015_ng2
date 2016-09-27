@@ -81,16 +81,12 @@ export class juGridBuilder
         return tpl.join('');
     }
     private getDataExpression(item: any, config: string)
-    {
+    {       
         if (!item.dataSrc)
         {
             item.dataSrc = [];
-        }
-        if (Array.isArray(item.dataSrc))
-        {
-            return `${config}.dataSrc`;
-        }
-        return `${config}.dataSrc() | async`
+        }      
+        return `${config}.dataSrc`;
     }
 
     private getCell(item, config: string, tpl: any[], index: number)
@@ -105,23 +101,21 @@ export class juGridBuilder
             item.width = item.width || 120;
             style = item.width ? `style="display:inline-block;" [style.width.px]="(config.columnDefs[${index}].width-(isValid('${item.field}', i)['validation-msg-hide']?18:40))"` : '';
             item.headerName = item.headerName || '';
-            header = item.headerName.replace(/(<([^>]+)>)/ig, '');
+            header = item.headerName.replace(/(<([^>]+)>)/ig, '');            
             switch (item.type)
-            {
+            {                  
                 case 'juSelect':
                     change = item.change ? ` (option-change)="${config}.change($event)"` : '';
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
                     <juSelect 
                         ${change} 
-                        [config]="${config}" 
-                        [disabled]="${config}.disabled"
-                        [hide-search]="${item.search ? 'false' : 'true'}"
-                        method="${item.method || 'getValues'}"
-                        [model]="row"                        
-                        property-name="${item.field}"
-                        view-mode="${item.viewMode || 'select'}"
-                        [data-src]="${this.getDataExpression(item, config)}"
-                        [index]="i"
+                        [config]="${config}"
+                        [model]="row"
+                        [value]="row['${item.field}']"                        
+                        property-name="${item.field}"                       
+                        [data]="${this.getDataExpression(item, config)}"
+                        [options]="${config}.options||{}"
+                        [index]="i"                        
                     >
                     </juSelect></div>`);
                     tpl.push(validation);
@@ -569,7 +563,7 @@ export class juGridBuilder
             @ViewChild('filterWindow') filterWindowRef: ElementRef;
             isValid(fieldName, index)
             {
-                let arr = this.editors.toArray();
+                let arr = this.editors.toArray(); 
                 if (arr.length > index)
                 {
                     return arr[index].isValid(fieldName);
@@ -774,7 +768,7 @@ export class juGridBuilder
                     this.config.onFormLoad(form);
                 }
             }
-            public setDropdownData(key: string, value: any[])
+            public setSelectData(key: string, value: any[])
             {
                 let col = this.config.columnDefs.find(_ => _.field === key);
                 col.dataSrc = value;

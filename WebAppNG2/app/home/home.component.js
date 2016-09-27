@@ -32,6 +32,9 @@ var HomeComponent = (function () {
             title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: true,
             height: 250, multiselect: true, selectedTextFormat: 'count>2'
         };
+        for (var i = 11; i < 1600; i++) {
+            this.dataList.push({ text: 'text' + i, value: i });
+        }
     };
     HomeComponent.prototype.ngOnDestroy = function () { };
     HomeComponent.prototype.initForm = function () {
