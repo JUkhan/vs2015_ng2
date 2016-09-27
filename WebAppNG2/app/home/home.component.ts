@@ -28,10 +28,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: true,
             height: 250, multiselect: true, selectedTextFormat: 'count>2'
         };
-        for (var i = 11; i < 1600; i++)
-        {
-            this.dataList.push({ text: 'text' + i, value: i });
-        }
+        
     }
     ngOnDestroy() { }
     myOptions: FormOptions;
@@ -42,7 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             viewMode:'panel', panelMode:'primary',
             labelPos: 'left', title: 'Complex Form Example',
             labelSize: 2,
-            refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {} },           
+            refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {}, aboutMe:'I love c#' },           
             tabs: {
                 'Tab-1': [
                     {

@@ -369,16 +369,18 @@ var juFormBuilder = (function () {
                     }
                     else if (field.type === 'juSelect') {
                         if (field.api) {
-                            field.api.setValue(dmodel);
+                            async_call(function () { field.api.setValue(dmodel); }, 100);
                         }
                     }
                     else if (field.type === 'datepicker' && dmodel) {
-                        async_call(function () { field.api.setDate(dmodel); });
+                        async_call(function () { field.api.setDate(dmodel); }, 200);
                     }
                     else if (field.type === 'ckeditor' && dmodel) {
-                        async_call(function () { field.api.setData(dmodel); });
+                        async_call(function () { field.api.setData(dmodel); }, 300);
                     }
-                    this_1.vlidate_input(dmodel, field, true);
+                    if (prop !== 'undefined') {
+                        this_1.vlidate_input(dmodel, field, true);
+                    }
                 };
                 var this_1 = this;
                 var i;
