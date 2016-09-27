@@ -50,8 +50,8 @@ export class rowEditor implements OnInit {
         return this.validationMsg[fieldName];
     } 
     setJuSelectData(key: string, value: any[]){
-       try{console.log(this.juSelectList.toArray());
-          this.juSelectList.toArray().find(_=>_.propertyName===key).dataSrc=value;
+       try{         
+            this.juSelectList.toArray().find(_=>_.propertyName===key).dataList=value;
        }catch(er){
            console.error(`Did not find the field name '${key}'`);           
        }
@@ -64,7 +64,7 @@ export class rowEditor implements OnInit {
         }
     }
     private validationMsg:any={};
-    private validate_input(val: any, field: any, def:any) {       
+    private validate_input(val: any, field: any, def: any) {        
             let res = true;
             if (def.validators) {
                 if (Array.isArray(def.validators) && def.validators.length > 0) {

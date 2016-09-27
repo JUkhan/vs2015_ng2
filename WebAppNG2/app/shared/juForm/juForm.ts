@@ -218,7 +218,7 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         return null;
     }
     public setSelectValue(key: string, value: any): juForm {
-        const sapi = <any>this.getSelectApi(key);
+        const sapi = this.getSelectApi(key);
         if (sapi)
             sapi.setValue(value);
         return this;

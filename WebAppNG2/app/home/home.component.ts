@@ -1,7 +1,7 @@
 ﻿import {Component, OnInit, OnDestroy} from '@angular/core';
 import {juForm, FormElement, FormOptions} from '../shared/juForm/juForm';
 import {FV} from '../shared/juForm/FV';
-import {SelectOptions} from '../shared/juForm/juSelectNew';
+import {SelectOptions} from '../shared/juForm/juSelect';
 @Component({
     moduleId: module.id,
     selector: 'my-home',

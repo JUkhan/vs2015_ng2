@@ -182,8 +182,8 @@ var juGrid = (function () {
         }
         this.componentRef.instance.removeItem(item);
     };
-    juGrid.prototype.setDropdownData = function (key, value) {
-        this.componentRef.instance.setDropdownData(key, value);
+    juGrid.prototype.setSelectData = function (key, value) {
+        this.componentRef.instance.setSelectData(key, value);
     };
     juGrid.prototype.setJuSelectData = function (key, value, index) {
         this.componentRef.instance.setJuSelectData(key, value, index);

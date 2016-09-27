@@ -264,9 +264,9 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
 
     }
 
-    public setDropdownData(key: string, value: any[])
+    public setSelectData(key: string, value: any[])
     {
-        this.componentRef.instance.setDropdownData(key, value);
+        this.componentRef.instance.setSelectData(key, value);
     }
     public setJuSelectData(key: string, value: any[], index: number)
     {
@@ -324,7 +324,7 @@ function async_call(fx: Function, time = 0)
 
 /*interface*/ 
 import { FormOptions} from '../juForm/juForm';
-import { SelectOptions} from '../juForm/juSelectNew';
+import { SelectOptions} from '../juForm/juSelect';
 export interface ColumnDefs
 {
     type?: 'select' | 'html' | 'juSelect' | 'datepicker' | string;

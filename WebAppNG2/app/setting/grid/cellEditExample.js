@@ -36,12 +36,12 @@ var CellEditExample = (function () {
             rowHeight: 50,
             enableCellEditing: true,
             columnDefs: [
-                { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item"><b class="fa fa-plus-circle"></b> </a>', width: 40, cellRenderer: function (row, index) { return ++index; } },
+                { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item."><b class="fa fa-plus-circle"></b> </a>', width: 40, cellRenderer: function (row, index) { return ++index; } },
                 { headerName: 'Name', field: 'name', filter: 'set', sort: true, exp: '<b>{{row.name}}</b>' },
-                { headerName: 'Education', field: 'education', filter: 'set', sort: true, change: this.changeEducation.bind(this), validators: FV_1.FV.required, type: 'juSelect', width: 160, options: { width: '90%', title: 'Select education' } },
+                { headerName: 'Education', field: 'education', filter: 'set', sort: true, change: this.changeEducation.bind(this), validators: FV_1.FV.required, type: 'juSelect', width: 160, options: { width: '100%', title: 'Select education' } },
                 { headerName: 'Age', field: 'age', filter: 'number', sort: true, type: 'number', width: 100, validators: FV_1.FV.required },
                 { headerName: 'Birth Date', field: 'bdate', type: 'datepicker', width: 160, validators: FV_1.FV.required },
-                { headerName: 'Address', field: 'address', type: 'juSelect', width: 170, validators: FV_1.FV.required, options: { width: '90%', title: 'select addresss' } },
+                { headerName: 'Address', field: 'address', type: 'juSelect', width: 170, validators: FV_1.FV.required, options: { width: '100%', title: 'select addresss' } },
                 { headerName: 'Description', field: 'description', type: 'text', validators: [FV_1.FV.required, FV_1.FV.minLength(5)], width: 220 }
             ],
             addItem: function () {
@@ -52,7 +52,7 @@ var CellEditExample = (function () {
     };
     CellEditExample.prototype.gridLoad = function (grid) {
         this.service.get('dummyData/getEducations')
-            .subscribe(function (res) { return grid.setDropdownData('education', res); });
+            .subscribe(function (res) { return grid.setSelectData('education', res); });
     };
     CellEditExample.prototype.changeEducation = function (obj) {
         var _this = this;

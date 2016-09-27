@@ -63,10 +63,7 @@ var juGridBuilder = (function () {
         if (!item.dataSrc) {
             item.dataSrc = [];
         }
-        if (Array.isArray(item.dataSrc)) {
-            return config + ".dataSrc";
-        }
-        return config + ".dataSrc() | async";
+        return config + ".dataSrc";
     };
     juGridBuilder.prototype.getCell = function (item, config, tpl, index) {
         var style = '', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? "style=\"height:" + this.options.rowHeight + "px\"" : '';
@@ -81,7 +78,7 @@ var juGridBuilder = (function () {
             switch (item.type) {
                 case 'juSelect':
                     change = item.change ? " (option-change)=\"" + config + ".change($event)\"" : '';
-                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + ">\n                    <juSelectNew \n                        " + change + " \n                        [config]=\"" + config + "\"\n                        [model]=\"row\"                        \n                        property-name=\"" + item.field + "\"                       \n                        [data]=\"" + this.getDataExpression(item, config) + "\"\n                        [options]=\"" + config + ".options||{}\"\n                        [index]=\"i\"                        \n                    >\n                    </juSelectNew></div>");
+                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + ">\n                    <juSelect \n                        " + change + " \n                        [config]=\"" + config + "\"\n                        [model]=\"row\"\n                        [value]=\"row['" + item.field + "']\"                        \n                        property-name=\"" + item.field + "\"                       \n                        [data]=\"" + this.getDataExpression(item, config) + "\"\n                        [options]=\"" + config + ".options||{}\"\n                        [index]=\"i\"                        \n                    >\n                    </juSelect></div>");
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
@@ -576,7 +573,7 @@ var juGridBuilder = (function () {
                     this.config.onFormLoad(form);
                 }
             };
-            DynamicGridComponent.prototype.setDropdownData = function (key, value) {
+            DynamicGridComponent.prototype.setSelectData = function (key, value) {
                 var col = this.config.columnDefs.find(function (_) { return _.field === key; });
                 col.dataSrc = value;
             };
