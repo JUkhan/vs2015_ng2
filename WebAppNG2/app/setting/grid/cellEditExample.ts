@@ -65,10 +65,9 @@ export class CellEditExample implements OnInit {
         
     }
     private changeEducation(obj)
-    {
-        console.log(obj.sender.propertyName,obj.value); 
-        if (!obj.value) return;   
-        this.service.get('dummyData/getAddress/'+obj.value)
+    {        
+        if (!obj.value) return;
+        this.service.get('dummyData/getAddress/' + obj.value)            
             .subscribe(res => this.gridOptions.api.grid.setJuSelectData('address', res, obj.index));      
     }
 }

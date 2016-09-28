@@ -190,6 +190,9 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
             this.componentRef = null;
         }
     }
+    public render() {
+        this.refreshContent();
+    }
     protected refreshContent()
     {        
         if (this.componentRef)
@@ -377,14 +380,14 @@ export interface GridOptions
     columnDefs?: ColumnDefs[];
     removeItem?: (data: any) => void;
     api?: { form: juForm, grid: juGrid, pager: juPager };
-    sspFn?: (params: { pageSize: number, pageNo: number, searchText: string, sort: string, filter: any[] }) => Observable<{ totalPage: number, data: any[] }>;
+    sspFn?: (params: { pageSize: number, pageNo: number, searchText: string, sort: string, filter: any[] }) => Observable<{ totalRecords: number, data: any[] }>;
     onFormLoad?: (form: juForm) => void;
     trackBy?: string;
     enableTreeView?: boolean;
     lazyLoad?: (row: any) => Observable<Array<any>>;
     level?: number;
     enableCellEditing?: boolean;
-    [key: string]: any;     
+    [key: string]: any;
 
 }
 export interface BaseFilter

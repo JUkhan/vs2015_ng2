@@ -4,13 +4,14 @@
     Input, Output, EventEmitter
 } from '@angular/core'
 import {Observable, Subject} from 'rxjs/Rx';
+declare var jQuery: any;
 @Component({
     moduleId: module.id,
     selector: 'juSelect, .juSelect, [juSelect]',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Default,
     template: `
-    <div [ngClass]="getDropdownStyle()" class="btn-group bootstrap-select" [style.width]="options.width">
+    <div #maincontent [ngClass]="getDropdownStyle()" class="btn-group bootstrap-select" [style.width]="options.width">
         <button [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" (click)="setFocusToValidate($event)">
             <span class="filter-option pull-left"> 
                 <i *ngIf="selectedItem[options.iconProp]||options.iconRenderer" [class]="getSelectedIconStyle()"></i>               
@@ -59,6 +60,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     }
 
     @ViewChild('searchEl') private searchEl: ElementRef;
+    @ViewChild('maincontent') private containerEl: ElementRef;
 
     private previousValue: any = '';
     private selectedItem: any = {};
@@ -66,7 +68,8 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     private livesearchText: string;
     private hasSerchResult: boolean = true;
     private maxOptionsVisibility: string = 'hidden';
-    private focusToValidate: boolean = false;    
+    private focusToValidate: boolean = false; 
+    private tableBodyContent: any = null;   
     notifyRowEditor: Subject<any> = new Subject();
     valueChanges: Subject<any> = new Subject();
 
@@ -141,7 +144,19 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
 
     }
     private setFocusToValidate(e:any){
-        this.focusToValidate = true;        
+        this.focusToValidate = true;
+        if (!this.tableBodyContent)
+        {
+            this.tableBodyContent = jQuery(this.containerEl.nativeElement).parents('.tbl-body-content');
+        }
+        if (this.tableBodyContent.length==0) return;
+        const containerOffset = this.tableBodyContent.offset();
+        const containerHeight = this.tableBodyContent.height()  - this.tableBodyContent.scrollTop();
+        const comPos = jQuery(e.target).offset().top - containerOffset.top;
+        const comHeight = jQuery(this.containerEl.nativeElement)[0].offsetHeight +
+            jQuery('.dropdown-menu', this.containerEl.nativeElement).height();
+        this.options.dropup = comPos + comHeight > containerHeight;
+        
     }
     private checkAll(checked)
     {

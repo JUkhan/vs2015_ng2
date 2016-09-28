@@ -13,7 +13,8 @@ import {AppService}   from '../../shared/app.service';
                      [data]="scholarList" 
                      [options]="scholarGridOptions">
                         
-                </div>`,
+                </div>
+                <button class="btn btn-primary" (click)="hideCol()">Hide Age Column</button>`,
 
     encapsulation: ViewEncapsulation.None
 })
@@ -35,8 +36,10 @@ export class CrudExample implements OnInit {
         });
 
     }
-    doSmth(){
-    alert('assddd')
+    
+    hideCol() {
+        this.scholarGridOptions.columnDefs[3].hide = true;
+        this.scholarGridOptions.api.grid.render();
     }
     private onLoad(grid: juGrid)
     {         
@@ -60,13 +63,13 @@ export class CrudExample implements OnInit {
             title:'Crud Example', crud: true, pagerPos:'header',
             //sspFn: this.getPagerData.bind(this),
             columnDefs: [
-                { headerName: 'Name', field: 'name', sort: true, filter: 'set' },
+                { headerName: 'Name', field: 'name', sort: true, filter: 'set'},
                 {
                     headerName: 'Education', field: 'education', sort: true, filter: 'set',
                     params: { valueGetter: this.educationCellRender.bind(this) },
                     cellRenderer: this.educationCellRender.bind(this)
                 },
-                { headerName: 'Age', field: 'age', filter: 'number', sort: true, hide:true },
+                { headerName: 'Age', field: 'age', filter: 'number', sort: true, hide:false },
                 { headerName: 'Address', field: 'address', cellRenderer: row => this.addressList.find(_ => _.value == row.address).text },
                 { headerName: 'Description', width: 300, field: 'description' }
             ],

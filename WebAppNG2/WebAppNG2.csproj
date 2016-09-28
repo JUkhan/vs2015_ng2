@@ -688,7 +688,6 @@
     <TypeScriptCompile Include="app\shared\juForm\Datetimepicker.ts" />
     <TypeScriptCompile Include="app\shared\juForm\FV.ts" />
     <TypeScriptCompile Include="app\shared\juForm\juForm.builder.ts" />
-    <TypeScriptCompile Include="app\shared\juForm\old_juSelect.ts" />
     <TypeScriptCompile Include="app\shared\juForm\juForm.ts" />
     <TypeScriptCompile Include="app\shared\juForm\juSelect.ts" />
     <TypeScriptCompile Include="app\shared\juGrid\juGrid.builder.ts" />

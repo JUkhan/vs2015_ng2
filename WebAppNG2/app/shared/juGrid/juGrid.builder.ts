@@ -24,6 +24,7 @@ export class juGridBuilder
         let totalWidth = 0;
         this.options.columnDefs.forEach(_ =>
         {
+            if (_.hide) return;
             _.width = _.width || 120
             totalWidth += _.width;
         });
@@ -53,7 +54,7 @@ export class juGridBuilder
                 </div>
             </div>
 
-            <div #tc1 style="max-height:${this.options.height}px;overflow:auto;" itemscope (scroll)="tblScroll($event, headerDiv)">
+            <div #tc1 style="max-height:${this.options.height}px;overflow:auto;" class="tbl-body-content" (scroll)="tblScroll($event, headerDiv)">
                 <div #tc2 [style.width.px]="config.width - 22">
                     <table class="${this.options.classNames} tbody ${this.options.colResize ? 'tbl-resize' : ''}">
                         <tbody (click)="hideFilterWindow()">
@@ -75,6 +76,7 @@ export class juGridBuilder
         tpl.push(`<tr ${this.options.rowEvents} [ngClass]="config.trClass(row, i, f, l)" [model]="row" [config]="config" class="row-editor" *ngFor="let row of viewList;${this.options.trackBy ? 'trackBy:trackByResolver();' : ''}let i = index;let f=first;let l = last">`);
         this.options.columnDefs.forEach((item, index) =>
         {
+            if (item.hide) return;
             this.getCell(item, `config.columnDefs[${index}]`, tpl, index);
         });
         tpl.push('</tr>');
@@ -91,9 +93,7 @@ export class juGridBuilder
 
     private getCell(item, config: string, tpl: any[], index: number)
     {
-        let style = '', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? `style="height:${this.options.rowHeight}px"` : '',
-            hide = `[style.display] = "config.hide?'none':'inline-grid'"`;
-
+        var style = '', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? `style="height:${this.options.rowHeight}px"` : '';
         if (item.type)
         {
             if (item.validators)
@@ -108,7 +108,7 @@ export class juGridBuilder
             {                  
                 case 'juSelect':
                     change = item.change ? ` (option-change)="${config}.change($event)"` : '';
-                    tpl.push(`<td ${hide} ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
                     <juSelect 
                         ${change} 
                         [config]="${config}"
@@ -125,7 +125,7 @@ export class juGridBuilder
                     break;
                 case 'select':
                     change = item.change ? `(change)="${config}.change(row, i)"` : '';
-                    tpl.push(`<td ${hide} ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><select ${style} ${change} class="select form-control" [(ngModel)]="row.${item.field}" >
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><select ${style} ${change} class="select form-control" [(ngModel)]="row.${item.field}" >
                             <option value="">{{${config}.emptyOptionText||'Select option'}}</option>
                             <option *ngFor="let v of ${this.getDataExpression(item, config)}" [value]="v.value">{{v.name}}</option>
                         </select>`);
@@ -133,7 +133,7 @@ export class juGridBuilder
                     tpl.push('</td>');
                     break;
                 case 'html':
-                    tpl.push(`<td ${hide} ${rowHeight} [style.width.px]="config.columnDefs[${index}].width">${item.content}</td>`);
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width">${item.content}</td>`);
                     break;
                 case 'datepicker':
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
@@ -149,13 +149,13 @@ export class juGridBuilder
 
                 case 'text':
                 case 'number':
-                    tpl.push(`<td ${hide} ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><input ${style} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}">`);
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><input ${style} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}">`);
                     tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'textarea':
-                    tpl.push(`<td ${hide} ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><textarea ${style} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><textarea ${style} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
                     tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');
@@ -175,6 +175,7 @@ export class juGridBuilder
         tpl.push(`<tr ${this.options.rowEvents} [ngClass]="config.trClass(row, i, f, l)" *ngFor="let row of viewList;${this.options.trackBy ? 'trackBy:trackByResolver();' : ''}let i = index;let f=first;let l = last">`);
         this.options.columnDefs.forEach((item, index) =>
         {
+            if (item.hide) return;
             tpl.push(this.getNormalTD(item, index));
         });
         tpl.push('</tr>');
@@ -182,9 +183,8 @@ export class juGridBuilder
     }
     private getNormalTD(item: any, index: number)
     {
-        
         let tpl: any[] = [], rowHeight = this.options.rowHeight > 0 ? `style="height:${this.options.rowHeight}px"` : '';
-        tpl.push(`<td [style.display] = "config.hide?'none':'inline-grid'" ${rowHeight} [title]="row.${item.field}" `);
+        tpl.push('<td ' + `${rowHeight} [title]="row.${item.field}" `);
         if (item.width)
         {
             tpl.push(`[style.width.px]="config.columnDefs[${index}].width"`);
@@ -211,7 +211,7 @@ export class juGridBuilder
                 }
 
             });
-            console.log(tpl.join(''));
+
         }
         else if (item.cellRenderer)
         {
@@ -250,7 +250,8 @@ export class juGridBuilder
         tpl.push(`<tr ${this.options.rowEvents} [ngClass]="config.trClass(${this.getParams(row, level)})">`);
         this.options.columnDefs.forEach((item, index) =>
         {
-            tpl.push(`<td [style.display] = "config.hide?'none':'inline-grid'" [style.width.px]="config.columnDefs[${index}].width" ${this.getLevel(index, level)}`);
+            if (item.hide) return;
+            tpl.push(`<td [style.width.px]="config.columnDefs[${index}].width" ${this.getLevel(index, level)}`);
             if (item.tdClass)
             {
                 tpl.push(`[ngClass]="config.columnDefs[${index}].tdClass(${this.getParams(row, level)})"`);
@@ -338,15 +339,17 @@ export class juGridBuilder
     private headerHtml: any[] = [];
     private getHeader(hederDef)
     {
-        this._colIndex = 0;
+        this._colIndex =0;
         var colDef = [], rc = this.row_count(hederDef), i = 0;
         while (i < rc)
         {
             this.headerHtml[i] = [];
             i++;
         }
-        hederDef.forEach(it =>
+        hederDef.forEach((it:any, i:number) =>
         {
+            this._colIndex = i;         
+            if (it.hide) return;          
             this.traverseCell(it, rc, 0, colDef);
         });
         if (rc > 1)
@@ -359,7 +362,7 @@ export class juGridBuilder
     private _colIndex: number = 0;
     private traverseCell(cell, rs, headerRowFlag, colDef: any[])
     {
-
+       
         if (cell.children)
         {
 
@@ -383,13 +386,13 @@ export class juGridBuilder
         {
             colDef.push(cell);
             let rh = this.options.headerHeight > 0 ? `style="height:${this.options.headerHeight}px"` : '';
-            this.headerHtml[headerRowFlag].push(`<th [style.display]="config.hide?'none':'inline-grid'" ${rh} `);
+            this.headerHtml[headerRowFlag].push(`<th ${rh} `);
             if (rs > 1)
             {
                 this.headerHtml[headerRowFlag].push(` valign="bottom" rowspan="${rs}"`);
             }
             if (cell.width)
-            {
+            {                
                 this.headerHtml[headerRowFlag].push(` [style.width.px]="config.columnDefs[${this._colIndex}].width"`);
             }
             if (cell.sort)
@@ -423,14 +426,14 @@ export class juGridBuilder
                 }
                 this.headerHtml[headerRowFlag].push('</th>');
             }
-            this._colIndex++;
+            //this._colIndex++;
         }
     }
     private row_count(hederDef)
     {
         var max = 0;
         for (var i = 0; i < hederDef.length; i++)
-        {
+        {            
             max = Math.max(max, this.cal_header_row(hederDef[i], 1));
         }
         return max;
@@ -442,7 +445,7 @@ export class juGridBuilder
         {
             row_count++;
             for (var i = 0; i < cell.children.length; i++)
-            {
+            {               
                 max = Math.max(max, this.cal_header_row(cell.children[i], row_count));
             }
         }
@@ -656,15 +659,14 @@ export class juGridBuilder
                 });
                 mousemove$
                     .map((e: any) => e.x - startX)
-                    .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } })                   
-                    .filter(e => !not_mousedown)
-                    .filter(e =>  w1 + e > 20)
+                    .filter(e => w1 + e > 20 && !not_mousedown)
+                    .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } }) 
                     .subscribe(e => {
                         this.config.columnDefs[activeIndex - 1].width = w1 + e;
                         this.config.width = tblWidth + e;
                     });                    
             }
-            private columnResizing_backup()
+            private columnResizing__backup()
             {
                 
                 let thList: any[] = this.el.nativeElement.querySelectorAll('table thead tr th'),
@@ -680,7 +682,7 @@ export class juGridBuilder
                         .filter(_ => index !== 0 /*&& index + 1 !== thList.length*/)
                         .filter((e: any) =>
                         {
-                            if (!not_mousedown) {                                
+                            if (!not_mousedown) {                                 
                                 return true;
                             }
                             if (e.target.tagName === 'TH')
@@ -809,7 +811,7 @@ export class juGridBuilder
 
             }
             public sort(colDef: any)
-            {
+            {                
                 if (this.isColResize) { this.isColResize = false; return; }
                 colDef.reverse = !(typeof colDef.reverse === 'undefined' ? true : colDef.reverse);
                 this.config.columnDefs.forEach(_ =>

@@ -27,6 +27,8 @@ var juGridBuilder = (function () {
     juGridBuilder.prototype.getTotalWidth = function () {
         var totalWidth = 0;
         this.options.columnDefs.forEach(function (_) {
+            if (_.hide)
+                return;
             _.width = _.width || 120;
             totalWidth += _.width;
         });
@@ -43,7 +45,7 @@ var juGridBuilder = (function () {
         if (this.options.pagerPos === 'top') {
             tpl.push(this.getPager());
         }
-        tpl.push("<div class=\"ju-grid\" [ngStyle]=\"getStyle(tc1, tc2)\">\n            <div style=\"overflow:hidden\" #headerDiv>\n                <div [style.width.px]=\"config.width\">\n                    <table  class=\"" + this.options.classNames + " theader " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <thead>\n                            " + this.getHeader(this.options.columnDefs) + "\n                        </thead>\n                     </table>\n                </div>\n            </div>\n\n            <div #tc1 style=\"max-height:" + this.options.height + "px;overflow:auto;\" itemscope (scroll)=\"tblScroll($event, headerDiv)\">\n                <div #tc2 [style.width.px]=\"config.width - 22\">\n                    <table class=\"" + this.options.classNames + " tbody " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <tbody (click)=\"hideFilterWindow()\">\n                            " + (this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()) + "\n                        </tbody>\n                    </table>\n                </div>\n            </div>            \n        </div>");
+        tpl.push("<div class=\"ju-grid\" [ngStyle]=\"getStyle(tc1, tc2)\">\n            <div style=\"overflow:hidden\" #headerDiv>\n                <div [style.width.px]=\"config.width\">\n                    <table  class=\"" + this.options.classNames + " theader " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <thead>\n                            " + this.getHeader(this.options.columnDefs) + "\n                        </thead>\n                     </table>\n                </div>\n            </div>\n\n            <div #tc1 style=\"max-height:" + this.options.height + "px;overflow:auto;\" class=\"tbl-body-content\" (scroll)=\"tblScroll($event, headerDiv)\">\n                <div #tc2 [style.width.px]=\"config.width - 22\">\n                    <table class=\"" + this.options.classNames + " tbody " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <tbody (click)=\"hideFilterWindow()\">\n                            " + (this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()) + "\n                        </tbody>\n                    </table>\n                </div>\n            </div>            \n        </div>");
         if (this.options.pagerPos === 'bottom') {
             tpl.push('<div style="height:5px;"></div>');
             tpl.push(this.getPager());
@@ -54,6 +56,8 @@ var juGridBuilder = (function () {
         var tpl = [];
         tpl.push("<tr " + this.options.rowEvents + " [ngClass]=\"config.trClass(row, i, f, l)\" [model]=\"row\" [config]=\"config\" class=\"row-editor\" *ngFor=\"let row of viewList;" + (this.options.trackBy ? 'trackBy:trackByResolver();' : '') + "let i = index;let f=first;let l = last\">");
         this.options.columnDefs.forEach(function (item, index) {
+            if (item.hide)
+                return;
             _this.getCell(item, "config.columnDefs[" + index + "]", tpl, index);
         });
         tpl.push('</tr>');
@@ -66,7 +70,7 @@ var juGridBuilder = (function () {
         return config + ".dataSrc";
     };
     juGridBuilder.prototype.getCell = function (item, config, tpl, index) {
-        var style = '', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? "style=\"height:" + this.options.rowHeight + "px\"" : '', hide = "[style.display] = \"config.hide?'none':'inline-grid'\"";
+        var style = '', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? "style=\"height:" + this.options.rowHeight + "px\"" : '';
         if (item.type) {
             if (item.validators) {
                 validation = " <i [ngClass]=\"isValid('" + item.field + "', i)\" class=\"validation fa fa-info-circle\" [title]=\"getValidationMsg('" + item.field + "', i)\"></i>";
@@ -78,18 +82,18 @@ var juGridBuilder = (function () {
             switch (item.type) {
                 case 'juSelect':
                     change = item.change ? " (option-change)=\"" + config + ".change($event)\"" : '';
-                    tpl.push("<td " + hide + " " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + ">\n                    <juSelect \n                        " + change + " \n                        [config]=\"" + config + "\"\n                        [model]=\"row\"\n                        [value]=\"row['" + item.field + "']\"                        \n                        property-name=\"" + item.field + "\"                       \n                        [data]=\"" + this.getDataExpression(item, config) + "\"\n                        [options]=\"" + config + ".options||{}\"\n                        [index]=\"i\"                        \n                    >\n                    </juSelect></div>");
+                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + ">\n                    <juSelect \n                        " + change + " \n                        [config]=\"" + config + "\"\n                        [model]=\"row\"\n                        [value]=\"row['" + item.field + "']\"                        \n                        property-name=\"" + item.field + "\"                       \n                        [data]=\"" + this.getDataExpression(item, config) + "\"\n                        [options]=\"" + config + ".options||{}\"\n                        [index]=\"i\"                        \n                    >\n                    </juSelect></div>");
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'select':
                     change = item.change ? "(change)=\"" + config + ".change(row, i)\"" : '';
-                    tpl.push("<td " + hide + " " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><select " + style + " " + change + " class=\"select form-control\" [(ngModel)]=\"row." + item.field + "\" >\n                            <option value=\"\">{{" + config + ".emptyOptionText||'Select option'}}</option>\n                            <option *ngFor=\"let v of " + this.getDataExpression(item, config) + "\" [value]=\"v.value\">{{v.name}}</option>\n                        </select>");
+                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><select " + style + " " + change + " class=\"select form-control\" [(ngModel)]=\"row." + item.field + "\" >\n                            <option value=\"\">{{" + config + ".emptyOptionText||'Select option'}}</option>\n                            <option *ngFor=\"let v of " + this.getDataExpression(item, config) + "\" [value]=\"v.value\">{{v.name}}</option>\n                        </select>");
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'html':
-                    tpl.push("<td " + hide + " " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\">" + item.content + "</td>");
+                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\">" + item.content + "</td>");
                     break;
                 case 'datepicker':
                     tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + ">\n                    <div class=\"input-group date\" [pickers]=\"" + config + ".config\" picker-name=\"" + item.type + "\" [model]=\"row\" property=\"" + item.field + "\" [config]=\"" + config + "\" [form]=\"myForm\" >\n                        <input type=\"text\" [disabled]=\"" + config + ".disabled\" [(ngModel)]=\"row." + item.field + "\" class=\"form-control\" placeholder=\"Enter " + header + "\">\n                        <span class=\"input-group-addon\">\n                            <span class=\"fa fa-calendar\"></span>\n                        </span>\n                    </div></div>");
@@ -98,13 +102,13 @@ var juGridBuilder = (function () {
                     break;
                 case 'text':
                 case 'number':
-                    tpl.push("<td " + hide + " " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + "><input " + style + " class=\"text form-control\" type=\"" + item.type + "\" [(ngModel)]=\"row." + item.field + "\" placeholder=\"Enter " + header + "\">");
+                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + "><input " + style + " class=\"text form-control\" type=\"" + item.type + "\" [(ngModel)]=\"row." + item.field + "\" placeholder=\"Enter " + header + "\">");
                     tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'textarea':
-                    tpl.push("<td " + hide + " " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + "><textarea " + style + " class=\"text form-control\" type=\"" + item.type + "\" [(ngModel)]=\"row." + item.field + "\" placeholder=\"Enter " + header + "\"></textarea>");
+                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + "><textarea " + style + " class=\"text form-control\" type=\"" + item.type + "\" [(ngModel)]=\"row." + item.field + "\" placeholder=\"Enter " + header + "\"></textarea>");
                     tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');
@@ -123,6 +127,8 @@ var juGridBuilder = (function () {
         var tpl = [];
         tpl.push("<tr " + this.options.rowEvents + " [ngClass]=\"config.trClass(row, i, f, l)\" *ngFor=\"let row of viewList;" + (this.options.trackBy ? 'trackBy:trackByResolver();' : '') + "let i = index;let f=first;let l = last\">");
         this.options.columnDefs.forEach(function (item, index) {
+            if (item.hide)
+                return;
             tpl.push(_this.getNormalTD(item, index));
         });
         tpl.push('</tr>');
@@ -130,7 +136,7 @@ var juGridBuilder = (function () {
     };
     juGridBuilder.prototype.getNormalTD = function (item, index) {
         var tpl = [], rowHeight = this.options.rowHeight > 0 ? "style=\"height:" + this.options.rowHeight + "px\"" : '';
-        tpl.push("<td [style.display] = \"config.hide?'none':'inline-grid'\" " + rowHeight + " [title]=\"row." + item.field + "\" ");
+        tpl.push('<td ' + (rowHeight + " [title]=\"row." + item.field + "\" "));
         if (item.width) {
             tpl.push("[style.width.px]=\"config.columnDefs[" + index + "].width\"");
         }
@@ -149,7 +155,6 @@ var juGridBuilder = (function () {
                     tpl.push("<a href=\"javascript:;\" title=\"" + ac.title + "\" (click)=\"config.columnDefs[" + index + "].action[" + aci + "].click(row)\"><b class=\"" + ac.icon + "\"></b></a> ");
                 }
             });
-            console.log(tpl.join(''));
         }
         else if (item.cellRenderer) {
             tpl.push(" [innerHTML]=\"config.columnDefs[" + index + "].cellRenderer(row,i,f, l)\">");
@@ -182,7 +187,9 @@ var juGridBuilder = (function () {
         }
         tpl.push("<tr " + this.options.rowEvents + " [ngClass]=\"config.trClass(" + this.getParams(row, level) + ")\">");
         this.options.columnDefs.forEach(function (item, index) {
-            tpl.push("<td [style.display] = \"config.hide?'none':'inline-grid'\" [style.width.px]=\"config.columnDefs[" + index + "].width\" " + _this.getLevel(index, level));
+            if (item.hide)
+                return;
+            tpl.push("<td [style.width.px]=\"config.columnDefs[" + index + "].width\" " + _this.getLevel(index, level));
             if (item.tdClass) {
                 tpl.push("[ngClass]=\"config.columnDefs[" + index + "].tdClass(" + _this.getParams(row, level) + ")\"");
             }
@@ -251,7 +258,10 @@ var juGridBuilder = (function () {
             this.headerHtml[i] = [];
             i++;
         }
-        hederDef.forEach(function (it) {
+        hederDef.forEach(function (it, i) {
+            _this._colIndex = i;
+            if (it.hide)
+                return;
             _this.traverseCell(it, rc, 0, colDef);
         });
         if (rc > 1) {
@@ -278,7 +288,7 @@ var juGridBuilder = (function () {
         else {
             colDef.push(cell);
             var rh = this.options.headerHeight > 0 ? "style=\"height:" + this.options.headerHeight + "px\"" : '';
-            this.headerHtml[headerRowFlag].push("<th [style.display]=\"config.hide?'none':'inline-grid'\" " + rh + " ");
+            this.headerHtml[headerRowFlag].push("<th " + rh + " ");
             if (rs > 1) {
                 this.headerHtml[headerRowFlag].push(" valign=\"bottom\" rowspan=\"" + rs + "\"");
             }
@@ -309,7 +319,6 @@ var juGridBuilder = (function () {
                 }
                 this.headerHtml[headerRowFlag].push('</th>');
             }
-            this._colIndex++;
         }
     };
     juGridBuilder.prototype.row_count = function (hederDef) {
@@ -477,17 +486,16 @@ var juGridBuilder = (function () {
                 });
                 mousemove$
                     .map(function (e) { return e.x - startX; })
+                    .filter(function (e) { return w1 + e > 20 && !not_mousedown; })
                     .do(function (diff) { if (Math.abs(diff) > 0) {
                     _this.isColResize = true;
                 } })
-                    .filter(function (e) { return !not_mousedown; })
-                    .filter(function (e) { return w1 + e > 20; })
                     .subscribe(function (e) {
                     _this.config.columnDefs[activeIndex - 1].width = w1 + e;
                     _this.config.width = tblWidth + e;
                 });
             };
-            DynamicGridComponent.prototype.columnResizing_backup = function () {
+            DynamicGridComponent.prototype.columnResizing__backup = function () {
                 var _this = this;
                 var thList = this.el.nativeElement.querySelectorAll('table thead tr th'), mousemove$ = Rx_1.Observable.fromEvent(document, 'mousemove'), mouseup$ = Rx_1.Observable.fromEvent(document, 'mouseup'), startX = 0, w1 = 0, w2 = 0, not_mousedown = true, tblWidth = this.config.width;
                 var _loop_2 = function(index) {
