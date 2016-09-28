@@ -346,7 +346,8 @@ export interface ColumnDefs
     validators?: Function | Array<Function>;
     search?: boolean;
     exp?: string;
-    options?:SelectOptions;
+    options?: SelectOptions;
+    hide?: boolean;
 }
 export interface GridOptions
 {
@@ -383,7 +384,7 @@ export interface GridOptions
     lazyLoad?: (row: any) => Observable<Array<any>>;
     level?: number;
     enableCellEditing?: boolean;
-    [key: string]: any;
+    [key: string]: any;     
 
 }
 export interface BaseFilter

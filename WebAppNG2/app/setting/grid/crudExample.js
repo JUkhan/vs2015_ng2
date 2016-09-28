@@ -54,7 +54,7 @@ var CrudExample = (function () {
                     params: { valueGetter: this.educationCellRender.bind(this) },
                     cellRenderer: this.educationCellRender.bind(this)
                 },
-                { headerName: 'Age', field: 'age', filter: 'number', sort: true },
+                { headerName: 'Age', field: 'age', filter: 'number', sort: true, hide: true },
                 { headerName: 'Address', field: 'address', cellRenderer: function (row) { return _this.addressList.find(function (_) { return _.value == row.address; }).text; } },
                 { headerName: 'Description', width: 300, field: 'description' }
             ],

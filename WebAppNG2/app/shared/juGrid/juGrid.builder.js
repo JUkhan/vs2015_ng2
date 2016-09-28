@@ -66,7 +66,7 @@ var juGridBuilder = (function () {
         return config + ".dataSrc";
     };
     juGridBuilder.prototype.getCell = function (item, config, tpl, index) {
-        var style = '', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? "style=\"height:" + this.options.rowHeight + "px\"" : '';
+        var style = '', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? "style=\"height:" + this.options.rowHeight + "px\"" : '', hide = "[style.display] = \"config.hide?'none':'inline-grid'\"";
         if (item.type) {
             if (item.validators) {
                 validation = " <i [ngClass]=\"isValid('" + item.field + "', i)\" class=\"validation fa fa-info-circle\" [title]=\"getValidationMsg('" + item.field + "', i)\"></i>";
@@ -78,18 +78,18 @@ var juGridBuilder = (function () {
             switch (item.type) {
                 case 'juSelect':
                     change = item.change ? " (option-change)=\"" + config + ".change($event)\"" : '';
-                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + ">\n                    <juSelect \n                        " + change + " \n                        [config]=\"" + config + "\"\n                        [model]=\"row\"\n                        [value]=\"row['" + item.field + "']\"                        \n                        property-name=\"" + item.field + "\"                       \n                        [data]=\"" + this.getDataExpression(item, config) + "\"\n                        [options]=\"" + config + ".options||{}\"\n                        [index]=\"i\"                        \n                    >\n                    </juSelect></div>");
+                    tpl.push("<td " + hide + " " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + ">\n                    <juSelect \n                        " + change + " \n                        [config]=\"" + config + "\"\n                        [model]=\"row\"\n                        [value]=\"row['" + item.field + "']\"                        \n                        property-name=\"" + item.field + "\"                       \n                        [data]=\"" + this.getDataExpression(item, config) + "\"\n                        [options]=\"" + config + ".options||{}\"\n                        [index]=\"i\"                        \n                    >\n                    </juSelect></div>");
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'select':
                     change = item.change ? "(change)=\"" + config + ".change(row, i)\"" : '';
-                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><select " + style + " " + change + " class=\"select form-control\" [(ngModel)]=\"row." + item.field + "\" >\n                            <option value=\"\">{{" + config + ".emptyOptionText||'Select option'}}</option>\n                            <option *ngFor=\"let v of " + this.getDataExpression(item, config) + "\" [value]=\"v.value\">{{v.name}}</option>\n                        </select>");
+                    tpl.push("<td " + hide + " " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><select " + style + " " + change + " class=\"select form-control\" [(ngModel)]=\"row." + item.field + "\" >\n                            <option value=\"\">{{" + config + ".emptyOptionText||'Select option'}}</option>\n                            <option *ngFor=\"let v of " + this.getDataExpression(item, config) + "\" [value]=\"v.value\">{{v.name}}</option>\n                        </select>");
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'html':
-                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\">" + item.content + "</td>");
+                    tpl.push("<td " + hide + " " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\">" + item.content + "</td>");
                     break;
                 case 'datepicker':
                     tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + ">\n                    <div class=\"input-group date\" [pickers]=\"" + config + ".config\" picker-name=\"" + item.type + "\" [model]=\"row\" property=\"" + item.field + "\" [config]=\"" + config + "\" [form]=\"myForm\" >\n                        <input type=\"text\" [disabled]=\"" + config + ".disabled\" [(ngModel)]=\"row." + item.field + "\" class=\"form-control\" placeholder=\"Enter " + header + "\">\n                        <span class=\"input-group-addon\">\n                            <span class=\"fa fa-calendar\"></span>\n                        </span>\n                    </div></div>");
@@ -98,13 +98,13 @@ var juGridBuilder = (function () {
                     break;
                 case 'text':
                 case 'number':
-                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + "><input " + style + " class=\"text form-control\" type=\"" + item.type + "\" [(ngModel)]=\"row." + item.field + "\" placeholder=\"Enter " + header + "\">");
+                    tpl.push("<td " + hide + " " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + "><input " + style + " class=\"text form-control\" type=\"" + item.type + "\" [(ngModel)]=\"row." + item.field + "\" placeholder=\"Enter " + header + "\">");
                     tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'textarea':
-                    tpl.push("<td " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + "><textarea " + style + " class=\"text form-control\" type=\"" + item.type + "\" [(ngModel)]=\"row." + item.field + "\" placeholder=\"Enter " + header + "\"></textarea>");
+                    tpl.push("<td " + hide + " " + rowHeight + " [style.width.px]=\"config.columnDefs[" + index + "].width\"><div " + style + "><textarea " + style + " class=\"text form-control\" type=\"" + item.type + "\" [(ngModel)]=\"row." + item.field + "\" placeholder=\"Enter " + header + "\"></textarea>");
                     tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');
@@ -130,7 +130,7 @@ var juGridBuilder = (function () {
     };
     juGridBuilder.prototype.getNormalTD = function (item, index) {
         var tpl = [], rowHeight = this.options.rowHeight > 0 ? "style=\"height:" + this.options.rowHeight + "px\"" : '';
-        tpl.push('<td ' + (rowHeight + " [title]=\"row." + item.field + "\" "));
+        tpl.push("<td [style.display] = \"config.hide?'none':'inline-grid'\" " + rowHeight + " [title]=\"row." + item.field + "\" ");
         if (item.width) {
             tpl.push("[style.width.px]=\"config.columnDefs[" + index + "].width\"");
         }
@@ -149,6 +149,7 @@ var juGridBuilder = (function () {
                     tpl.push("<a href=\"javascript:;\" title=\"" + ac.title + "\" (click)=\"config.columnDefs[" + index + "].action[" + aci + "].click(row)\"><b class=\"" + ac.icon + "\"></b></a> ");
                 }
             });
+            console.log(tpl.join(''));
         }
         else if (item.cellRenderer) {
             tpl.push(" [innerHTML]=\"config.columnDefs[" + index + "].cellRenderer(row,i,f, l)\">");
@@ -181,7 +182,7 @@ var juGridBuilder = (function () {
         }
         tpl.push("<tr " + this.options.rowEvents + " [ngClass]=\"config.trClass(" + this.getParams(row, level) + ")\">");
         this.options.columnDefs.forEach(function (item, index) {
-            tpl.push("<td [style.width.px]=\"config.columnDefs[" + index + "].width\" " + _this.getLevel(index, level));
+            tpl.push("<td [style.display] = \"config.hide?'none':'inline-grid'\" [style.width.px]=\"config.columnDefs[" + index + "].width\" " + _this.getLevel(index, level));
             if (item.tdClass) {
                 tpl.push("[ngClass]=\"config.columnDefs[" + index + "].tdClass(" + _this.getParams(row, level) + ")\"");
             }
@@ -277,7 +278,7 @@ var juGridBuilder = (function () {
         else {
             colDef.push(cell);
             var rh = this.options.headerHeight > 0 ? "style=\"height:" + this.options.headerHeight + "px\"" : '';
-            this.headerHtml[headerRowFlag].push("<th " + rh + " ");
+            this.headerHtml[headerRowFlag].push("<th [style.display]=\"config.hide?'none':'inline-grid'\" " + rh + " ");
             if (rs > 1) {
                 this.headerHtml[headerRowFlag].push(" valign=\"bottom\" rowspan=\"" + rs + "\"");
             }
@@ -495,7 +496,6 @@ var juGridBuilder = (function () {
                         .filter(function (_) { return index !== 0; })
                         .filter(function (e) {
                         if (!not_mousedown) {
-                            console.log('......', index);
                             return true;
                         }
                         if (e.target.tagName === 'TH') {

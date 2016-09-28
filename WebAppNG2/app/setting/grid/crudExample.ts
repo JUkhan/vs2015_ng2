@@ -66,7 +66,7 @@ export class CrudExample implements OnInit {
                     params: { valueGetter: this.educationCellRender.bind(this) },
                     cellRenderer: this.educationCellRender.bind(this)
                 },
-                { headerName: 'Age', field: 'age', filter: 'number', sort: true },
+                { headerName: 'Age', field: 'age', filter: 'number', sort: true, hide:true },
                 { headerName: 'Address', field: 'address', cellRenderer: row => this.addressList.find(_ => _.value == row.address).text },
                 { headerName: 'Description', width: 300, field: 'description' }
             ],
