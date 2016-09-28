@@ -293,6 +293,7 @@ var juGridBuilder = (function () {
                 this.headerHtml[headerRowFlag].push(" valign=\"bottom\" rowspan=\"" + rs + "\"");
             }
             if (cell.width) {
+                console.log();
                 this.headerHtml[headerRowFlag].push(" [style.width.px]=\"config.columnDefs[" + this._colIndex + "].width\"");
             }
             if (cell.sort) {

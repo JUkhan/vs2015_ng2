@@ -393,6 +393,7 @@ export class juGridBuilder
             }
             if (cell.width)
             {                
+                console.log()
                 this.headerHtml[headerRowFlag].push(` [style.width.px]="config.columnDefs[${this._colIndex}].width"`);
             }
             if (cell.sort)
