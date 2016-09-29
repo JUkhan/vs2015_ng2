@@ -3,7 +3,7 @@ import { AfterViewInit, OnInit, OnDestroy}          from '@angular/core';
 import { OnChanges, SimpleChange, ComponentFactory} from '@angular/core';
 
 import {juFormBuilder} from './juForm.builder';
-import {juSelect}              from './juSelect';
+import {juSelect, SelectOptions}              from './juSelect';
 import {Datetimepicker}        from './Datetimepicker';
 import {CkEditor, FileSelect}  from './CkEditor';
 import {Observable, Subject}   from 'rxjs/Rx';
@@ -126,11 +126,14 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
             this.componentRef = null;
         }
     }
-
+    public getKeys()
+    {
+        return Object.keys(this.options._events).filter(_ => _ !== 'undefined');
+    }
     public valueChanges(key: string): Observable<any> {
         if (key === 'form') {
             let _observers: any[] = [];
-            for (var prop in this.options._events) {
+            for (var prop in this.options._events) { 
                 if (prop !== 'undefined') {
                     _observers.push(this.valueChanges(prop));
                 }
@@ -156,11 +159,16 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         }
         return Observable.empty();
     }
-    public disabled(key: string, value: boolean) {        
+    public disabled(key: string, value: boolean):juForm {        
         this.options._events[key].field.disabled = value;
         if (this.options._events[key].type === "juSelect") {
             this.options._events[key].field.api.options.disabled = value;
         }
+        return this;
+    }
+    public setLabel(key: string, value: string):juForm {        
+        this.options._events[key].field.label = value;
+        return this;        
     }
     public get valid(): boolean
     {
@@ -299,6 +307,7 @@ export interface FormElement
      */
     enable?: (form: any, model: any) => boolean;
     content?: string;
+    options?: SelectOptions;
 }
 
 export interface FormOptions

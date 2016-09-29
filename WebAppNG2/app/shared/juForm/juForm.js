@@ -108,6 +108,9 @@ var juForm = (function () {
             this.componentRef = null;
         }
     };
+    juForm.prototype.getKeys = function () {
+        return Object.keys(this.options._events).filter(function (_) { return _ !== 'undefined'; });
+    };
     juForm.prototype.valueChanges = function (key) {
         var _this = this;
         if (key === 'form') {
@@ -140,6 +143,11 @@ var juForm = (function () {
         if (this.options._events[key].type === "juSelect") {
             this.options._events[key].field.api.options.disabled = value;
         }
+        return this;
+    };
+    juForm.prototype.setLabel = function (key, value) {
+        this.options._events[key].field.label = value;
+        return this;
     };
     Object.defineProperty(juForm.prototype, "valid", {
         get: function () {

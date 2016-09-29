@@ -60,7 +60,7 @@ var HomeComponent = (function () {
                                         [{
                                                 groupName: 'Address1', labelSize: 4, exp: '[ngStyle]="config.disappear(model.country)"', size: 12, inputs: [
                                                     { field: 'address1.name', label: 'Name', type: 'text' },
-                                                    { field: 'address1.country', label: 'Country', type: 'juSelect' }
+                                                    { field: 'address1.country', label: 'Country', type: 'juSelect', options: { width: '100%', title: 'Select address' } }
                                                 ]
                                             },
                                             {
@@ -125,7 +125,8 @@ var HomeComponent = (function () {
     HomeComponent.prototype.myFormLoad = function (form) {
         form.setData('country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
             .setData('address1.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
-            .setData('address2.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }]);
+            .setData('address2.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
+            .setLabel('age', 'Age').setLabel('aboutMe', 'Ambot Me');
         form.valueChanges('form').filter(function (_) { return form.valid; })
             .subscribe(function (res) { return console.log(res); });
     };
