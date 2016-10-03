@@ -47,11 +47,26 @@ var juForm = (function () {
         if (this.model) {
             this.options = _.cloneDeep(this.options);
             this.options.viewMode = 'form';
-            if (juForm.FORM_LIST.size > 0) {
-            }
-            juForm.FORM_LIST.set(this, this.options);
         }
         this.options.api = this;
+    };
+    juForm.prototype.setCommonData = function (preOpts, opts) {
+        console.log(opts);
+        for (var prop in preOpts._events) {
+            if (prop !== 'undefined' && preOpts._events[prop].type === 'juSelect') {
+                opts._events[prop].field.data = preOpts._events[prop].field.data;
+            }
+        }
+        if (preOpts.inputs) {
+            this.commonDataHelper(preOpts.inputs, opts.inputs);
+        }
+        else if (preOpts.tabs) {
+            for (var tabName in preOpts.tabs) {
+                this.commonDataHelper(preOpts.tabs[tabName], opts.tabs[tabName]);
+            }
+        }
+    };
+    juForm.prototype.commonDataHelper = function (fields, desFields) {
     };
     juForm.prototype.render = function () {
         this.refreshContent();
@@ -106,6 +121,9 @@ var juForm = (function () {
         if (this.componentRef) {
             this.componentRef.destroy();
             this.componentRef = null;
+        }
+        if (juForm.FORM_LIST.has(this)) {
+            juForm.FORM_LIST.delete(this);
         }
     };
     juForm.prototype.getKeys = function () {

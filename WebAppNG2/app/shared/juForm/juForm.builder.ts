@@ -471,7 +471,7 @@ export class juFormBuilder {
                         }
                     }                    
                     else if (field.type === 'juSelect') {
-                        if (field.api) {
+                        if (field.api) { 
                             async_call(() => { field.api.setValue(dmodel); }, 100);                           
                         }
                     }

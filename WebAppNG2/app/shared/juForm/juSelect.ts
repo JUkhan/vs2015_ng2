@@ -240,9 +240,11 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     }
     /*model communication*/
     public setValue(value: any)
-    {       
+    {    
+        this.previousValue=value;    
         this.checkAll(false);
-        this.selectedItem = {};       
+        this.selectedItem = {};  
+        if(!this.dataList)return;     
         if (!value) {            
             this.setModelValue('');
             this.focusToValidate = false;
@@ -300,7 +302,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         }
         else { this.model[this.propertyName] = val; }
         //subscribing...
-        if(val!==this.previousValue){
+        if(val!==this.previousValue && val){
             this.notifyRowEditor.next({});
             this.onChange.next({ value: val, sender: this, form: this.myForm, index: this.index });
             this.valueChanges.next({ value: val, sender: this, form: this.myForm, index: this.index });

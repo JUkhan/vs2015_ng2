@@ -95,7 +95,7 @@ var HomeComponent = (function () {
                                         field: 'district', size: 3, label: 'District', validators: FV_1.FV.required, search: true, change: this.changeThana, type: 'juSelect',
                                         data: [{ text: 'Tangail', value: 1, subText: 'Rx', description: 'Async data streaming with observable' }, { text: 'Unknown', value: 2 }]
                                     },
-                                    { field: 'Thana', size: 3, type: 'select', validators: FV_1.FV.required }
+                                    { field: 'Thana', label: 'Thana', size: 3, type: 'juSelect', validators: FV_1.FV.required }
                                 ]],
                             remove: function (model) {
                                 if (confirm('Are you sure to remove this item?')) {
@@ -132,10 +132,10 @@ var HomeComponent = (function () {
     };
     HomeComponent.prototype.changeThana = function (e) {
         if (e.value && e.value == 1) {
-            e.form.setData('Thana', [{ name: 'asd', value: 1 }, { name: 'MXZ', value: 2 }]);
+            e.form.setData('Thana', [{ text: 'asd', value: 1 }, { text: 'MXZ', value: 2 }]);
         }
         else if (e.value && e.value == 2) {
-            e.form.setData('Thana', [{ name: 'suna', value: 1 }, { name: 'kotha', value: 2 }]);
+            e.form.setData('Thana', [{ text: 'suna', value: 1 }, { text: 'kotha', value: 2 }]);
         }
     };
     HomeComponent = __decorate([

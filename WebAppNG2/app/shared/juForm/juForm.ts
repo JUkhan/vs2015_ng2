@@ -62,13 +62,51 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         if (this.model) {
             this.options = _.cloneDeep(this.options);
             this.options.viewMode = 'form';
-            if (juForm.FORM_LIST.size > 0) {
-                //this._setCommonData(juForm.FORM_LIST.values().next().value, this.options);
-            }
-            juForm.FORM_LIST.set(this, this.options);
+            //if (juForm.FORM_LIST.size > 0) {           
+            //    this.setCommonData(juForm.FORM_LIST.values().next().value, this.options);
+            //}
+            //juForm.FORM_LIST.set(this, this.options);
         }
         this.options.api = this;
     }
+    ///set detail data///
+    private setCommonData(preOpts, opts) { console.log(opts);
+        for (var prop in preOpts._events) { 
+                if (prop !== 'undefined' && preOpts._events[prop].type==='juSelect') {
+                     opts._events[prop].field.data=  preOpts._events[prop].field.data;
+                }
+            }
+        if (preOpts.inputs) {
+            this.commonDataHelper(preOpts.inputs, opts.inputs);
+        }
+        else if (preOpts.tabs) {
+            for (var tabName in preOpts.tabs) {
+                this.commonDataHelper(preOpts.tabs[tabName], opts.tabs[tabName]);
+            }
+        }
+    }
+    private commonDataHelper(fields: Array<any>, desFields: Array<any>) {
+        /*fields.forEach(item => {
+            if (Array.isArray(item)) {
+                item.forEach(item2 => {
+                    if ((item2.type === 'juSelect' || item2.type === 'select') && item2.data) {
+                        let resItem = getItem(desFields, (x: any) => x.field === item2.field && (x.type === 'juSelect' || x.type == 'select'));
+                        if (resItem) {
+                            resItem.data = item2.data;
+                        }
+                    }
+                })
+            } else {
+                if ((item.type === 'juSelect' || item.type === 'select') && item.data) {
+                    let resItem = getItem(desFields, (x: any) => x.field === item.field && (x.type === 'juSelect' || x.type == 'select'));
+                    if (resItem) {
+                        resItem.data = item.data;
+                    }
+                }
+            }
+        });*/
+    }
+    ///end of set detail data//
     public render() {
         this.refreshContent();
     }
@@ -103,7 +141,8 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
                 } else {
                     component.focus();
                 }
-                if (this.model) {
+                
+                if (this.model) {                    
                     this.setModel(this.model);
                 }
                 async_call(() => { this.onLoad.emit(this); });               
@@ -124,6 +163,9 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         {            
             this.componentRef.destroy();
             this.componentRef = null;
+        }
+        if (juForm.FORM_LIST.has(this)) {
+            juForm.FORM_LIST.delete(this);
         }
     }
     public getKeys()
