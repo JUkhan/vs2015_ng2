@@ -169,6 +169,12 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
         }
         //this.refreshContent();
         this.options.api = { grid: this, form: null };
+        Observable.fromEvent(document, 'keyup').subscribe(e =>
+        {
+            this.shiftKey = false;
+            this.altKey = false;
+            this.ctrlKey = false;
+        });
     }
     public ngOnChanges(changes)
     {
@@ -200,12 +206,12 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
             {
                 this.shiftKey = e.shiftKey;
                 this.ctrlKey = e.ctrlKey;
-                this.altKey = e.ctrlKey;
+                this.altKey = e.altKey;
                 switch (key)
                 {
-                    case 'shift': return e.shiftKey;
-                    case 'ctrl':  return e.ctrlKey;
-                    case 'alt':  return e.altKey;
+                    case 'shift':return this.shiftKey;
+                    case 'ctrl': return this.ctrlKey;
+                    case 'alt':  return this.altKey;
                 }
                 return false;
             });

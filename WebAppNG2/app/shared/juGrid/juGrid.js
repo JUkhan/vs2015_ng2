@@ -117,6 +117,11 @@ var juGrid = (function () {
             });
         }
         this.options.api = { grid: this, form: null };
+        Rx_1.Observable.fromEvent(document, 'keyup').subscribe(function (e) {
+            _this.shiftKey = false;
+            _this.altKey = false;
+            _this.ctrlKey = false;
+        });
     };
     juGrid.prototype.ngOnChanges = function (changes) {
         if (this.data && this.wasViewInitialized) {
@@ -139,11 +144,11 @@ var juGrid = (function () {
             .filter(function (e) {
             _this.shiftKey = e.shiftKey;
             _this.ctrlKey = e.ctrlKey;
-            _this.altKey = e.ctrlKey;
+            _this.altKey = e.altKey;
             switch (key) {
-                case 'shift': return e.shiftKey;
-                case 'ctrl': return e.ctrlKey;
-                case 'alt': return e.altKey;
+                case 'shift': return _this.shiftKey;
+                case 'ctrl': return _this.ctrlKey;
+                case 'alt': return _this.altKey;
             }
             return false;
         });

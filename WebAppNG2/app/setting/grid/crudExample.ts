@@ -50,9 +50,9 @@ export class CrudExample implements OnInit {
                     .setData('address', this.addressList);
                 this.scholarList = list
             });
-        //grid.keydown('ctrl').subscribe(e => { console.log('ctrl') });
-        //grid.keydown('shift').subscribe(e => { console.log('shift') });
-        //grid.keydown('alt').subscribe(e => { console.log('alt') }); 
+        //grid.keydown('ctrl').subscribe(e => { console.log(grid.shiftKey, grid.ctrlKey, grid.altKey) });
+        //grid.keydown('shift').subscribe(e => { console.log(grid.shiftKey, grid.ctrlKey, grid.altKey) });
+        //grid.keydown('alt').subscribe(e => { console.log(grid.shiftKey, grid.ctrlKey, grid.altKey) }); 
     }
     educationCellRender(row) {
         return this.educationList.find(_ => _.value == row.education).text;
