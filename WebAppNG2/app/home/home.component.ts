@@ -2,6 +2,8 @@
 import {juForm, FormElement, FormOptions} from '../shared/juForm/juForm';
 import {FV} from '../shared/juForm/FV';
 import {SelectOptions} from '../shared/juForm/juSelect';
+import {Observable} from 'rxjs/Rx';
+
 @Component({
     moduleId: module.id,
     selector: 'my-home',

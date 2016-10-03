@@ -34,7 +34,7 @@ export class CrudExample implements OnInit {
             this.educationList = res[0];
             this.addressList = res[1]
         });
-
+       
     }
     
     hideCol() {
@@ -50,6 +50,9 @@ export class CrudExample implements OnInit {
                     .setData('address', this.addressList);
                 this.scholarList = list
             });
+        //grid.keydown('ctrl').subscribe(e => { console.log('ctrl') });
+        //grid.keydown('shift').subscribe(e => { console.log('shift') });
+        //grid.keydown('alt').subscribe(e => { console.log('alt') }); 
     }
     educationCellRender(row) {
         return this.educationList.find(_ => _.value == row.education).text;

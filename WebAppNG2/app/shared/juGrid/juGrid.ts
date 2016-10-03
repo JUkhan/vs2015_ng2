@@ -190,6 +190,26 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
             this.componentRef = null;
         }
     }
+    public shiftKey: boolean = false;
+    public ctrlKey: boolean = false;
+    public altKey: boolean = false;
+    keydown(key:'shift'|'ctrl'|'alt'): Observable<any>
+    {
+        return Observable.fromEvent(document, 'keydown')
+            .filter((e: any) =>
+            {
+                this.shiftKey = e.shiftKey;
+                this.ctrlKey = e.ctrlKey;
+                this.altKey = e.ctrlKey;
+                switch (key)
+                {
+                    case 'shift': return e.shiftKey;
+                    case 'ctrl':  return e.ctrlKey;
+                    case 'alt':  return e.altKey;
+                }
+                return false;
+            });
+    }
     public render() {
         this.refreshContent();
     }
