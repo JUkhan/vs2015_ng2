@@ -401,7 +401,8 @@ legend {
    
 }
 .tbl-resize tbody td, .tbl-resize thead th {    
-    width:120px;
+    /*xwidth:120px;
+    xfloat: left;*/
     float: left;
     white-space: nowrap;
     overflow: hidden;   

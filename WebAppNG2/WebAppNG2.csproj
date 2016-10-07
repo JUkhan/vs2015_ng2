@@ -572,6 +572,7 @@
     <Content Include="Content\font-awesome\css\font-awesome.css" />
     <Content Include="Content\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\jquery-3.1.1.min.js" />
     <Content Include="Content\jquery.js" />
     <Content Include="Content\selectpicker\css\bootstrap-select.css" />
     <Content Include="Content\selectpicker\css\bootstrap-select.min.css" />
