@@ -4,14 +4,15 @@
     Input, Output, EventEmitter
 } from '@angular/core'
 import {Observable, Subject} from 'rxjs/Rx';
+declare var jQuery: any;
 @Component({
     moduleId: module.id,
     selector: 'juSelect, .juSelect, [juSelect]',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Default,
     template: `
-    <div [ngClass]="getDropdownStyle()" class="btn-group bootstrap-select" [style.width]="options.width">
-        <button [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" (click)="setFocusToValidate($event)">
+    <div #maincontent [class.open]="isEditable" [ngClass]="getDropdownStyle()" class="btn-group bootstrap-select" [style.width]="options.width">
+        <button *ngIf="!options.editable" [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" (click)="setFocusToValidate($event)">
             <span class="filter-option pull-left"> 
                 <i *ngIf="selectedItem[options.iconProp]||options.iconRenderer" [class]="getSelectedIconStyle()"></i>               
                 <span class="{{options.multiselect?'':selectedItem[options.styleProp]}}">{{getFormatedText()}}</span>
@@ -20,6 +21,12 @@ import {Observable, Subject} from 'rxjs/Rx';
                 <span class="caret"></span>
             </span>
         </button>
+        <div class="input-group" [style.width]="options.width" *ngIf="options.editable">
+          <input type="text" #editableText class="form-control" value="{{getFormatedText()}}">
+          <span class="input-group-btn">
+                <button (click)="isEditable=!isEditable" class="btn btn-default" type="button"><span class="caret"></span></button>
+          </span>
+        </div>
         <div class="dropdown-menu open" role="combobox" [style.max-height.px]="options.height?options.height:'none'" style="overflow: hidden; min-height: 0px;">            
             <div class="search-checkall" *ngIf="options.liveSearch||(options.multiselect && options.checkAll)">
                 <label (click)="$event.stopPropagation()" *ngIf="options.checkAll"><input (click)="checkAll(chkAll.checked)" #chkAll type="checkbox">Select All</label>
@@ -58,7 +65,9 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
          this.previousValue = val;
     }
 
-    @ViewChild('searchEl') private searchEl: ElementRef;
+    @ViewChild('searchEl')     private searchEl: ElementRef;
+    @ViewChild('maincontent')  private containerEl: ElementRef;
+    @ViewChild('editableText') private editableText: ElementRef;
 
     private previousValue: any = '';
     private selectedItem: any = {};
@@ -66,7 +75,9 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     private livesearchText: string;
     private hasSerchResult: boolean = true;
     private maxOptionsVisibility: string = 'hidden';
-    private focusToValidate: boolean = false;    
+    private focusToValidate: boolean = false; 
+    private tableBodyContent: any = null;
+    private isEditable: boolean = false; 
     notifyRowEditor: Subject<any> = new Subject();
     valueChanges: Subject<any> = new Subject();
 
@@ -109,6 +120,18 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         if (!('showMenuArrow' in this.options)) {
             this.options.showMenuArrow = false;
         }
+        if (!('editable' in this.options))
+        {
+            this.options.showMenuArrow = false;
+        }
+        if (this.options.editable)
+        {
+            Observable.fromEvent(document.body, 'mouseup').subscribe(_ =>
+            {                
+                if (this.isEditable) this.isEditable = false;
+               
+            });
+        }
     }
     public ngOnChanges(changes: any) {                          
         if (changes.dataList && changes.dataList.currentValue && changes.dataList.currentValue !== changes.dataList.previousValue)
@@ -136,12 +159,31 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
                 .map((e: any) => e.target.value)
                 .subscribe(e => this.liveSearch(e));
         }
+        if (this.options.editable)
+        {            
+            Observable.fromEvent(this.editableText.nativeElement, 'keyup')
+                .debounceTime(300).distinctUntilChanged()
+                .map((e: any) => e.target.value)
+                .subscribe(e => this.setModelValue(e));
+        }
     }
     public ngOnDestroy() {
 
     }
     private setFocusToValidate(e:any){
-        this.focusToValidate = true;        
+        this.focusToValidate = true;
+        if (!this.tableBodyContent)
+        {
+            this.tableBodyContent = jQuery(this.containerEl.nativeElement).parents('.tbl-body-content');
+        }
+        if (this.tableBodyContent.length==0) return;
+        const containerOffset = this.tableBodyContent.offset();
+        const containerHeight = this.tableBodyContent.height()  - this.tableBodyContent.scrollTop();
+        const comPos = jQuery(e.target).offset().top - containerOffset.top;
+        const comHeight = jQuery(this.containerEl.nativeElement)[0].offsetHeight +
+            jQuery('.dropdown-menu', this.containerEl.nativeElement).height();
+        this.options.dropup = comPos + comHeight > containerHeight;
+        
     }
     private checkAll(checked)
     {
@@ -185,7 +227,9 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     private getItemClasses(item: any) {
         return { selected: item.selected, disabled: item[this.options.disabledItemProp], 'single-silected': !this.options.multiselect && item.selected};
     }
-    private selectItem(item: any, e: any) {
+    private selectItem(item: any, e: any)
+    {
+        this.isEditable = false;
         if (this.options.multiselect) {
             e.stopPropagation();
             item.selected = !item.selected;
@@ -225,9 +269,12 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     }
     /*model communication*/
     public setValue(value: any)
-    {       
+    {
+        if (this.options.editable && this.editableText) this.editableText.nativeElement.value = '';  
+        this.previousValue=value;    
         this.checkAll(false);
-        this.selectedItem = {};       
+        this.selectedItem = {};  
+        if(!this.dataList)return;     
         if (!value) {            
             this.setModelValue('');
             this.focusToValidate = false;
@@ -254,6 +301,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     }
     public getValue()
     {
+        if (this.options.editable && this.editableText) return this.editableText.nativeElement.value;
         if(this.dataList ===undefined)return '';
         return this.dataList.filter(_ => _.selected).map(_ => _[this.options.valueProp]).join(this.options.multipleSeparator);
     }
@@ -285,7 +333,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         }
         else { this.model[this.propertyName] = val; }
         //subscribing...
-        if(val!==this.previousValue){
+        if(val!==this.previousValue && val){
             this.notifyRowEditor.next({});
             this.onChange.next({ value: val, sender: this, form: this.myForm, index: this.index });
             this.valueChanges.next({ value: val, sender: this, form: this.myForm, index: this.index });
@@ -322,5 +370,6 @@ export interface SelectOptions {
     height?: number;
     fitWidth?: boolean;
     showMenuArrow?: boolean;
-    multipleSeparator?: string;    
+    multipleSeparator?: string;
+    editable?: boolean;   
 }

@@ -3,7 +3,7 @@ import { AfterViewInit, OnInit, OnDestroy}          from '@angular/core';
 import { OnChanges, SimpleChange, ComponentFactory} from '@angular/core';
 
 import {juFormBuilder} from './juForm.builder';
-import {juSelect}              from './juSelect';
+import {juSelect, SelectOptions}              from './juSelect';
 import {Datetimepicker}        from './Datetimepicker';
 import {CkEditor, FileSelect}  from './CkEditor';
 import {Observable, Subject}   from 'rxjs/Rx';
@@ -62,13 +62,51 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         if (this.model) {
             this.options = _.cloneDeep(this.options);
             this.options.viewMode = 'form';
-            if (juForm.FORM_LIST.size > 0) {
-                //this._setCommonData(juForm.FORM_LIST.values().next().value, this.options);
-            }
-            juForm.FORM_LIST.set(this, this.options);
+            //if (juForm.FORM_LIST.size > 0) {           
+            //    this.setCommonData(juForm.FORM_LIST.values().next().value, this.options);
+            //}
+            //juForm.FORM_LIST.set(this, this.options);
         }
         this.options.api = this;
     }
+    ///set detail data///
+    private setCommonData(preOpts, opts) { console.log(opts);
+        for (var prop in preOpts._events) { 
+                if (prop !== 'undefined' && preOpts._events[prop].type==='juSelect') {
+                     opts._events[prop].field.data=  preOpts._events[prop].field.data;
+                }
+            }
+        if (preOpts.inputs) {
+            this.commonDataHelper(preOpts.inputs, opts.inputs);
+        }
+        else if (preOpts.tabs) {
+            for (var tabName in preOpts.tabs) {
+                this.commonDataHelper(preOpts.tabs[tabName], opts.tabs[tabName]);
+            }
+        }
+    }
+    private commonDataHelper(fields: Array<any>, desFields: Array<any>) {
+        /*fields.forEach(item => {
+            if (Array.isArray(item)) {
+                item.forEach(item2 => {
+                    if ((item2.type === 'juSelect' || item2.type === 'select') && item2.data) {
+                        let resItem = getItem(desFields, (x: any) => x.field === item2.field && (x.type === 'juSelect' || x.type == 'select'));
+                        if (resItem) {
+                            resItem.data = item2.data;
+                        }
+                    }
+                })
+            } else {
+                if ((item.type === 'juSelect' || item.type === 'select') && item.data) {
+                    let resItem = getItem(desFields, (x: any) => x.field === item.field && (x.type === 'juSelect' || x.type == 'select'));
+                    if (resItem) {
+                        resItem.data = item.data;
+                    }
+                }
+            }
+        });*/
+    }
+    ///end of set detail data//
     public render() {
         this.refreshContent();
     }
@@ -103,7 +141,8 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
                 } else {
                     component.focus();
                 }
-                if (this.model) {
+                
+                if (this.model) {                    
                     this.setModel(this.model);
                 }
                 async_call(() => { this.onLoad.emit(this); });               
@@ -125,12 +164,18 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
             this.componentRef.destroy();
             this.componentRef = null;
         }
+        if (juForm.FORM_LIST.has(this)) {
+            juForm.FORM_LIST.delete(this);
+        }
     }
-
+    public getKeys()
+    {
+        return Object.keys(this.options._events).filter(_ => _ !== 'undefined');
+    }
     public valueChanges(key: string): Observable<any> {
         if (key === 'form') {
             let _observers: any[] = [];
-            for (var prop in this.options._events) {
+            for (var prop in this.options._events) { 
                 if (prop !== 'undefined') {
                     _observers.push(this.valueChanges(prop));
                 }
@@ -156,11 +201,16 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         }
         return Observable.empty();
     }
-    public disabled(key: string, value: boolean) {        
+    public disabled(key: string, value: boolean):juForm {        
         this.options._events[key].field.disabled = value;
         if (this.options._events[key].type === "juSelect") {
             this.options._events[key].field.api.options.disabled = value;
         }
+        return this;
+    }
+    public setLabel(key: string, value: string):juForm {        
+        this.options._events[key].field.label = value;
+        return this;        
     }
     public get valid(): boolean
     {
@@ -299,6 +349,7 @@ export interface FormElement
      */
     enable?: (form: any, model: any) => boolean;
     content?: string;
+    options?: SelectOptions;
 }
 
 export interface FormOptions

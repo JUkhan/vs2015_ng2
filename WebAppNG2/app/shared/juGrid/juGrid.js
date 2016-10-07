@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var juGrid_builder_1 = require('./juGrid.builder');
+var Rx_1 = require('rxjs/Rx');
 var juGrid = (function () {
     function juGrid(_elementRef, typeBuilder, viewContainerRef) {
         this._elementRef = _elementRef;
@@ -22,6 +23,9 @@ var juGrid = (function () {
         this.data = [];
         this.onLoad = new core_1.EventEmitter();
         this.wasViewInitialized = false;
+        this.shiftKey = false;
+        this.ctrlKey = false;
+        this.altKey = false;
     }
     juGrid.prototype.ngOnInit = function () {
         var _this = this;
@@ -113,6 +117,11 @@ var juGrid = (function () {
             });
         }
         this.options.api = { grid: this, form: null };
+        Rx_1.Observable.fromEvent(document, 'keyup').subscribe(function (e) {
+            _this.shiftKey = false;
+            _this.altKey = false;
+            _this.ctrlKey = false;
+        });
     };
     juGrid.prototype.ngOnChanges = function (changes) {
         if (this.data && this.wasViewInitialized) {
@@ -128,6 +137,21 @@ var juGrid = (function () {
             this.componentRef.destroy();
             this.componentRef = null;
         }
+    };
+    juGrid.prototype.keydown = function (key) {
+        var _this = this;
+        return Rx_1.Observable.fromEvent(document, 'keydown')
+            .filter(function (e) {
+            _this.shiftKey = e.shiftKey;
+            _this.ctrlKey = e.ctrlKey;
+            _this.altKey = e.altKey;
+            switch (key) {
+                case 'shift': return _this.shiftKey;
+                case 'ctrl': return _this.ctrlKey;
+                case 'alt': return _this.altKey;
+            }
+            return false;
+        });
     };
     juGrid.prototype.render = function () {
         this.refreshContent();

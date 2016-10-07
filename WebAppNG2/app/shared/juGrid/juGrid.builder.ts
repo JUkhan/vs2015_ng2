@@ -54,7 +54,7 @@ export class juGridBuilder
                 </div>
             </div>
 
-            <div #tc1 style="max-height:${this.options.height}px;overflow:auto;" itemscope (scroll)="tblScroll($event, headerDiv)">
+            <div #tc1 style="max-height:${this.options.height}px;overflow:auto;" class="tbl-body-content" (scroll)="tblScroll($event, headerDiv)">
                 <div #tc2 [style.width.px]="config.width - 22">
                     <table class="${this.options.classNames} tbody ${this.options.colResize ? 'tbl-resize' : ''}">
                         <tbody (click)="hideFilterWindow()">
@@ -392,7 +392,7 @@ export class juGridBuilder
                 this.headerHtml[headerRowFlag].push(` valign="bottom" rowspan="${rs}"`);
             }
             if (cell.width)
-            {
+            {                
                 console.log()
                 this.headerHtml[headerRowFlag].push(` [style.width.px]="config.columnDefs[${this._colIndex}].width"`);
             }
@@ -660,15 +660,14 @@ export class juGridBuilder
                 });
                 mousemove$
                     .map((e: any) => e.x - startX)
-                    .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } })                   
-                    .filter(e => !not_mousedown)
-                    .filter(e =>  w1 + e > 20)
+                    .filter(e => w1 + e > 20 && !not_mousedown)
+                    .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } }) 
                     .subscribe(e => {
                         this.config.columnDefs[activeIndex - 1].width = w1 + e;
                         this.config.width = tblWidth + e;
                     });                    
             }
-            private columnResizing_backup()
+            private columnResizing__backup()
             {
                 
                 let thList: any[] = this.el.nativeElement.querySelectorAll('table thead tr th'),
@@ -684,8 +683,7 @@ export class juGridBuilder
                         .filter(_ => index !== 0 /*&& index + 1 !== thList.length*/)
                         .filter((e: any) =>
                         {
-                            if (!not_mousedown) {
-                                console.log('......', index)
+                            if (!not_mousedown) {                                 
                                 return true;
                             }
                             if (e.target.tagName === 'TH')
@@ -814,7 +812,7 @@ export class juGridBuilder
 
             }
             public sort(colDef: any)
-            {
+            {                
                 if (this.isColResize) { this.isColResize = false; return; }
                 colDef.reverse = !(typeof colDef.reverse === 'undefined' ? true : colDef.reverse);
                 this.config.columnDefs.forEach(_ =>

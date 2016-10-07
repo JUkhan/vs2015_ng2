@@ -76,6 +76,7 @@ export class juPager implements OnInit, OnChanges
     activePage: number = 1;
     list: any[] = [];
     searchText: any = '';
+    totalRecords: any = 0;
     _sort: string = '';
     _filter: any[] = [];
    
@@ -225,7 +226,8 @@ export class juPager implements OnInit, OnChanges
             this.sspFn({ pageSize: this.pageSize, pageNo: this.activePage, searchText: this.searchText, sort: this._sort, filter: this._filter })
                 .subscribe(res =>
                 {
-                    this.totalPage = res.totalPage;
+                    this.totalRecords = res.totalRecords;
+                    this.totalPage = this.getTotalPage();
                     this.pageChange.next(res.data);
 
                     this.calculatePager();
@@ -332,7 +334,7 @@ export class juPager implements OnInit, OnChanges
     {
         if (this.sspFn)
         {
-            return this.totalPage;
+            return parseInt((this.totalRecords / this.pageSize).toString()) + ((this.totalRecords % this.pageSize) > 0 ? 1 : 0);
         }
         if (!this.data) return 0;
         let len = this.data.length;

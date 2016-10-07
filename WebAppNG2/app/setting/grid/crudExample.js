@@ -25,8 +25,11 @@ var CrudExample = (function () {
         });
     };
     CrudExample.prototype.hideCol = function () {
-        this.scholarGridOptions.columnDefs[3].hide = true;
-        this.scholarGridOptions.api.grid.render();
+        var _this = this;
+        this.service.confirmDialog('Column removing', 'Are you sure to remove the age column?', function () {
+            _this.scholarGridOptions.columnDefs[3].hide = true;
+            _this.scholarGridOptions.api.grid.render();
+        });
     };
     CrudExample.prototype.onLoad = function (grid) {
         var _this = this;

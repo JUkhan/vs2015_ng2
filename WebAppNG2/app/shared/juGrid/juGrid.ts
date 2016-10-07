@@ -169,6 +169,12 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
         }
         //this.refreshContent();
         this.options.api = { grid: this, form: null };
+        Observable.fromEvent(document, 'keyup').subscribe(e =>
+        {
+            this.shiftKey = false;
+            this.altKey = false;
+            this.ctrlKey = false;
+        });
     }
     public ngOnChanges(changes)
     {
@@ -189,6 +195,26 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
             this.componentRef.destroy();
             this.componentRef = null;
         }
+    }
+    public shiftKey: boolean = false;
+    public ctrlKey: boolean = false;
+    public altKey: boolean = false;
+    keydown(key:'shift'|'ctrl'|'alt'): Observable<any>
+    {
+        return Observable.fromEvent(document, 'keydown')
+            .filter((e: any) =>
+            {
+                this.shiftKey = e.shiftKey;
+                this.ctrlKey = e.ctrlKey;
+                this.altKey = e.altKey;
+                switch (key)
+                {
+                    case 'shift':return this.shiftKey;
+                    case 'ctrl': return this.ctrlKey;
+                    case 'alt':  return this.altKey;
+                }
+                return false;
+            });
     }
     public render() {
         this.refreshContent();
@@ -380,7 +406,7 @@ export interface GridOptions
     columnDefs?: ColumnDefs[];
     removeItem?: (data: any) => void;
     api?: { form: juForm, grid: juGrid, pager: juPager };
-    sspFn?: (params: { pageSize: number, pageNo: number, searchText: string, sort: string, filter: any[] }) => Observable<{ totalPage: number, data: any[] }>;
+    sspFn?: (params: { pageSize: number, pageNo: number, searchText: string, sort: string, filter: any[] }) => Observable<{ totalRecords: number, data: any[] }>;
     onFormLoad?: (form: juForm) => void;
     trackBy?: string;
     enableTreeView?: boolean;
@@ -400,3 +426,6 @@ export interface BaseFilter
     searchText: string;
     searchCategory: string;
 }
+
+
+

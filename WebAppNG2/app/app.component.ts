@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-
+import { MessageDialog }   from './shared/app-ui/message.dialog';
+import { ConfirmDialog }   from './shared/app-ui/confirm.dialog';
+import {AppService} from './shared/app.service'
 @Component({
     moduleId: module.id,
     selector: 'my-app',
@@ -7,8 +9,21 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
     menuData: any[];
+    constructor(private service: AppService) { }
     ngOnInit() {        
         this.setMenu();
+        this.service.notifier$.subscribe(it =>
+        {
+            switch (it.key)
+            {
+                case 'messageDialog':
+                    this.messageDialog.showDialog(it.value.title, it.value.message);
+                    break;
+                case 'confirmDialog':
+                    this.confirmDialog.showDialog(it.value.title, it.value.message, it.value.yesCallback, it.value.noCallback);
+                    break;
+            }
+        });
     }
     private setMenu() {
         this.menuData = [
@@ -24,5 +39,16 @@ export class AppComponent {
                 ]
             },
         ];
+    }
+    private messageDialog: MessageDialog;
+    private confirmDialog: ConfirmDialog;
+    private messageLoad(message: MessageDialog)
+    {
+        this.messageDialog = message;
+    }
+    
+    private confirmLoad(confirm: ConfirmDialog)
+    {
+        this.confirmDialog = confirm;
     }
  }

@@ -14,6 +14,8 @@
     </div>
 </div>
 <div class="container body-content">
+    <div message (onLoad)="messageLoad($event)"></div> 
+    <div confirm (onLoad)="confirmLoad($event)"></div>
     <router-outlet></router-outlet>
     <hr />
     <footer>

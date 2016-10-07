@@ -25,12 +25,14 @@ var HomeComponent = (function () {
             { text: 'UK', value: 9 },
             { text: 'Austrlia', value: 10 }
         ];
+        this.attach = 'sss';
+        this.mailList = [];
     }
     HomeComponent.prototype.ngOnInit = function () {
         this.initForm();
         this.mySelectOptions = {
             title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: true,
-            height: 250, multiselect: true, selectedTextFormat: 'count>2'
+            height: 250, multiselect: !true, selectedTextFormat: 'count>2', editable: true
         };
     };
     HomeComponent.prototype.ngOnDestroy = function () { };
@@ -60,7 +62,7 @@ var HomeComponent = (function () {
                                         [{
                                                 groupName: 'Address1', labelSize: 4, exp: '[ngStyle]="config.disappear(model.country)"', size: 12, inputs: [
                                                     { field: 'address1.name', label: 'Name', type: 'text' },
-                                                    { field: 'address1.country', label: 'Country', type: 'juSelect' }
+                                                    { field: 'address1.country', label: 'Country', type: 'juSelect', options: { width: '100%', title: 'Select address' } }
                                                 ]
                                             },
                                             {
@@ -95,7 +97,7 @@ var HomeComponent = (function () {
                                         field: 'district', size: 3, label: 'District', validators: FV_1.FV.required, search: true, change: this.changeThana, type: 'juSelect',
                                         data: [{ text: 'Tangail', value: 1, subText: 'Rx', description: 'Async data streaming with observable' }, { text: 'Unknown', value: 2 }]
                                     },
-                                    { field: 'Thana', size: 3, type: 'select', validators: FV_1.FV.required }
+                                    { field: 'Thana', label: 'Thana', size: 3, type: 'juSelect', validators: FV_1.FV.required }
                                 ]],
                             remove: function (model) {
                                 if (confirm('Are you sure to remove this item?')) {
@@ -125,17 +127,25 @@ var HomeComponent = (function () {
     HomeComponent.prototype.myFormLoad = function (form) {
         form.setData('country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
             .setData('address1.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
-            .setData('address2.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }]);
+            .setData('address2.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
+            .setLabel('age', 'Age').setLabel('aboutMe', 'Ambot Me');
         form.valueChanges('form').filter(function (_) { return form.valid; })
             .subscribe(function (res) { return console.log(res); });
     };
     HomeComponent.prototype.changeThana = function (e) {
         if (e.value && e.value == 1) {
-            e.form.setData('Thana', [{ name: 'asd', value: 1 }, { name: 'MXZ', value: 2 }]);
+            e.form.setData('Thana', [{ text: 'asd', value: 1 }, { text: 'MXZ', value: 2 }]);
         }
         else if (e.value && e.value == 2) {
-            e.form.setData('Thana', [{ name: 'suna', value: 1 }, { name: 'kotha', value: 2 }]);
+            e.form.setData('Thana', [{ text: 'suna', value: 1 }, { text: 'kotha', value: 2 }]);
         }
+    };
+    HomeComponent.prototype.mailLoad = function (mail) {
+        mail.setAttachment('helloq.zip');
+        mail.setMailList([{ text: 'jasim@gmail.com', value: 'jasim@gmail.com' }, { text: 'arif@gmail.com', value: 'arif@gmail.com' }]);
+    };
+    HomeComponent.prototype.mailData = function (model) {
+        console.log(model);
     };
     HomeComponent = __decorate([
         core_1.Component({

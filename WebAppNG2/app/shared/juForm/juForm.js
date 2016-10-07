@@ -47,11 +47,26 @@ var juForm = (function () {
         if (this.model) {
             this.options = _.cloneDeep(this.options);
             this.options.viewMode = 'form';
-            if (juForm.FORM_LIST.size > 0) {
-            }
-            juForm.FORM_LIST.set(this, this.options);
         }
         this.options.api = this;
+    };
+    juForm.prototype.setCommonData = function (preOpts, opts) {
+        console.log(opts);
+        for (var prop in preOpts._events) {
+            if (prop !== 'undefined' && preOpts._events[prop].type === 'juSelect') {
+                opts._events[prop].field.data = preOpts._events[prop].field.data;
+            }
+        }
+        if (preOpts.inputs) {
+            this.commonDataHelper(preOpts.inputs, opts.inputs);
+        }
+        else if (preOpts.tabs) {
+            for (var tabName in preOpts.tabs) {
+                this.commonDataHelper(preOpts.tabs[tabName], opts.tabs[tabName]);
+            }
+        }
+    };
+    juForm.prototype.commonDataHelper = function (fields, desFields) {
     };
     juForm.prototype.render = function () {
         this.refreshContent();
@@ -107,6 +122,12 @@ var juForm = (function () {
             this.componentRef.destroy();
             this.componentRef = null;
         }
+        if (juForm.FORM_LIST.has(this)) {
+            juForm.FORM_LIST.delete(this);
+        }
+    };
+    juForm.prototype.getKeys = function () {
+        return Object.keys(this.options._events).filter(function (_) { return _ !== 'undefined'; });
     };
     juForm.prototype.valueChanges = function (key) {
         var _this = this;
@@ -140,6 +161,11 @@ var juForm = (function () {
         if (this.options._events[key].type === "juSelect") {
             this.options._events[key].field.api.options.disabled = value;
         }
+        return this;
+    };
+    juForm.prototype.setLabel = function (key, value) {
+        this.options._events[key].field.label = value;
+        return this;
     };
     Object.defineProperty(juForm.prototype, "valid", {
         get: function () {

@@ -257,7 +257,7 @@ var juFormBuilder = (function () {
     };
     juFormBuilder.prototype._getjuSelectTemplate = function (fieldName, input, config) {
         var labelSize = input.labelSize || this.options.labelSize || 3, labelPos = input.labelPos || this.options.labelPos || 'top', cfield = fieldName.split('.').join('_'), element = "<juSelect\n                    [myForm]=\"myForm\"\n                    [config]=\"" + config + "\"                     \n                    #" + cfield + "select \n                    (option-change)=\"" + config + ".change($event)\"\n                    [model]=\"model\"                     \n                    property-name=\"" + fieldName + "\"\n                    [data]=\"" + config + ".data\" \n                    [options]=\"" + config + ".options||{}\"                   \n                    >\n                </juSelect>                \n                <div *ngIf=\"" + cfield + "select.hasError()\" class=\"alert alert-danger\" [innerHTML]=\"" + config + ".message\"></div>";
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
     };
     juFormBuilder.prototype._getInputTemplate = function (fieldName, input, config) {
         var labelSize = input.labelSize || this.options.labelSize || 3, labelPos = input.labelPos || this.options.labelPos || 'top', cfield = fieldName.split('.').join('_');
@@ -269,7 +269,7 @@ var juFormBuilder = (function () {
         if (this.options.viewMode === 'table') {
             return "<td>" + element + "</td>";
         }
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
     };
     juFormBuilder.prototype.getColOffset = function (input) {
         return input.offset ? " col-md-offset-" + input.offset : '';
@@ -279,22 +279,22 @@ var juFormBuilder = (function () {
     };
     juFormBuilder.prototype._getFileTemplate = function (fieldName, input, config) {
         var labelSize = input.labelSize || this.options.labelSize || 3, labelPos = input.labelPos || this.options.labelPos || 'top', cfield = fieldName.split('.').join('_'), element = "<input type=\"file\" fileSelect [model]=\"model\" propName=\"" + fieldName + "\" [ext]=\"" + config + ".ext\" " + (input.multiple ? 'multiple' : '') + " (click)=\"vlidate_input(model." + fieldName + ", " + config + ")\" [form]=\"myForm\" [config]=\"" + config + "\" [disabled]=\"" + config + ".disabled\" class=\"form-control\" placeholder=\"Select file(s)...\">\n                    <div *ngIf=\"!" + config + ".hideMsg\" class=\"alert alert-danger\" [innerHTML]=\"" + config + ".message\"></div>";
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
     };
     juFormBuilder.prototype._getCkEditorTemplate = function (fieldName, input, config) {
         var labelSize = input.labelSize || this.options.labelSize || 3, labelPos = input.labelPos || this.options.labelPos || 'top', cfield = fieldName.split('.').join('_'), element = "<textarea ckeditor [config]=\"" + config + "\" (click)=\"fieldClick('" + fieldName + "', " + config + ")\" [disabled]=\"" + config + ".disabled\" [(ngModel)]=\"model." + fieldName + "\" class=\"form-control\" placeholder=\"Enter " + (input.label || fieldName) + "\"></textarea>\n                 <div *ngIf=\"!" + config + ".hideMsg\" class=\"alert alert-danger\" [innerHTML]=\"" + config + ".message\"></div>";
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
     };
     juFormBuilder.prototype._getDateTemplate = function (fieldName, input, config) {
         var labelSize = input.labelSize || this.options.labelSize || 3, labelPos = input.labelPos || this.options.labelPos || 'top', cfield = fieldName.split('.').join('_'), element = "<div (click)=\"vlidate_input(model." + fieldName + ", " + config + ")\" class=\"input-group date\" [pickers]=\"" + config + ".config\" picker-name=\"" + input.type + "\" [model]=\"model\" property=\"" + fieldName + "\" [config]=\"" + config + "\" [form]=\"myForm\" >\n                        <input type=\"text\" [disabled]=\"" + config + ".disabled\" [(ngModel)]=\"model." + fieldName + "\" class=\"form-control\" placeholder=\"Enter " + (input.label || fieldName) + "\">\n                        <span class=\"input-group-addon\">\n                            <span class=\"fa fa-calendar\"></span>\n                        </span>\n                    </div>                    \n                    <div *ngIf=\"!" + config + ".hideMsg\" class=\"alert alert-danger\" [innerHTML]=\"" + config + ".message\"></div>";
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
     };
     juFormBuilder.prototype._getSelectTemplate = function (fieldName, input, config) {
         var labelSize = input.labelSize || this.options.labelSize || 3, labelPos = input.labelPos || this.options.labelPos || 'top', cfield = fieldName.split('.').join('_'), element = "<select (click)=\"vlidate_input(model." + fieldName + ", " + config + ")\" (change)=\"" + config + ".change({value:" + cfield + ".value, sender:" + cfield + ", form:myForm})\" #" + cfield + " [disabled]=\"" + config + ".disabled\" [(ngModel)]=\"model." + fieldName + "\" class=\"form-control " + cfield + "\">\n                            <option value=\"\">{{" + config + ".emptyOptionText||'Select option'}}</option>\n                            <option *ngFor=\"let v of " + config + ".data\" [value]=\"v.value\">{{v.name}}</option>\n                        </select>\n                        <div *ngIf=\"!" + config + ".hideMsg\" class=\"alert alert-danger\" [innerHTML]=\"" + config + ".message\"></div>";
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
     };
-    juFormBuilder.prototype.getHtml = function (input, element, fieldName, labelPos, labelSize) {
-        var label = (input.label || fieldName) + this.getRequiredInfo(input);
+    juFormBuilder.prototype.getHtml = function (input, element, fieldName, labelPos, labelSize, config) {
+        var label = ("{{" + config + ".label}}") + this.getRequiredInfo(input);
         if (this.isVertical) {
             return labelPos === 'top' ?
                 "<div class=\"form-group\" " + input.exp + ">\n                        <label>" + label + "</label>                        \n                        " + element + "                        \n                </div>" :

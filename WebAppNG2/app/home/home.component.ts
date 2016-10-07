@@ -1,7 +1,10 @@
 ﻿import {Component, OnInit, OnDestroy} from '@angular/core';
 import {juForm, FormElement, FormOptions} from '../shared/juForm/juForm';
 import {FV} from '../shared/juForm/FV';
+import {MailComponent} from '../shared/app-ui/mail';
 import {SelectOptions} from '../shared/juForm/juSelect';
+import {Observable} from 'rxjs/Rx';
+
 @Component({
     moduleId: module.id,
     selector: 'my-home',
@@ -26,15 +29,15 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.initForm();
         this.mySelectOptions = {
             title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: true,
-            height: 250, multiselect: true, selectedTextFormat: 'count>2'
+            height: 250, multiselect: !true, selectedTextFormat: 'count>2', editable:true
         };
         
     }
     ngOnDestroy() { }
     myOptions: FormOptions;
     
-    initForm() {
-        
+    initForm()
+    {         
         this.myOptions = {
             viewMode:'panel', panelMode:'primary',
             labelPos: 'left', title: 'Complex Form Example',
@@ -59,7 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                                         [{
                                             groupName: 'Address1', labelSize: 4, exp: '[ngStyle]="config.disappear(model.country)"', size: 12, inputs: [
                                                 { field: 'address1.name', label: 'Name', type: 'text' },
-                                                { field: 'address1.country', label: 'Country', type: 'juSelect' }
+                                                { field: 'address1.country', label: 'Country', type: 'juSelect', options: {width:'100%', title:'Select address'} }
                                             ]
                                         },
                                             {
@@ -95,7 +98,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                                     field: 'district', size: 3, label: 'District', validators: FV.required, search: true, change: this.changeThana, type: 'juSelect',
                                     data: [{ text: 'Tangail', value: 1, subText: 'Rx', description: 'Async data streaming with observable' }, { text: 'Unknown', value: 2 }]
                                 },
-                                { field: 'Thana', size: 3, type: 'select', validators: FV.required }
+                                { field: 'Thana', label:'Thana', size: 3, type: 'juSelect', validators: FV.required }
                             ]],
                             remove: (model) => {
                                 if (confirm('Are you sure to remove this item?')) {
@@ -130,7 +133,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         
         form.setData('country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
             .setData('address1.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
-            .setData('address2.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }]);
+            .setData('address2.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
+            .setLabel('age', 'Age').setLabel('aboutMe', 'Ambot Me');
 
         //form.valueChanges('address')       
         //.subscribe(res=>console.log(res));
@@ -141,11 +145,22 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     changeThana(e) {
         if (e.value && e.value == 1) {
-            e.form.setData('Thana', [{ name: 'asd', value: 1 }, { name: 'MXZ', value: 2 }]);
+            e.form.setData('Thana', [{ text: 'asd', value: 1 }, { text: 'MXZ', value: 2 }]);
         }
         else if (e.value && e.value == 2) {
-            e.form.setData('Thana', [{ name: 'suna', value: 1 }, { name: 'kotha', value: 2 }]);
+            e.form.setData('Thana', [{ text: 'suna', value: 1 }, { text: 'kotha', value: 2 }]);
         }
+    }
+    attach: string = 'sss';
+    mailList: any[]=[];
+    mailLoad(mail: MailComponent)
+    {
+        mail.setAttachment('helloq.zip');
+        mail.setMailList([{ text: 'jasim@gmail.com', value: 'jasim@gmail.com' }, { text: 'arif@gmail.com', value: 'arif@gmail.com' }]);
+    }
+    mailData(model)
+    {
+        console.log(model);
     }
 }
 

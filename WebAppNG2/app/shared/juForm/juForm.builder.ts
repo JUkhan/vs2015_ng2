@@ -306,7 +306,7 @@ export class juFormBuilder {
                     >
                 </juSelect>                
                 <div *ngIf="${cfield}select.hasError()" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
     }
     private _getInputTemplate(fieldName: string, input: any, config: string) {
 
@@ -323,7 +323,7 @@ export class juFormBuilder {
         if (this.options.viewMode === 'table') {
             return `<td>${element}</td>`;
         }
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
 
     }
     private getColOffset(input: any) {
@@ -338,7 +338,7 @@ export class juFormBuilder {
             cfield = fieldName.split('.').join('_'),
             element = `<input type="file" fileSelect [model]="model" propName="${fieldName}" [ext]="${config}.ext" ${input.multiple ? 'multiple' : ''} (click)="vlidate_input(model.${fieldName}, ${config})" [form]="myForm" [config]="${config}" [disabled]="${config}.disabled" class="form-control" placeholder="Select file(s)...">
                     <div *ngIf="!${config}.hideMsg" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
     }
     private _getCkEditorTemplate(fieldName: string, input: any, config: string) {
         let labelSize = input.labelSize || this.options.labelSize || 3,
@@ -347,7 +347,7 @@ export class juFormBuilder {
             element =
                 `<textarea ckeditor [config]="${config}" (click)="fieldClick('${fieldName}', ${config})" [disabled]="${config}.disabled" [(ngModel)]="model.${fieldName}" class="form-control" placeholder="Enter ${input.label || fieldName}"></textarea>
                  <div *ngIf="!${config}.hideMsg" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
 
     }
     private _getDateTemplate(fieldName: string, input: any, config: string) {
@@ -361,10 +361,11 @@ export class juFormBuilder {
                         </span>
                     </div>                    
                     <div *ngIf="!${config}.hideMsg" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
 
     }
-    private _getSelectTemplate(fieldName: string, input: any, config: string) {
+    private _getSelectTemplate(fieldName: string, input: any, config: string)
+    {        
         let labelSize = input.labelSize || this.options.labelSize || 3,
             labelPos = input.labelPos || this.options.labelPos || 'top',
             cfield = fieldName.split('.').join('_'),
@@ -373,11 +374,13 @@ export class juFormBuilder {
                             <option *ngFor="let v of ${config}.data" [value]="v.value">{{v.name}}</option>
                         </select>
                         <div *ngIf="!${config}.hideMsg" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
-        return this.getHtml(input, element, fieldName, labelPos, labelSize);
+        return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
 
     }
-    private getHtml(input: any, element: any, fieldName: string, labelPos: string, labelSize: any) {
-        let label = (input.label || fieldName) + this.getRequiredInfo(input);
+    private getHtml(input: any, element: any, fieldName: string, labelPos: string, labelSize: any, config: string)
+    {
+        //let label = (input.label || fieldName) + this.getRequiredInfo(input);
+        let label =`{{${config}.label}}` + this.getRequiredInfo(input);       
         if (this.isVertical) {
             return labelPos === 'top' ?
                 `<div class="form-group" ${input.exp}>
@@ -468,7 +471,7 @@ export class juFormBuilder {
                         }
                     }                    
                     else if (field.type === 'juSelect') {
-                        if (field.api) {
+                        if (field.api) { 
                             async_call(() => { field.api.setValue(dmodel); }, 100);                           
                         }
                     }

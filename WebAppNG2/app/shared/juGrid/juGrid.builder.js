@@ -45,7 +45,7 @@ var juGridBuilder = (function () {
         if (this.options.pagerPos === 'top') {
             tpl.push(this.getPager());
         }
-        tpl.push("<div class=\"ju-grid\" [ngStyle]=\"getStyle(tc1, tc2)\">\n            <div style=\"overflow:hidden\" #headerDiv>\n                <div [style.width.px]=\"config.width\">\n                    <table  class=\"" + this.options.classNames + " theader " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <thead>\n                            " + this.getHeader(this.options.columnDefs) + "\n                        </thead>\n                     </table>\n                </div>\n            </div>\n\n            <div #tc1 style=\"max-height:" + this.options.height + "px;overflow:auto;\" itemscope (scroll)=\"tblScroll($event, headerDiv)\">\n                <div #tc2 [style.width.px]=\"config.width - 22\">\n                    <table class=\"" + this.options.classNames + " tbody " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <tbody (click)=\"hideFilterWindow()\">\n                            " + (this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()) + "\n                        </tbody>\n                    </table>\n                </div>\n            </div>            \n        </div>");
+        tpl.push("<div class=\"ju-grid\" [ngStyle]=\"getStyle(tc1, tc2)\">\n            <div style=\"overflow:hidden\" #headerDiv>\n                <div [style.width.px]=\"config.width\">\n                    <table  class=\"" + this.options.classNames + " theader " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <thead>\n                            " + this.getHeader(this.options.columnDefs) + "\n                        </thead>\n                     </table>\n                </div>\n            </div>\n\n            <div #tc1 style=\"max-height:" + this.options.height + "px;overflow:auto;\" class=\"tbl-body-content\" (scroll)=\"tblScroll($event, headerDiv)\">\n                <div #tc2 [style.width.px]=\"config.width - 22\">\n                    <table class=\"" + this.options.classNames + " tbody " + (this.options.colResize ? 'tbl-resize' : '') + "\">\n                        <tbody (click)=\"hideFilterWindow()\">\n                            " + (this.options.enableCellEditing ? this.getCellEditingView() : this.options.enableTreeView ? this.getTreeView() : this.getPlainView()) + "\n                        </tbody>\n                    </table>\n                </div>\n            </div>            \n        </div>");
         if (this.options.pagerPos === 'bottom') {
             tpl.push('<div style="height:5px;"></div>');
             tpl.push(this.getPager());
@@ -487,17 +487,16 @@ var juGridBuilder = (function () {
                 });
                 mousemove$
                     .map(function (e) { return e.x - startX; })
+                    .filter(function (e) { return w1 + e > 20 && !not_mousedown; })
                     .do(function (diff) { if (Math.abs(diff) > 0) {
                     _this.isColResize = true;
                 } })
-                    .filter(function (e) { return !not_mousedown; })
-                    .filter(function (e) { return w1 + e > 20; })
                     .subscribe(function (e) {
                     _this.config.columnDefs[activeIndex - 1].width = w1 + e;
                     _this.config.width = tblWidth + e;
                 });
             };
-            DynamicGridComponent.prototype.columnResizing_backup = function () {
+            DynamicGridComponent.prototype.columnResizing__backup = function () {
                 var _this = this;
                 var thList = this.el.nativeElement.querySelectorAll('table thead tr th'), mousemove$ = Rx_1.Observable.fromEvent(document, 'mousemove'), mouseup$ = Rx_1.Observable.fromEvent(document, 'mouseup'), startX = 0, w1 = 0, w2 = 0, not_mousedown = true, tblWidth = this.config.width;
                 var _loop_2 = function(index) {
@@ -506,7 +505,6 @@ var juGridBuilder = (function () {
                         .filter(function (_) { return index !== 0; })
                         .filter(function (e) {
                         if (!not_mousedown) {
-                            console.log('......', index);
                             return true;
                         }
                         if (e.target.tagName === 'TH') {

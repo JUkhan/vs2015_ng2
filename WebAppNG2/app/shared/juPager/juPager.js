@@ -25,6 +25,7 @@ var juPager = (function () {
         this.activePage = 1;
         this.list = [];
         this.searchText = '';
+        this.totalRecords = 0;
         this._sort = '';
         this._filter = [];
         this.groupNumber = 1;
@@ -141,7 +142,8 @@ var juPager = (function () {
         if (this.sspFn) {
             this.sspFn({ pageSize: this.pageSize, pageNo: this.activePage, searchText: this.searchText, sort: this._sort, filter: this._filter })
                 .subscribe(function (res) {
-                _this.totalPage = res.totalPage;
+                _this.totalRecords = res.totalRecords;
+                _this.totalPage = _this.getTotalPage();
                 _this.pageChange.next(res.data);
                 _this.calculatePager();
             });
@@ -221,7 +223,7 @@ var juPager = (function () {
     };
     juPager.prototype.getTotalPage = function () {
         if (this.sspFn) {
-            return this.totalPage;
+            return parseInt((this.totalRecords / this.pageSize).toString()) + ((this.totalRecords % this.pageSize) > 0 ? 1 : 0);
         }
         if (!this.data)
             return 0;
