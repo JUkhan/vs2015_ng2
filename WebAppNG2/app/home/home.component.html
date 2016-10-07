@@ -1,5 +1,7 @@
 ﻿
-<div juSelect [data]="dataList" [options]="mySelectOptions"></div>
+<div juSelect [data]="dataList" [options]="mySelectOptions" ></div>
+<button (click)="m.show()">Mail</button>
+<div #m mail (onLoad)="mailLoad($event)"  (onSend)="mailData($event)"></div>
 <div juForm (onLoad)="myFormLoad($event)" [options]="myOptions"> </div>
 
 <div class="btn-group bootstrap-select dropup">

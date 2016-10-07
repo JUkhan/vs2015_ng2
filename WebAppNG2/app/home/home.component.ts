@@ -1,6 +1,7 @@
 ﻿import {Component, OnInit, OnDestroy} from '@angular/core';
 import {juForm, FormElement, FormOptions} from '../shared/juForm/juForm';
 import {FV} from '../shared/juForm/FV';
+import {MailComponent} from '../shared/app-ui/mail';
 import {SelectOptions} from '../shared/juForm/juSelect';
 import {Observable} from 'rxjs/Rx';
 
@@ -28,15 +29,15 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.initForm();
         this.mySelectOptions = {
             title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: true,
-            height: 250, multiselect: true, selectedTextFormat: 'count>2'
+            height: 250, multiselect: !true, selectedTextFormat: 'count>2', editable:true
         };
         
     }
     ngOnDestroy() { }
     myOptions: FormOptions;
     
-    initForm() {
-        
+    initForm()
+    {         
         this.myOptions = {
             viewMode:'panel', panelMode:'primary',
             labelPos: 'left', title: 'Complex Form Example',
@@ -149,6 +150,17 @@ export class HomeComponent implements OnInit, OnDestroy {
         else if (e.value && e.value == 2) {
             e.form.setData('Thana', [{ text: 'suna', value: 1 }, { text: 'kotha', value: 2 }]);
         }
+    }
+    attach: string = 'sss';
+    mailList: any[]=[];
+    mailLoad(mail: MailComponent)
+    {
+        mail.setAttachment('helloq.zip');
+        mail.setMailList([{ text: 'jasim@gmail.com', value: 'jasim@gmail.com' }, { text: 'arif@gmail.com', value: 'arif@gmail.com' }]);
+    }
+    mailData(model)
+    {
+        console.log(model);
     }
 }
 

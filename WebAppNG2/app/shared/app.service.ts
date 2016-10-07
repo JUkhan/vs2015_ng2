@@ -25,6 +25,14 @@ export class AppService {
         this.baseUrl += '';
         return this.baseUrl;
     }
+    messageDialog(title: string, message: string)
+    {
+        this.notifyAll({ key: 'messageDialog', value: { title: title, message: message }});
+    }
+    confirmDialog(title: string, message: string, yesCallback?, noCallback?)
+    {
+        this.notifyAll({ key: 'confirmDialog', value: { title: title, message: message, yesCallback: yesCallback, noCallback: noCallback } });
+    }
     showMessage(message: string) {
         this.notifyAll({ key: 'message', value: message });
     }

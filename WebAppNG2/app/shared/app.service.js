@@ -28,6 +28,12 @@ var AppService = (function () {
         this.baseUrl += '';
         return this.baseUrl;
     };
+    AppService.prototype.messageDialog = function (title, message) {
+        this.notifyAll({ key: 'messageDialog', value: { title: title, message: message } });
+    };
+    AppService.prototype.confirmDialog = function (title, message, yesCallback, noCallback) {
+        this.notifyAll({ key: 'confirmDialog', value: { title: title, message: message, yesCallback: yesCallback, noCallback: noCallback } });
+    };
     AppService.prototype.showMessage = function (message) {
         this.notifyAll({ key: 'message', value: message });
     };

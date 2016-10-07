@@ -426,3 +426,6 @@ export interface BaseFilter
     searchText: string;
     searchCategory: string;
 }
+
+
+

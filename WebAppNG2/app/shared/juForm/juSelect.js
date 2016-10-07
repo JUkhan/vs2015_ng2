@@ -23,6 +23,7 @@ var juSelect = (function () {
         this.maxOptionsVisibility = 'hidden';
         this.focusToValidate = false;
         this.tableBodyContent = null;
+        this.isEditable = false;
         this.notifyRowEditor = new Rx_1.Subject();
         this.valueChanges = new Rx_1.Subject();
     }
@@ -34,6 +35,7 @@ var juSelect = (function () {
         configurable: true
     });
     juSelect.prototype.ngOnInit = function () {
+        var _this = this;
         this.config.api = this;
         this.options.textProp = this.options.textProp || 'text';
         this.options.valueProp = this.options.valueProp || 'value';
@@ -69,6 +71,15 @@ var juSelect = (function () {
         if (!('showMenuArrow' in this.options)) {
             this.options.showMenuArrow = false;
         }
+        if (!('editable' in this.options)) {
+            this.options.showMenuArrow = false;
+        }
+        if (this.options.editable) {
+            Rx_1.Observable.fromEvent(document.body, 'mouseup').subscribe(function (_) {
+                if (_this.isEditable)
+                    _this.isEditable = false;
+            });
+        }
     };
     juSelect.prototype.ngOnChanges = function (changes) {
         if (changes.dataList && changes.dataList.currentValue && changes.dataList.currentValue !== changes.dataList.previousValue) {
@@ -92,6 +103,12 @@ var juSelect = (function () {
                 .debounceTime(300).distinctUntilChanged()
                 .map(function (e) { return e.target.value; })
                 .subscribe(function (e) { return _this.liveSearch(e); });
+        }
+        if (this.options.editable) {
+            Rx_1.Observable.fromEvent(this.editableText.nativeElement, 'keyup')
+                .debounceTime(300).distinctUntilChanged()
+                .map(function (e) { return e.target.value; })
+                .subscribe(function (e) { return _this.setModelValue(e); });
         }
     };
     juSelect.prototype.ngOnDestroy = function () {
@@ -160,6 +177,7 @@ var juSelect = (function () {
     };
     juSelect.prototype.selectItem = function (item, e) {
         var _this = this;
+        this.isEditable = false;
         if (this.options.multiselect) {
             e.stopPropagation();
             item.selected = !item.selected;
@@ -202,6 +220,8 @@ var juSelect = (function () {
     };
     juSelect.prototype.setValue = function (value) {
         var _this = this;
+        if (this.options.editable && this.editableText)
+            this.editableText.nativeElement.value = '';
         this.previousValue = value;
         this.checkAll(false);
         this.selectedItem = {};
@@ -232,6 +252,8 @@ var juSelect = (function () {
     };
     juSelect.prototype.getValue = function () {
         var _this = this;
+        if (this.options.editable && this.editableText)
+            return this.editableText.nativeElement.value;
         if (this.dataList === undefined)
             return '';
         return this.dataList.filter(function (_) { return _.selected; }).map(function (_) { return _[_this.options.valueProp]; }).join(this.options.multipleSeparator);
@@ -316,13 +338,17 @@ var juSelect = (function () {
         core_1.ViewChild('maincontent'), 
         __metadata('design:type', core_1.ElementRef)
     ], juSelect.prototype, "containerEl", void 0);
+    __decorate([
+        core_1.ViewChild('editableText'), 
+        __metadata('design:type', core_1.ElementRef)
+    ], juSelect.prototype, "editableText", void 0);
     juSelect = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: 'juSelect, .juSelect, [juSelect]',
             encapsulation: core_1.ViewEncapsulation.None,
             changeDetection: core_1.ChangeDetectionStrategy.Default,
-            template: "\n    <div #maincontent [ngClass]=\"getDropdownStyle()\" class=\"btn-group bootstrap-select\" [style.width]=\"options.width\">\n        <button [disabled]=\"options.disabled\" type=\"button\" [ngClass]=\"getBtnStyle()\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" [title]=\"getFormatedText()\" aria-expanded=\"false\" (click)=\"setFocusToValidate($event)\">\n            <span class=\"filter-option pull-left\"> \n                <i *ngIf=\"selectedItem[options.iconProp]||options.iconRenderer\" [class]=\"getSelectedIconStyle()\"></i>               \n                <span class=\"{{options.multiselect?'':selectedItem[options.styleProp]}}\">{{getFormatedText()}}</span>\n            </span>&nbsp;\n            <span class=\"bs-caret\">\n                <span class=\"caret\"></span>\n            </span>\n        </button>\n        <div class=\"dropdown-menu open\" role=\"combobox\" [style.max-height.px]=\"options.height?options.height:'none'\" style=\"overflow: hidden; min-height: 0px;\">            \n            <div class=\"search-checkall\" *ngIf=\"options.liveSearch||(options.multiselect && options.checkAll)\">\n                <label (click)=\"$event.stopPropagation()\" *ngIf=\"options.checkAll\"><input (click)=\"checkAll(chkAll.checked)\" #chkAll type=\"checkbox\">Select All</label>\n                <input #searchEl *ngIf=\"options.liveSearch\" [style.width.%]=\"options.checkAll?50:100\" autofocus type=\"text\" class=\"form-control\" role=\"textbox\" placeholder=\"Search...\">\n            </div>\n            <ul class=\"dropdown-menu inner\" role=\"listbox\" aria-expanded=\"false\" [style.max-height.px]=\"options.height?options.height-46:'none'\" style=\"overflow-y: auto; min-height: 0px;\" >\n                <li [ngClass]=\"getItemClasses(item)\" *ngFor=\"let item of dataList\">\n                    <a role=\"option\" (click)=\"selectItem(item, $event)\" role=\"option\">\n                        <span *ngIf=\"item[options.iconProp]||options.iconRenderer\" [class]=\"getIconStyle(item)\"></span>\n                        <span class=\"{{item[options.styleProp]||'text'}}\">{{item[options.textProp]}}<small class=\"text-muted\">{{item[options.subTextProp]}}</small>\n                        <div *ngIf=\"item[options.descriptionProp]\"><small class=\"text-muted\">{{item[options.descriptionProp]}}</small></div>\n                        </span>\n                        <span class=\"glyphicon glyphicon-ok check-mark\"></span>\n                    </a>\n                </li> \n                <li *ngIf=\"!hasSerchResult\" class=\"no-results\" style=\"display: list-item;\">\n                    No results matched \"{{livesearchText}}\"\n                </li>                         \n            </ul>\n            <div [style.visibility]=\"maxOptionsVisibility\" class=\"notify\">{{options.maxOptionsText}}</div>\n        </div>\n\n    </div>"
+            template: "\n    <div #maincontent [class.open]=\"isEditable\" [ngClass]=\"getDropdownStyle()\" class=\"btn-group bootstrap-select\" [style.width]=\"options.width\">\n        <button *ngIf=\"!options.editable\" [disabled]=\"options.disabled\" type=\"button\" [ngClass]=\"getBtnStyle()\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" [title]=\"getFormatedText()\" aria-expanded=\"false\" (click)=\"setFocusToValidate($event)\">\n            <span class=\"filter-option pull-left\"> \n                <i *ngIf=\"selectedItem[options.iconProp]||options.iconRenderer\" [class]=\"getSelectedIconStyle()\"></i>               \n                <span class=\"{{options.multiselect?'':selectedItem[options.styleProp]}}\">{{getFormatedText()}}</span>\n            </span>&nbsp;\n            <span class=\"bs-caret\">\n                <span class=\"caret\"></span>\n            </span>\n        </button>\n        <div class=\"input-group\" [style.width]=\"options.width\" *ngIf=\"options.editable\">\n          <input type=\"text\" #editableText class=\"form-control\" value=\"{{getFormatedText()}}\">\n          <span class=\"input-group-btn\">\n                <button (click)=\"isEditable=!isEditable\" class=\"btn btn-default\" type=\"button\"><span class=\"caret\"></span></button>\n          </span>\n        </div>\n        <div class=\"dropdown-menu open\" role=\"combobox\" [style.max-height.px]=\"options.height?options.height:'none'\" style=\"overflow: hidden; min-height: 0px;\">            \n            <div class=\"search-checkall\" *ngIf=\"options.liveSearch||(options.multiselect && options.checkAll)\">\n                <label (click)=\"$event.stopPropagation()\" *ngIf=\"options.checkAll\"><input (click)=\"checkAll(chkAll.checked)\" #chkAll type=\"checkbox\">Select All</label>\n                <input #searchEl *ngIf=\"options.liveSearch\" [style.width.%]=\"options.checkAll?50:100\" autofocus type=\"text\" class=\"form-control\" role=\"textbox\" placeholder=\"Search...\">\n            </div>\n            <ul class=\"dropdown-menu inner\" role=\"listbox\" aria-expanded=\"false\" [style.max-height.px]=\"options.height?options.height-46:'none'\" style=\"overflow-y: auto; min-height: 0px;\" >\n                <li [ngClass]=\"getItemClasses(item)\" *ngFor=\"let item of dataList\">\n                    <a role=\"option\" (click)=\"selectItem(item, $event)\" role=\"option\">\n                        <span *ngIf=\"item[options.iconProp]||options.iconRenderer\" [class]=\"getIconStyle(item)\"></span>\n                        <span class=\"{{item[options.styleProp]||'text'}}\">{{item[options.textProp]}}<small class=\"text-muted\">{{item[options.subTextProp]}}</small>\n                        <div *ngIf=\"item[options.descriptionProp]\"><small class=\"text-muted\">{{item[options.descriptionProp]}}</small></div>\n                        </span>\n                        <span class=\"glyphicon glyphicon-ok check-mark\"></span>\n                    </a>\n                </li> \n                <li *ngIf=\"!hasSerchResult\" class=\"no-results\" style=\"display: list-item;\">\n                    No results matched \"{{livesearchText}}\"\n                </li>                         \n            </ul>\n            <div [style.visibility]=\"maxOptionsVisibility\" class=\"notify\">{{options.maxOptionsText}}</div>\n        </div>\n\n    </div>"
         }), 
         __metadata('design:paramtypes', [core_1.Renderer])
     ], juSelect);

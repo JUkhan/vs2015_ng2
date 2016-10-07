@@ -24,6 +24,9 @@ var Datetimepicker_1 = require('./juForm/Datetimepicker');
 var juGrid_1 = require('./juGrid/juGrid');
 var rowEditor_1 = require('./juGrid/rowEditor');
 var juWindowService_1 = require('./juWindow/juWindowService');
+var Mail_1 = require('./app-ui/Mail');
+var message_dialog_1 = require('./app-ui/message.dialog');
+var confirm_dialog_1 = require('./app-ui/confirm.dialog');
 var ui_service_1 = require('./ui.service');
 var app_service_1 = require('./app.service');
 var canDeactivateGuard_service_1 = require('./canDeactivateGuard.service');
@@ -53,6 +56,7 @@ var SharedModule = (function () {
                 Datetimepicker_1.Datetimepicker,
                 juGrid_1.juGrid,
                 rowEditor_1.rowEditor,
+                Mail_1.MailComponent, message_dialog_1.MessageDialog, confirm_dialog_1.ConfirmDialog
             ],
             exports: [
                 common_1.CommonModule,
@@ -68,6 +72,7 @@ var SharedModule = (function () {
                 Datetimepicker_1.Datetimepicker,
                 juGrid_1.juGrid,
                 rowEditor_1.rowEditor,
+                Mail_1.MailComponent, message_dialog_1.MessageDialog, confirm_dialog_1.ConfirmDialog
             ],
             providers: [compiler_1.COMPILER_PROVIDERS]
         }), 

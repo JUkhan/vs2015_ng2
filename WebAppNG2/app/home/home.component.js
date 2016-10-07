@@ -25,12 +25,14 @@ var HomeComponent = (function () {
             { text: 'UK', value: 9 },
             { text: 'Austrlia', value: 10 }
         ];
+        this.attach = 'sss';
+        this.mailList = [];
     }
     HomeComponent.prototype.ngOnInit = function () {
         this.initForm();
         this.mySelectOptions = {
             title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: true,
-            height: 250, multiselect: true, selectedTextFormat: 'count>2'
+            height: 250, multiselect: !true, selectedTextFormat: 'count>2', editable: true
         };
     };
     HomeComponent.prototype.ngOnDestroy = function () { };
@@ -137,6 +139,13 @@ var HomeComponent = (function () {
         else if (e.value && e.value == 2) {
             e.form.setData('Thana', [{ text: 'suna', value: 1 }, { text: 'kotha', value: 2 }]);
         }
+    };
+    HomeComponent.prototype.mailLoad = function (mail) {
+        mail.setAttachment('helloq.zip');
+        mail.setMailList([{ text: 'jasim@gmail.com', value: 'jasim@gmail.com' }, { text: 'arif@gmail.com', value: 'arif@gmail.com' }]);
+    };
+    HomeComponent.prototype.mailData = function (model) {
+        console.log(model);
     };
     HomeComponent = __decorate([
         core_1.Component({

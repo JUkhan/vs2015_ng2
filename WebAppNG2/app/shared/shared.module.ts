@@ -10,7 +10,6 @@ import {juMenu}                 from './juMenu/juMenu';
 import {juPager}                from './juPager/juPager';
 import {juForm}                 from './juForm/juForm';
 import {juSelect}               from './juForm/juSelect';
-//import {juSelectNew}            from './juForm/juSelectNew';
 import {CkEditor, FileSelect}   from './juForm/CkEditor';
 import {Datetimepicker}         from './juForm/Datetimepicker';
 import {juGrid}                 from './juGrid/juGrid';
@@ -18,6 +17,9 @@ import {rowEditor}              from './juGrid/rowEditor';
 import {juParentWindow}         from './juWindow/juParentWindow';
 import {juChildWindow}          from './juWindow/juChildWindow';
 import {juWindowService}        from './juWindow/juWindowService';
+import {MailComponent}          from './app-ui/Mail';
+import {MessageDialog}          from './app-ui/message.dialog';
+import {ConfirmDialog}          from './app-ui/confirm.dialog';
 
 import {UiService}              from './ui.service';
 import {AppService}             from './app.service';
@@ -39,8 +41,7 @@ import {juGridBuilder} from './juGrid/juGrid.builder';
         Datetimepicker,
         juGrid,
         rowEditor,
-        //juParentWindow,
-        //juChildWindow
+        MailComponent, MessageDialog, ConfirmDialog
     ],
     exports: [
         CommonModule,
@@ -56,8 +57,7 @@ import {juGridBuilder} from './juGrid/juGrid.builder';
         Datetimepicker,
         juGrid,
         rowEditor,
-        //juParentWindow,
-        //juChildWindow
+        MailComponent, MessageDialog, ConfirmDialog
     ],
     providers: [COMPILER_PROVIDERS]
 })

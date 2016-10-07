@@ -9,11 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var app_service_1 = require('./shared/app.service');
 var AppComponent = (function () {
-    function AppComponent() {
+    function AppComponent(service) {
+        this.service = service;
     }
     AppComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.setMenu();
+        this.service.notifier$.subscribe(function (it) {
+            switch (it.key) {
+                case 'messageDialog':
+                    _this.messageDialog.showDialog(it.value.title, it.value.message);
+                    break;
+                case 'confirmDialog':
+                    _this.confirmDialog.showDialog(it.value.title, it.value.message, it.value.yesCallback, it.value.noCallback);
+                    break;
+            }
+        });
     };
     AppComponent.prototype.setMenu = function () {
         this.menuData = [
@@ -30,13 +43,19 @@ var AppComponent = (function () {
             },
         ];
     };
+    AppComponent.prototype.messageLoad = function (message) {
+        this.messageDialog = message;
+    };
+    AppComponent.prototype.confirmLoad = function (confirm) {
+        this.confirmDialog = confirm;
+    };
     AppComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: 'my-app',
             templateUrl: './app.component.html'
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [app_service_1.AppService])
     ], AppComponent);
     return AppComponent;
 }());

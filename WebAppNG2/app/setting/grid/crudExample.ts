@@ -38,8 +38,13 @@ export class CrudExample implements OnInit {
     }
     
     hideCol() {
-        this.scholarGridOptions.columnDefs[3].hide = true;
-        this.scholarGridOptions.api.grid.render();
+       
+        //this.service.messageDialog('Column removing', 'Column removed successfully');
+        this.service.confirmDialog('Column removing', 'Are you sure to remove the age column?', () =>
+        {
+            this.scholarGridOptions.columnDefs[3].hide = true;
+            this.scholarGridOptions.api.grid.render();
+        });
     }
     private onLoad(grid: juGrid)
     {         
@@ -48,7 +53,7 @@ export class CrudExample implements OnInit {
                 this.scholarGridOptions.api.form
                     .setData('education', this.educationList)
                     .setData('address', this.addressList);
-                this.scholarList = list
+                this.scholarList = list;
             });
         //grid.keydown('ctrl').subscribe(e => { console.log(grid.shiftKey, grid.ctrlKey, grid.altKey) });
         //grid.keydown('shift').subscribe(e => { console.log(grid.shiftKey, grid.ctrlKey, grid.altKey) });
