@@ -28,6 +28,18 @@ var AppService = (function () {
         this.baseUrl += '';
         return this.baseUrl;
     };
+    AppService.prototype.sync_get = function (url) {
+        var res = null;
+        jQuery.ajax({
+            url: this.getBaseUrl() + url,
+            type: "GET",
+            async: false,
+            success: function (data) {
+                res = data;
+            }
+        });
+        return res;
+    };
     AppService.prototype.messageDialog = function (title, message) {
         this.notifyAll({ key: 'messageDialog', value: { title: title, message: message } });
     };

@@ -25,6 +25,18 @@ export class AppService {
         this.baseUrl += '';
         return this.baseUrl;
     }
+    sync_get(url: string) {
+        let res = null;
+        jQuery.ajax({
+            url: this.getBaseUrl() +url,           
+            type: "GET",
+            async: false,
+            success: function (data) {
+                res = data;
+            }
+        });
+        return res;
+    }
     messageDialog(title: string, message: string)
     {
         this.notifyAll({ key: 'messageDialog', value: { title: title, message: message }});

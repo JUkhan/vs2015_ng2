@@ -36,9 +36,10 @@ export class CrudExample implements OnInit {
         });
        
     }
-    
+     
     hideCol() {
-       
+        console.log('hide col', this.service.sync_get('dummyData/getEducations'));
+     
         //this.service.messageDialog('Column removing', 'Column removed successfully');
         this.service.confirmDialog('Column removing', 'Are you sure to remove the age column?', () =>
         {
