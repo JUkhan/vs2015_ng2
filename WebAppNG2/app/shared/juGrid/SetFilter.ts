@@ -128,7 +128,7 @@ export class SetFilter implements BaseFilter {
             }
             tpl.push('</div>');
         });
-        this._gui.querySelector('.set-content').innerHTML = tpl.join('');
+        (<any>this._gui.querySelector('.set-content')).innerHTML = tpl.join('');
         let chkList = this._gui.querySelectorAll('.set-content input.chk'),
             chkAll:any=this._gui.querySelector('#selectAll');
         for (let i = 0; i < chkList.length; i++) {

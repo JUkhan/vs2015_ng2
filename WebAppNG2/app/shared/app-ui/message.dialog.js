@@ -8,15 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var MessageDialog = (function () {
-    function MessageDialog() {
+const core_1 = require('@angular/core');
+let MessageDialog = class MessageDialog {
+    constructor() {
         this.onLoad = new core_1.EventEmitter();
     }
-    MessageDialog.prototype.ngOnInit = function () { this.constructForm(); };
-    MessageDialog.prototype.ngOnChanges = function (changes) {
-    };
-    MessageDialog.prototype.constructForm = function () {
+    ngOnInit() { this.constructForm(); }
+    ngOnChanges(changes) {
+    }
+    constructForm() {
         this.formOptions = {
             title: 'Health Care Regulatory System', viewMode: 'popup', message: '',
             inputs: [
@@ -26,30 +26,28 @@ var MessageDialog = (function () {
                 'Ok': { type: 'close', cssClass: 'btn btn-primary' }
             }
         };
-    };
-    MessageDialog.prototype.fromLoad = function (form) {
+    }
+    fromLoad(form) {
         this.form = form;
         this.onLoad.emit(this);
-    };
-    MessageDialog.prototype.showDialog = function (title, message) {
+    }
+    showDialog(title, message) {
         if (title)
             this.formOptions['title'] = title;
         this.formOptions['message'] = message;
         this.form.showModal();
-    };
-    __decorate([
-        core_1.Output(), 
-        __metadata('design:type', Object)
-    ], MessageDialog.prototype, "onLoad", void 0);
-    MessageDialog = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: 'message, [message], .message',
-            template: '<div juForm (onLoad)="fromLoad($event)" [options]="formOptions"></div>'
-        }), 
-        __metadata('design:paramtypes', [])
-    ], MessageDialog);
-    return MessageDialog;
-}());
+    }
+};
+__decorate([
+    core_1.Output(), 
+    __metadata('design:type', Object)
+], MessageDialog.prototype, "onLoad", void 0);
+MessageDialog = __decorate([
+    core_1.Component({
+        moduleId: module.id,
+        selector: 'message, [message], .message',
+        template: '<div juForm (onLoad)="fromLoad($event)" [options]="formOptions"></div>'
+    }), 
+    __metadata('design:paramtypes', [])
+], MessageDialog);
 exports.MessageDialog = MessageDialog;
-//# sourceMappingURL=message.dialog.js.map

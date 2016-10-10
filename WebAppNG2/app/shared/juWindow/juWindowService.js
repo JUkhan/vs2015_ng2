@@ -8,31 +8,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var Rx_1 = require('rxjs/Rx');
-var juWindowService = (function () {
-    function juWindowService() {
+const core_1 = require('@angular/core');
+const Rx_1 = require('rxjs/Rx');
+let juWindowService = class juWindowService {
+    constructor() {
         this.childList = {};
         this.$minWin = new Rx_1.Subject();
         this.windowConfig = {};
     }
-    juWindowService.prototype.closeWindow = function (windowId) {
+    closeWindow(windowId) {
         if (this.childList[windowId] && this.childList[windowId].child) {
             this.childList[windowId].child.destroy();
             this.childList[windowId] = undefined;
         }
-    };
-    juWindowService.prototype.createWindow = function (winId) {
+    }
+    createWindow(winId) {
         this.parentWindow.createWindow(winId);
-    };
-    juWindowService.prototype.getChildList = function () {
+    }
+    getChildList() {
         return this.childList;
-    };
-    juWindowService.prototype.minWindow = function (windowId) {
+    }
+    minWindow(windowId) {
         this.$minWin.next({ id: windowId, title: this.windowConfig[windowId].title });
-    };
-    juWindowService.prototype.syncZIndex = function (windowId) {
-        for (var win in this.childList) {
+    }
+    syncZIndex(windowId) {
+        for (let win in this.childList) {
             if (typeof this.childList[win] !== 'undefined') {
                 if (windowId === win) {
                     this.childList[win].child.instance.setStyle('z-index', '9');
@@ -42,21 +42,20 @@ var juWindowService = (function () {
                 }
             }
         }
-    };
-    juWindowService.prototype.getComponent = function (windowId) {
+    }
+    getComponent(windowId) {
         return this.windowConfig[windowId].loader();
-    };
-    juWindowService.prototype.setProperty = function (windowId) {
-        var wConfig = this.windowConfig[windowId], window = this.childList[windowId].child.instance;
+    }
+    setProperty(windowId) {
+        let wConfig = this.windowConfig[windowId], window = this.childList[windowId].child.instance;
         window.top = Math.floor((this.pWin.offsetHeight - wConfig.height) / 2);
         window.left = Math.floor((this.pWin.offsetWidth - wConfig.width) / 2);
         window.width = wConfig.width;
         window.height = wConfig.height;
         window.title = wConfig.title;
-    };
-    juWindowService.prototype.expandWindow = function (windowId, isExpand) {
-        if (isExpand === void 0) { isExpand = true; }
-        var window = this.childList[windowId].child.instance;
+    }
+    expandWindow(windowId, isExpand = true) {
+        let window = this.childList[windowId].child.instance;
         if (isExpand) {
             window.adjustWidth(this.pWin.offsetWidth);
             window.adjustHeight(this.pWin.offsetHeight);
@@ -70,9 +69,9 @@ var juWindowService = (function () {
             window.setStyle('left', window.left + 'px');
             window.setStyle('display', 'block');
         }
-    };
-    juWindowService.prototype.openWindow = function (windowId) {
-        var window = this.childList[windowId].child.instance;
+    }
+    openWindow(windowId) {
+        let window = this.childList[windowId].child.instance;
         window.isMax = true;
         window.adjustWidth(window.width);
         window.adjustHeight(window.height);
@@ -80,21 +79,19 @@ var juWindowService = (function () {
         window.setStyle('left', window.left + 'px');
         window.setStyle('display', 'block');
         this.syncZIndex(windowId);
-    };
-    juWindowService.prototype.destroyAll = function () {
-        for (var win in this.childList) {
+    }
+    destroyAll() {
+        for (let win in this.childList) {
             if (typeof this.childList[win] !== 'undefined') {
                 if (this.childList[win].child) {
                     this.childList[win].child.destroy();
                 }
             }
         }
-    };
-    juWindowService = __decorate([
-        core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
-    ], juWindowService);
-    return juWindowService;
-}());
+    }
+};
+juWindowService = __decorate([
+    core_1.Injectable(), 
+    __metadata('design:paramtypes', [])
+], juWindowService);
 exports.juWindowService = juWindowService;
-//# sourceMappingURL=juWindowService.js.map

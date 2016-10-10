@@ -48,4 +48,18 @@ export class ConfirmDialog implements OnInit, OnChanges
             this.noCallback = noCallback;
         this.form.showModal();
     }
+     public showDialogPromise(title: string, message: string):Promise<Number>
+    {
+        if (title)
+            this.formOptions['title'] = title;
+        this.formOptions['message'] = message;
+        this.form.showModal();
+        return new Promise((resolve, reject)=>{
+      
+            this.yesCallback = ()=>{resolve(1);};
+       
+            this.noCallback = ()=>{resolve(0);};
+        });
+       
+    }
 }

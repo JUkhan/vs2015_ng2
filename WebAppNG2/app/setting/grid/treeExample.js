@@ -8,24 +8,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var app_service_1 = require('../../shared/app.service');
-var TreeExample = (function () {
-    function TreeExample(service) {
+const core_1 = require('@angular/core');
+const app_service_1 = require('../../shared/app.service');
+let TreeExample = class TreeExample {
+    constructor(service) {
         this.service = service;
     }
-    TreeExample.prototype.ngOnInit = function () {
+    ngOnInit() {
         this.initScholar();
-    };
-    TreeExample.prototype.onLoad = function (grid) {
-        var _this = this;
+    }
+    onLoad(grid) {
         this.service.get('dummydata/GetScholarList')
-            .subscribe(function (list) { return _this.scholarList = list; });
-    };
-    TreeExample.prototype.getChildData = function (row) {
+            .subscribe(list => this.scholarList = list);
+    }
+    getChildData(row) {
         return this.service.get('dummydata/GetScholarList');
-    };
-    TreeExample.prototype.initScholar = function () {
+    }
+    initScholar() {
         this.scholarGridOptions = {
             title: 'Tree view Example',
             colResize: true,
@@ -44,17 +43,22 @@ var TreeExample = (function () {
                 { headerName: 'Description', width: 300, field: 'description' }
             ]
         };
-    };
-    TreeExample = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: 'tree',
-            template: " \n                <div \n                     juGrid                     \n                     (onLoad)=\"onLoad($event)\" \n                     [data]=\"scholarList\" \n                     [options]=\"scholarGridOptions\">\n\n                </div>",
-            encapsulation: core_1.ViewEncapsulation.None
-        }), 
-        __metadata('design:paramtypes', [app_service_1.AppService])
-    ], TreeExample);
-    return TreeExample;
-}());
+    }
+};
+TreeExample = __decorate([
+    core_1.Component({
+        moduleId: module.id,
+        selector: 'tree',
+        template: ` 
+                <div 
+                     juGrid                     
+                     (onLoad)="onLoad($event)" 
+                     [data]="scholarList" 
+                     [options]="scholarGridOptions">
+
+                </div>`,
+        encapsulation: core_1.ViewEncapsulation.None
+    }), 
+    __metadata('design:paramtypes', [app_service_1.AppService])
+], TreeExample);
 exports.TreeExample = TreeExample;
-//# sourceMappingURL=treeExample.js.map

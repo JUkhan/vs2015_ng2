@@ -8,17 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var juWindowService_1 = require('../../shared/juWindow/juWindowService');
-var FV_1 = require('../../shared/juForm/FV');
-var WindowComponent = (function () {
-    function WindowComponent(service) {
+const core_1 = require('@angular/core');
+const juWindowService_1 = require('../../shared/juWindow/juWindowService');
+const FV_1 = require('../../shared/juForm/FV');
+let WindowComponent = class WindowComponent {
+    constructor(service) {
         this.service = service;
     }
-    WindowComponent.prototype.ngOnInit = function () {
+    ngOnInit() {
         this.initForm();
-    };
-    WindowComponent.prototype.initForm = function () {
+    }
+    initForm() {
         this.formDefs = {
             title: 'Scholar',
             labelPos: 'left',
@@ -35,21 +35,21 @@ var WindowComponent = (function () {
                 'Close': { type: 'close', cssClass: 'btn btn-default' }
             }
         };
-    };
-    WindowComponent.prototype.submitScholar = function () {
+    }
+    submitScholar() {
         alert('submitted');
-    };
-    WindowComponent = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: 'test-component',
-            template: "<div juForm [options]=\"formDefs\"></div>",
-            styles: ["\n          .wnav{margin-top:1px;}  \n    "],
-            encapsulation: core_1.ViewEncapsulation.None
-        }), 
-        __metadata('design:paramtypes', [juWindowService_1.juWindowService])
-    ], WindowComponent);
-    return WindowComponent;
-}());
+    }
+};
+WindowComponent = __decorate([
+    core_1.Component({
+        moduleId: module.id,
+        selector: 'test-component',
+        template: `<div juForm [options]="formDefs"></div>`,
+        styles: [`
+          .wnav{margin-top:1px;}  
+    `],
+        encapsulation: core_1.ViewEncapsulation.None
+    }), 
+    __metadata('design:paramtypes', [juWindowService_1.juWindowService])
+], WindowComponent);
 exports.WindowComponent = WindowComponent;
-//# sourceMappingURL=windowExample.js.map

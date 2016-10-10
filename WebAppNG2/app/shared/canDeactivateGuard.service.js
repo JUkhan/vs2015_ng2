@@ -8,18 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var CanDeactivateGuard = (function () {
-    function CanDeactivateGuard() {
-    }
-    CanDeactivateGuard.prototype.canDeactivate = function (component) {
+const core_1 = require('@angular/core');
+let CanDeactivateGuard = class CanDeactivateGuard {
+    canDeactivate(component) {
         return component.canDeactivate ? component.canDeactivate() : true;
-    };
-    CanDeactivateGuard = __decorate([
-        core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
-    ], CanDeactivateGuard);
-    return CanDeactivateGuard;
-}());
+    }
+};
+CanDeactivateGuard = __decorate([
+    core_1.Injectable(), 
+    __metadata('design:paramtypes', [])
+], CanDeactivateGuard);
 exports.CanDeactivateGuard = CanDeactivateGuard;
-//# sourceMappingURL=canDeactivateGuard.service.js.map

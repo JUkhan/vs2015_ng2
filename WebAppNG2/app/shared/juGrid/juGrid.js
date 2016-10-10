@@ -8,11 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var juGrid_builder_1 = require('./juGrid.builder');
-var Rx_1 = require('rxjs/Rx');
-var juGrid = (function () {
-    function juGrid(_elementRef, typeBuilder, viewContainerRef) {
+const core_1 = require('@angular/core');
+const juGrid_builder_1 = require('./juGrid.builder');
+const Rx_1 = require('rxjs/Rx');
+let juGrid = class juGrid {
+    constructor(_elementRef, typeBuilder, viewContainerRef) {
         this._elementRef = _elementRef;
         this.typeBuilder = typeBuilder;
         this.viewContainerRef = viewContainerRef;
@@ -27,8 +27,7 @@ var juGrid = (function () {
         this.ctrlKey = false;
         this.altKey = false;
     }
-    juGrid.prototype.ngOnInit = function () {
-        var _this = this;
+    ngOnInit() {
         if (!this.options) {
             return;
         }
@@ -68,7 +67,7 @@ var juGrid = (function () {
             this.options.quickSearch = false;
         }
         if (!('trClass' in this.options)) {
-            this.options.trClass = function () { return null; };
+            this.options.trClass = () => null;
         }
         if (!('level' in this.options)) {
             this.options.level = 5;
@@ -78,38 +77,38 @@ var juGrid = (function () {
         }
         this.options.rowEvents = this.options.rowEvents || '';
         if (this.options.crud) {
-            this.options.newItem = function () {
-                _this._oldItem = null;
-                _this._updtedItem = null;
-                _this.options.message = '';
-                _this.componentRef.instance.formObj.isUpdate = false;
-                _this.componentRef.instance.formObj.refresh();
-                _this.componentRef.instance.formObj.showModal();
-                if (_this.options.insert_CB) {
-                    _this.options.insert_CB(_this.componentRef.instance.formObj);
+            this.options.newItem = () => {
+                this._oldItem = null;
+                this._updtedItem = null;
+                this.options.message = '';
+                this.componentRef.instance.formObj.isUpdate = false;
+                this.componentRef.instance.formObj.refresh();
+                this.componentRef.instance.formObj.showModal();
+                if (this.options.insert_CB) {
+                    this.options.insert_CB(this.componentRef.instance.formObj);
                 }
             };
             this.options.columnDefs.unshift({
                 headerName: 'crud', width: 50, enable: this.options.create,
                 action: [{
-                        enable: this.options.update, title: 'Edit', icon: 'fa fa-pencil', click: function (data) {
-                            _this._oldItem = data;
-                            _this._updtedItem = Object.assign({}, data);
-                            _this.options.message = '';
-                            _this.componentRef.instance.formObj.isUpdate = true;
-                            _this.componentRef.instance.formObj.setModel(_this._updtedItem);
-                            _this.componentRef.instance.formObj.showModal();
-                            if (_this.options.update_CB) {
-                                _this.options.update_CB(_this.componentRef.instance.formObj, _this._updtedItem);
+                        enable: this.options.update, title: 'Edit', icon: 'fa fa-pencil', click: (data) => {
+                            this._oldItem = data;
+                            this._updtedItem = Object.assign({}, data);
+                            this.options.message = '';
+                            this.componentRef.instance.formObj.isUpdate = true;
+                            this.componentRef.instance.formObj.setModel(this._updtedItem);
+                            this.componentRef.instance.formObj.showModal();
+                            if (this.options.update_CB) {
+                                this.options.update_CB(this.componentRef.instance.formObj, this._updtedItem);
                             }
                         }
                     }, {
-                        enable: this.options.remove, title: 'Remove', icon: 'fa fa-remove', click: function (data) {
-                            if (confirm(_this.options.confirmMessage)) {
-                                _this._oldItem = null;
-                                _this._updtedItem = null;
-                                if (_this.options.removeItem) {
-                                    _this.options.removeItem(data);
+                        enable: this.options.remove, title: 'Remove', icon: 'fa fa-remove', click: (data) => {
+                            if (confirm(this.options.confirmMessage)) {
+                                this._oldItem = null;
+                                this._updtedItem = null;
+                                if (this.options.removeItem) {
+                                    this.options.removeItem(data);
                                 }
                             }
                         }
@@ -117,109 +116,104 @@ var juGrid = (function () {
             });
         }
         this.options.api = { grid: this, form: null };
-        Rx_1.Observable.fromEvent(document, 'keyup').subscribe(function (e) {
-            _this.shiftKey = false;
-            _this.altKey = false;
-            _this.ctrlKey = false;
+        Rx_1.Observable.fromEvent(document, 'keyup').subscribe(e => {
+            this.shiftKey = false;
+            this.altKey = false;
+            this.ctrlKey = false;
         });
-    };
-    juGrid.prototype.ngOnChanges = function (changes) {
+    }
+    ngOnChanges(changes) {
         if (this.data && this.wasViewInitialized) {
             this.componentRef.instance.setData(this.data);
         }
-    };
-    juGrid.prototype.ngAfterViewInit = function () {
+    }
+    ngAfterViewInit() {
         this.wasViewInitialized = true;
         this.refreshContent();
-    };
-    juGrid.prototype.ngOnDestroy = function () {
+    }
+    ngOnDestroy() {
         if (this.componentRef) {
             this.componentRef.destroy();
             this.componentRef = null;
         }
-    };
-    juGrid.prototype.keydown = function (key) {
-        var _this = this;
+    }
+    keydown(key) {
         return Rx_1.Observable.fromEvent(document, 'keydown')
-            .filter(function (e) {
-            _this.shiftKey = e.shiftKey;
-            _this.ctrlKey = e.ctrlKey;
-            _this.altKey = e.altKey;
+            .filter((e) => {
+            this.shiftKey = e.shiftKey;
+            this.ctrlKey = e.ctrlKey;
+            this.altKey = e.altKey;
             switch (key) {
-                case 'shift': return _this.shiftKey;
-                case 'ctrl': return _this.ctrlKey;
-                case 'alt': return _this.altKey;
+                case 'shift': return this.shiftKey;
+                case 'ctrl': return this.ctrlKey;
+                case 'alt': return this.altKey;
             }
             return false;
         });
-    };
-    juGrid.prototype.render = function () {
+    }
+    render() {
         this.refreshContent();
-    };
-    juGrid.prototype.refreshContent = function () {
-        var _this = this;
+    }
+    refreshContent() {
         if (this.componentRef) {
             this.componentRef.destroy();
         }
         this.typeBuilder
             .createComponentFactory(this.options)
-            .then(function (factory) {
-            _this.componentRef = _this
+            .then((factory) => {
+            this.componentRef = this
                 .dynamicComponentTarget
                 .createComponent(factory);
-            var component = _this.componentRef.instance;
-            component.config = _this.options;
-            if (_this.options.data || _this.data) {
-                component.setData(_this.data || _this.options.data);
+            const component = this.componentRef.instance;
+            component.config = this.options;
+            if (this.options.data || this.data) {
+                component.setData(this.data || this.options.data);
             }
-            if (!_this.options.crud) {
-                async_call(function () { _this.onLoad.emit(_this); });
+            if (!this.options.crud) {
+                async_call(() => { this.onLoad.emit(this); });
             }
         });
-    };
-    juGrid.prototype.getUpdatedRecords = function () {
-        return this.componentRef.instance.editors.toArray().filter(function (_) { return _.isUpdated; }).map(function (_) { return _.model; });
-    };
-    juGrid.prototype.addItem = function (item) {
+    }
+    getUpdatedRecords() {
+        return this.componentRef.instance.editors.toArray().filter(_ => _.isUpdated).map(_ => _.model);
+    }
+    addItem(item) {
         if (this._searchInActive) {
             this.data.unshift(item);
         }
         this.componentRef.instance.addItem(item);
-    };
-    juGrid.prototype.getData = function () {
+    }
+    getData() {
         return this.data.length ? this.data : this.componentRef.instance.viewList;
-    };
-    juGrid.prototype.showMessage = function (message, messageCss) {
-        var _this = this;
-        if (messageCss === void 0) { messageCss = 'alert alert-info'; }
+    }
+    showMessage(message, messageCss = 'alert alert-info') {
         this.options.message = message;
         this.options.messageCss = messageCss;
-        async_call(function () { _this.options.message = ''; }, 3000);
-    };
-    juGrid.prototype.updateItem = function (record) {
+        async_call(() => { this.options.message = ''; }, 3000);
+    }
+    updateItem(record) {
         if (this._oldItem && record) {
-            for (var prop in record) {
+            for (let prop in record) {
                 this._oldItem[prop] = record[prop];
             }
         }
-    };
-    juGrid.prototype.removeItem = function (item) {
+    }
+    removeItem(item) {
         if (this._searchInActive) {
             this.data.splice(this.data.indexOf(item), 1);
         }
         this.componentRef.instance.removeItem(item);
-    };
-    juGrid.prototype.setSelectData = function (key, value) {
+    }
+    setSelectData(key, value) {
         this.componentRef.instance.setSelectData(key, value);
-    };
-    juGrid.prototype.setJuSelectData = function (key, value, index) {
+    }
+    setJuSelectData(key, value, index) {
         this.componentRef.instance.setJuSelectData(key, value, index);
-    };
-    juGrid.prototype.slideToggle = function () {
+    }
+    slideToggle() {
         this.componentRef.instance.slideToggle();
-    };
-    juGrid.prototype.search = function (val) {
-        var _this = this;
+    }
+    search(val) {
         if (this.options.sspFn) {
             this.options.api.pager.search(val);
             return;
@@ -231,11 +225,11 @@ var juGrid = (function () {
         }
         this._searchInActive = true;
         val = val.toLowerCase();
-        var res = [];
-        var len = this.options.columnDefs.length;
-        this.data.forEach(function (item) {
+        let res = [];
+        let len = this.options.columnDefs.length;
+        this.data.forEach((item) => {
             for (var index = 0; index < len; index++) {
-                var item2 = _this.options.columnDefs[index];
+                let item2 = this.options.columnDefs[index];
                 if (item2.field && item[item2.field] && item[item2.field].toString().toLowerCase().indexOf(val) != -1) {
                     res.push(item);
                     break;
@@ -243,50 +237,60 @@ var juGrid = (function () {
             }
         });
         this.componentRef.instance.data = res;
-    };
-    juGrid.prototype.onFormLoad = function (form) {
+    }
+    onFormLoad(form) {
         this.componentRef.instance.formObj = form;
         this.options.api.form = form;
         if (this.options.onFormLoad) {
             this.options.onFormLoad(form);
         }
         this.onLoad.emit(this);
-    };
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Object)
-    ], juGrid.prototype, "options", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Object)
-    ], juGrid.prototype, "data", void 0);
-    __decorate([
-        core_1.Output(), 
-        __metadata('design:type', Object)
-    ], juGrid.prototype, "onLoad", void 0);
-    __decorate([
-        core_1.ViewChild('dynamicContentPlaceHolder', { read: core_1.ViewContainerRef }), 
-        __metadata('design:type', core_1.ViewContainerRef)
-    ], juGrid.prototype, "dynamicComponentTarget", void 0);
-    __decorate([
-        core_1.ContentChild(core_1.TemplateRef), 
-        __metadata('design:type', core_1.TemplateRef)
-    ], juGrid.prototype, "toolbar", void 0);
-    juGrid = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: '.juGrid, [juGrid], juGrid',
-            encapsulation: core_1.ViewEncapsulation.None,
-            changeDetection: core_1.ChangeDetectionStrategy.Default,
-            template: "<div class=\"grid-toolbar\">\n                    <div class=\"quickSearch\" *ngIf=\"options.quickSearch\">             \n                            <div class=\"input-group stylish-input-group\">\n                                <input type=\"text\" class=\"form-control\" (keyup)=\"search($event.target.value)\" placeholder=\"Search\">\n                                <span class=\"input-group-addon\">                        \n                                        <span class=\"fa fa-search\"></span>                         \n                                </span>\n                            </div>            \n                    </div>\n                  <div [style.left.px]=\"options.quickSearch?144:0\" class=\"tool-items\"><template [ngTemplateOutlet]=\"toolbar\"></template></div>\n\t            </div> \n                <div *ngIf=\"options.quickSearch||toolbar\" style=\"height:33px\">&nbsp;</div> \n                <div #dynamicContentPlaceHolder></div>  \n                <div class=\"juForm\" *ngIf=\"options.crud\" (onLoad)=\"onFormLoad($event)\" [options]=\"options.formDefs\"></div>"
-        }), 
-        __metadata('design:paramtypes', [core_1.ElementRef, juGrid_builder_1.juGridBuilder, core_1.ViewContainerRef])
-    ], juGrid);
-    return juGrid;
-}());
+    }
+};
+__decorate([
+    core_1.Input(), 
+    __metadata('design:type', Object)
+], juGrid.prototype, "options", void 0);
+__decorate([
+    core_1.Input(), 
+    __metadata('design:type', Object)
+], juGrid.prototype, "data", void 0);
+__decorate([
+    core_1.Output(), 
+    __metadata('design:type', Object)
+], juGrid.prototype, "onLoad", void 0);
+__decorate([
+    core_1.ViewChild('dynamicContentPlaceHolder', { read: core_1.ViewContainerRef }), 
+    __metadata('design:type', core_1.ViewContainerRef)
+], juGrid.prototype, "dynamicComponentTarget", void 0);
+__decorate([
+    core_1.ContentChild(core_1.TemplateRef), 
+    __metadata('design:type', core_1.TemplateRef)
+], juGrid.prototype, "toolbar", void 0);
+juGrid = __decorate([
+    core_1.Component({
+        moduleId: module.id,
+        selector: '.juGrid, [juGrid], juGrid',
+        encapsulation: core_1.ViewEncapsulation.None,
+        changeDetection: core_1.ChangeDetectionStrategy.Default,
+        template: `<div class="grid-toolbar">
+                    <div class="quickSearch" *ngIf="options.quickSearch">             
+                            <div class="input-group stylish-input-group">
+                                <input type="text" class="form-control" (keyup)="search($event.target.value)" placeholder="Search">
+                                <span class="input-group-addon">                        
+                                        <span class="fa fa-search"></span>                         
+                                </span>
+                            </div>            
+                    </div>
+                  <div [style.left.px]="options.quickSearch?144:0" class="tool-items"><template [ngTemplateOutlet]="toolbar"></template></div>
+	            </div> 
+                <div *ngIf="options.quickSearch||toolbar" style="height:33px">&nbsp;</div> 
+                <div #dynamicContentPlaceHolder></div>  
+                <div class="juForm" *ngIf="options.crud" (onLoad)="onFormLoad($event)" [options]="options.formDefs"></div>`
+    }), 
+    __metadata('design:paramtypes', [core_1.ElementRef, juGrid_builder_1.juGridBuilder, core_1.ViewContainerRef])
+], juGrid);
 exports.juGrid = juGrid;
-function async_call(fx, time) {
-    if (time === void 0) { time = 0; }
-    var tid = setTimeout(function () { fx(); clearTimeout(tid); }, time);
+function async_call(fx, time = 0) {
+    let tid = setTimeout(() => { fx(); clearTimeout(tid); }, time);
 }
-//# sourceMappingURL=juGrid.js.map

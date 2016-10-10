@@ -8,47 +8,46 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var CkEditor = (function () {
-    function CkEditor(el) {
+const core_1 = require('@angular/core');
+let CkEditor = class CkEditor {
+    constructor(el) {
         this.el = el;
         this.config = {};
     }
-    CkEditor.prototype.ngOnInit = function () {
+    ngOnInit() {
         this.config.api = CKEDITOR.replace(this.el.nativeElement);
-    };
-    CkEditor.prototype.ngOnDestroy = function () { };
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Object)
-    ], CkEditor.prototype, "config", void 0);
-    CkEditor = __decorate([
-        core_1.Directive({
-            selector: '[ckeditor]'
-        }), 
-        __metadata('design:paramtypes', [core_1.ElementRef])
-    ], CkEditor);
-    return CkEditor;
-}());
+    }
+    ngOnDestroy() { }
+};
+__decorate([
+    core_1.Input(), 
+    __metadata('design:type', Object)
+], CkEditor.prototype, "config", void 0);
+CkEditor = __decorate([
+    core_1.Directive({
+        selector: '[ckeditor]'
+    }), 
+    __metadata('design:paramtypes', [core_1.ElementRef])
+], CkEditor);
 exports.CkEditor = CkEditor;
-var FileSelect = (function () {
-    function FileSelect(element) {
+let FileSelect = class FileSelect {
+    constructor(element) {
         this.element = element;
     }
-    FileSelect.prototype.onChangeFile = function () {
+    onChangeFile() {
         if (!this.model.FILES) {
             this.model.FILES = {};
         }
         this.setFileNames();
-    };
-    FileSelect.prototype.setFileNames = function () {
-        var fileList = this.element.nativeElement.files;
+    }
+    setFileNames() {
+        let fileList = this.element.nativeElement.files;
         if (fileList.length == 0) {
             console.log(this.element.nativeElement);
             return '';
         }
-        var filesName = [];
-        var files = [];
+        let filesName = [];
+        let files = [];
         for (var index = 0; index < fileList.length; index++) {
             if (this.hasValidExt(fileList.item(index).name)) {
                 filesName.push(fileList.item(index).name);
@@ -59,45 +58,43 @@ var FileSelect = (function () {
         this.model.FILES[this.propName] = files;
         this.form.componentRef.instance
             .vlidate_input(filesName.join(';'), this.config);
-    };
-    FileSelect.prototype.hasValidExt = function (name) {
+    }
+    hasValidExt(name) {
         if (this.ext && this.ext.length > 0) {
-            var res = this.ext.filter(function (ex) { return name.endsWith(ex); });
+            let res = this.ext.filter(ex => name.endsWith(ex));
             return res && res.length > 0;
         }
         return true;
-    };
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Object)
-    ], FileSelect.prototype, "model", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', String)
-    ], FileSelect.prototype, "propName", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Array)
-    ], FileSelect.prototype, "ext", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Object)
-    ], FileSelect.prototype, "config", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Object)
-    ], FileSelect.prototype, "form", void 0);
-    __decorate([
-        core_1.HostListener('change'), 
-        __metadata('design:type', Function), 
-        __metadata('design:paramtypes', []), 
-        __metadata('design:returntype', void 0)
-    ], FileSelect.prototype, "onChangeFile", null);
-    FileSelect = __decorate([
-        core_1.Directive({ selector: '[fileSelect]' }), 
-        __metadata('design:paramtypes', [core_1.ElementRef])
-    ], FileSelect);
-    return FileSelect;
-}());
+    }
+};
+__decorate([
+    core_1.Input(), 
+    __metadata('design:type', Object)
+], FileSelect.prototype, "model", void 0);
+__decorate([
+    core_1.Input(), 
+    __metadata('design:type', String)
+], FileSelect.prototype, "propName", void 0);
+__decorate([
+    core_1.Input(), 
+    __metadata('design:type', Array)
+], FileSelect.prototype, "ext", void 0);
+__decorate([
+    core_1.Input(), 
+    __metadata('design:type', Object)
+], FileSelect.prototype, "config", void 0);
+__decorate([
+    core_1.Input(), 
+    __metadata('design:type', Object)
+], FileSelect.prototype, "form", void 0);
+__decorate([
+    core_1.HostListener('change'), 
+    __metadata('design:type', Function), 
+    __metadata('design:paramtypes', []), 
+    __metadata('design:returntype', void 0)
+], FileSelect.prototype, "onChangeFile", null);
+FileSelect = __decorate([
+    core_1.Directive({ selector: '[fileSelect]' }), 
+    __metadata('design:paramtypes', [core_1.ElementRef])
+], FileSelect);
 exports.FileSelect = FileSelect;
-//# sourceMappingURL=CkEditor.js.map

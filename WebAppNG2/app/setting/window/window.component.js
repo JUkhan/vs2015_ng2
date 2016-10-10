@@ -8,26 +8,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var juWindowService_1 = require('../../shared/juWindow/juWindowService');
-var crudExample_1 = require('../grid/crudExample');
-var WindowComponent = (function () {
-    function WindowComponent(service) {
+const core_1 = require('@angular/core');
+const juWindowService_1 = require('../../shared/juWindow/juWindowService');
+const crudExample_1 = require('../grid/crudExample');
+let WindowComponent = class WindowComponent {
+    constructor(service) {
         this.service = service;
     }
-    WindowComponent.prototype.ngOnInit = function () {
+    ngOnInit() {
         this.service.windowConfig = {
-            'about': { title: 'About us', width: 600, height: 400, loader: function () { return crudExample_1.CrudExample; } },
+            'about': { title: 'About us', width: 600, height: 400, loader: () => crudExample_1.CrudExample },
         };
-    };
-    WindowComponent = __decorate([
-        core_1.Component({
-            selector: 'window-component',
-            template: "\n    <div class=\"wnav\">\n        <input type=\"button\" class=\"btn btn-success\" value=\"Form\" (click)=\"service.createWindow('form')\">\n        <input type=\"button\" class=\"btn btn-success\" value=\"Grid\" (click)=\"service.createWindow('grid')\">\n        <input type=\"button\" class=\"btn btn-success\" value=\"About\" (click)=\"service.createWindow('about')\">\n    </div>\n    <div class=\"pw\" height=\"500\"></div>\n    "
-        }), 
-        __metadata('design:paramtypes', [juWindowService_1.juWindowService])
-    ], WindowComponent);
-    return WindowComponent;
-}());
+    }
+};
+WindowComponent = __decorate([
+    core_1.Component({
+        selector: 'window-component',
+        template: `
+    <div class="wnav">
+        <input type="button" class="btn btn-success" value="Form" (click)="service.createWindow('form')">
+        <input type="button" class="btn btn-success" value="Grid" (click)="service.createWindow('grid')">
+        <input type="button" class="btn btn-success" value="About" (click)="service.createWindow('about')">
+    </div>
+    <div class="pw" height="500"></div>
+    `
+    }), 
+    __metadata('design:paramtypes', [juWindowService_1.juWindowService])
+], WindowComponent);
 exports.WindowComponent = WindowComponent;
-//# sourceMappingURL=window.component.js.map

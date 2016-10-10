@@ -40,7 +40,7 @@ export class CellEditExample implements OnInit {
             viewMode:'!panel',
             quickSearch: true,
             pagerPos: 'bottom',
-            colResize: !false,
+            colResize: false,
             rowHeight: 50,
             enableCellEditing: true,
             columnDefs: [

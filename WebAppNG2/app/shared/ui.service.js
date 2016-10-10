@@ -8,16 +8,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var Rx_1 = require('rxjs/Rx');
-var UiService = (function () {
-    function UiService() {
+const core_1 = require('@angular/core');
+const Rx_1 = require('rxjs/Rx');
+let UiService = class UiService {
+    constructor() {
         this.setEventListeners();
     }
-    UiService.prototype.setEventListeners = function () {
+    setEventListeners() {
         this.documentClick = Rx_1.Observable.fromEvent(document, 'mousedown');
-    };
-    UiService.prototype.hasParent = function (el, parentSelector) {
+    }
+    hasParent(el, parentSelector) {
         if (parentSelector === undefined) {
             parentSelector = document;
         }
@@ -30,12 +30,10 @@ var UiService = (function () {
             }
         }
         return true;
-    };
-    UiService = __decorate([
-        core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
-    ], UiService);
-    return UiService;
-}());
+    }
+};
+UiService = __decorate([
+    core_1.Injectable(), 
+    __metadata('design:paramtypes', [])
+], UiService);
 exports.UiService = UiService;
-//# sourceMappingURL=ui.service.js.map

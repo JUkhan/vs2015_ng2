@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {juGrid, GridOptions}       from '../../shared/juGrid/juGrid';
 import { FV}          from '../../shared/juForm/FV';
-import {Observable}   from 'rxjs/Rx';
+import {Observable, Scheduler}   from 'rxjs/Rx';
 import {AppService}   from '../../shared/app.service';
 @Component({
     moduleId: module.id,
@@ -36,16 +36,18 @@ export class CrudExample implements OnInit {
         });
        
     }
-     
-    hideCol() {
-        console.log('hide col', this.service.sync_get('dummyData/getEducations'));
-     
+    async doSmth(){
+        let res=await this.service.get('dummyData/getEducations').toPromise();
+        console.log(res);
+    } 
+    async hideCol() {
         //this.service.messageDialog('Column removing', 'Column removed successfully');
-        this.service.confirmDialog('Column removing', 'Are you sure to remove the age column?', () =>
+        if(await this.service.confirmDialogPromise('Column removing', 'Are you sure to remove the age column?'))
         {
             this.scholarGridOptions.columnDefs[3].hide = true;
             this.scholarGridOptions.api.grid.render();
-        });
+        }
+        console.log('waiting for user input.');
     }
     private onLoad(grid: juGrid)
     {         

@@ -8,27 +8,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var app_service_1 = require('./shared/app.service');
-var AppComponent = (function () {
-    function AppComponent(service) {
+const core_1 = require('@angular/core');
+const app_service_1 = require('./shared/app.service');
+let AppComponent = class AppComponent {
+    constructor(service) {
         this.service = service;
     }
-    AppComponent.prototype.ngOnInit = function () {
-        var _this = this;
+    ngOnInit() {
         this.setMenu();
-        this.service.notifier$.subscribe(function (it) {
+        this.service.notifier$.subscribe(it => {
             switch (it.key) {
                 case 'messageDialog':
-                    _this.messageDialog.showDialog(it.value.title, it.value.message);
+                    this.messageDialog.showDialog(it.value.title, it.value.message);
                     break;
                 case 'confirmDialog':
-                    _this.confirmDialog.showDialog(it.value.title, it.value.message, it.value.yesCallback, it.value.noCallback);
+                    this.confirmDialog.showDialog(it.value.title, it.value.message, it.value.yesCallback, it.value.noCallback);
                     break;
             }
         });
-    };
-    AppComponent.prototype.setMenu = function () {
+    }
+    setMenu() {
         this.menuData = [
             { name: 'Home', link: 'home', icon: 'fa fa-home' },
             { name: 'CRUD', link: 'setting', icon: 'fa fa-home' },
@@ -42,22 +41,21 @@ var AppComponent = (function () {
                 ]
             },
         ];
-    };
-    AppComponent.prototype.messageLoad = function (message) {
+    }
+    messageLoad(message) {
         this.messageDialog = message;
-    };
-    AppComponent.prototype.confirmLoad = function (confirm) {
+    }
+    confirmLoad(confirm) {
+        this.service.confirmDialogInstance = confirm;
         this.confirmDialog = confirm;
-    };
-    AppComponent = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: 'my-app',
-            templateUrl: './app.component.html'
-        }), 
-        __metadata('design:paramtypes', [app_service_1.AppService])
-    ], AppComponent);
-    return AppComponent;
-}());
+    }
+};
+AppComponent = __decorate([
+    core_1.Component({
+        moduleId: module.id,
+        selector: 'my-app',
+        templateUrl: './app.component.html'
+    }), 
+    __metadata('design:paramtypes', [app_service_1.AppService])
+], AppComponent);
 exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.component.js.map

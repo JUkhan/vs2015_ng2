@@ -8,10 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var FV_1 = require('../shared/juForm/FV');
-var HomeComponent = (function () {
-    function HomeComponent() {
+const core_1 = require('@angular/core');
+const FV_1 = require('../shared/juForm/FV');
+let HomeComponent = class HomeComponent {
+    constructor() {
         this.msg = 'say:Hello World...';
         this.dataList = [
             { text: 'Beautiful Bangladesg', value: 1, disabled: !true },
@@ -28,16 +28,15 @@ var HomeComponent = (function () {
         this.attach = 'sss';
         this.mailList = [];
     }
-    HomeComponent.prototype.ngOnInit = function () {
+    ngOnInit() {
         this.initForm();
         this.mySelectOptions = {
             title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: true,
             height: 250, multiselect: !true, selectedTextFormat: 'count>2', editable: true
         };
-    };
-    HomeComponent.prototype.ngOnDestroy = function () { };
-    HomeComponent.prototype.initForm = function () {
-        var _this = this;
+    }
+    ngOnDestroy() { }
+    initForm() {
         this.myOptions = {
             viewMode: 'panel', panelMode: 'primary',
             labelPos: 'left', title: 'Complex Form Example',
@@ -50,7 +49,7 @@ var HomeComponent = (function () {
                             [{
                                     groupName: 'Group-1', size: 8, inputs: [
                                         { field: 'name', label: 'Name1', type: 'file', validators: [FV_1.FV.required, FV_1.FV.minLength(5)] },
-                                        { field: 'country', change: function (e) { return console.log(e); }, label: 'Country', type: 'juSelect', validators: FV_1.FV.required },
+                                        { field: 'country', change: e => console.log(e), label: 'Country', type: 'juSelect', validators: FV_1.FV.required },
                                         { field: 'address', label: 'Address', type: 'text', validators: FV_1.FV.required },
                                         [{ field: 'age', labelSize: 4, size: 6 }, { field: 'address1.post', label: 'Post', type: 'datepicker', size: 4, offset: 2, validators: FV_1.FV.required }],
                                         { field: 'Gender', label: 'Gender', type: 'juSelect', data: [{ text: 'Male', value: 1 }, { text: 'Female', value: 2 }], options: { title: 'Select gender' } },
@@ -78,7 +77,7 @@ var HomeComponent = (function () {
                                     Oxygen: [{ field: 'oxygen', label: 'Oxygen', type: 'text', }],
                                     h20: [
                                         { field: 'h20', label: 'H20', type: 'text' },
-                                        { tabConfig: true, enable: function (form, model) { return !!model.oxygen; } }
+                                        { tabConfig: true, enable: (form, model) => { return !!model.oxygen; } }
                                     ]
                                 }
                             }
@@ -99,7 +98,7 @@ var HomeComponent = (function () {
                                     },
                                     { field: 'Thana', label: 'Thana', size: 3, type: 'juSelect', validators: FV_1.FV.required }
                                 ]],
-                            remove: function (model) {
+                            remove: (model) => {
                                 if (confirm('Are you sure to remove this item?')) {
                                     model.removed = true;
                                 }
@@ -114,48 +113,46 @@ var HomeComponent = (function () {
                 ]
             },
             buttons: {
-                'Save Changes': { type: 'submit', cssClass: 'btn btn-success', click: function (_) { console.log(_this.myOptions.api.getModel()); } },
+                'Save Changes': { type: 'submit', cssClass: 'btn btn-success', click: _ => { console.log(this.myOptions.api.getModel()); } },
                 'Set Data': {
-                    type: 'button', click: function () {
-                        _this.myOptions.api.setModel({ products: [{ name: 'Jasim', price: 2 }, { name: 'JArif', price: 34 }, { name: 'Abdulla', price: 134, district: 1, Thana: 2 }], address1: { post: '07/14/2016' }, address2: { country: 2 }, aboutMe: 'I love JS' });
+                    type: 'button', click: () => {
+                        this.myOptions.api.setModel({ products: [{ name: 'Jasim', price: 2 }, { name: 'JArif', price: 34 }, { name: 'Abdulla', price: 134, district: 1, Thana: 2 }], address1: { post: '07/14/2016' }, address2: { country: 2 }, aboutMe: 'I love JS' });
                     }
                 }
             },
-            disappear: function (val) { return ({ display: val ? +val === 1 ? 'block' : 'none' : 'block' }); },
+            disappear: (val) => ({ display: val ? +val === 1 ? 'block' : 'none' : 'block' }),
         };
-    };
-    HomeComponent.prototype.myFormLoad = function (form) {
+    }
+    myFormLoad(form) {
         form.setData('country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
             .setData('address1.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
             .setData('address2.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
             .setLabel('age', 'Age').setLabel('aboutMe', 'Ambot Me');
-        form.valueChanges('form').filter(function (_) { return form.valid; })
-            .subscribe(function (res) { return console.log(res); });
-    };
-    HomeComponent.prototype.changeThana = function (e) {
+        form.valueChanges('form').filter(_ => form.valid)
+            .subscribe(res => console.log(res));
+    }
+    changeThana(e) {
         if (e.value && e.value == 1) {
             e.form.setData('Thana', [{ text: 'asd', value: 1 }, { text: 'MXZ', value: 2 }]);
         }
         else if (e.value && e.value == 2) {
             e.form.setData('Thana', [{ text: 'suna', value: 1 }, { text: 'kotha', value: 2 }]);
         }
-    };
-    HomeComponent.prototype.mailLoad = function (mail) {
+    }
+    mailLoad(mail) {
         mail.setAttachment('helloq.zip');
         mail.setMailList([{ text: 'jasim@gmail.com', value: 'jasim@gmail.com' }, { text: 'arif@gmail.com', value: 'arif@gmail.com' }]);
-    };
-    HomeComponent.prototype.mailData = function (model) {
+    }
+    mailData(model) {
         console.log(model);
-    };
-    HomeComponent = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: 'my-home',
-            templateUrl: './home.component.html'
-        }), 
-        __metadata('design:paramtypes', [])
-    ], HomeComponent);
-    return HomeComponent;
-}());
+    }
+};
+HomeComponent = __decorate([
+    core_1.Component({
+        moduleId: module.id,
+        selector: 'my-home',
+        templateUrl: './home.component.html'
+    }), 
+    __metadata('design:paramtypes', [])
+], HomeComponent);
 exports.HomeComponent = HomeComponent;
-//# sourceMappingURL=home.component.js.map

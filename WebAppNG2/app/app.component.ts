@@ -21,7 +21,7 @@ export class AppComponent {
                     break;
                 case 'confirmDialog':
                     this.confirmDialog.showDialog(it.value.title, it.value.message, it.value.yesCallback, it.value.noCallback);
-                    break;
+                    break;               
             }
         });
     }
@@ -49,6 +49,7 @@ export class AppComponent {
     
     private confirmLoad(confirm: ConfirmDialog)
     {
+        this.service.confirmDialogInstance=confirm;
         this.confirmDialog = confirm;
     }
  }

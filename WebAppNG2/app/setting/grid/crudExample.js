@@ -8,48 +8,60 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var FV_1 = require('../../shared/juForm/FV');
-var Rx_1 = require('rxjs/Rx');
-var app_service_1 = require('../../shared/app.service');
-var CrudExample = (function () {
-    function CrudExample(service) {
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments)).next());
+    });
+};
+const core_1 = require('@angular/core');
+const FV_1 = require('../../shared/juForm/FV');
+const Rx_1 = require('rxjs/Rx');
+const app_service_1 = require('../../shared/app.service');
+let CrudExample = class CrudExample {
+    constructor(service) {
         this.service = service;
     }
-    CrudExample.prototype.ngOnInit = function () {
-        var _this = this;
+    ngOnInit() {
         this.initScholar();
-        Rx_1.Observable.forkJoin(this.service.get('dummyData/getEducations'), this.service.get('dummyData/getAddress/1')).subscribe(function (res) {
-            _this.educationList = res[0];
-            _this.addressList = res[1];
+        Rx_1.Observable.forkJoin(this.service.get('dummyData/getEducations'), this.service.get('dummyData/getAddress/1')).subscribe(res => {
+            this.educationList = res[0];
+            this.addressList = res[1];
         });
-    };
-    CrudExample.prototype.hideCol = function () {
-        var _this = this;
-        console.log('hide col', this.service.sync_get('dummyData/getEducations'));
-        this.service.confirmDialog('Column removing', 'Are you sure to remove the age column?', function () {
-            _this.scholarGridOptions.columnDefs[3].hide = true;
-            _this.scholarGridOptions.api.grid.render();
+    }
+    doSmth() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let res = yield this.service.get('dummyData/getEducations').toPromise();
+            console.log(res);
         });
-    };
-    CrudExample.prototype.onLoad = function (grid) {
-        var _this = this;
+    }
+    hideCol() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (yield this.service.confirmDialogPromise('Column removing', 'Are you sure to remove the age column?')) {
+                this.scholarGridOptions.columnDefs[3].hide = true;
+                this.scholarGridOptions.api.grid.render();
+            }
+            console.log('waiting for user input.');
+        });
+    }
+    onLoad(grid) {
         this.service.get('dummydata/GetScholarList')
-            .subscribe(function (list) {
-            _this.scholarGridOptions.api.form
-                .setData('education', _this.educationList)
-                .setData('address', _this.addressList);
-            _this.scholarList = list;
+            .subscribe(list => {
+            this.scholarGridOptions.api.form
+                .setData('education', this.educationList)
+                .setData('address', this.addressList);
+            this.scholarList = list;
         });
-    };
-    CrudExample.prototype.educationCellRender = function (row) {
-        return this.educationList.find(function (_) { return _.value == row.education; }).text;
-    };
-    CrudExample.prototype.getPagerData = function () {
+    }
+    educationCellRender(row) {
+        return this.educationList.find(_ => _.value == row.education).text;
+    }
+    getPagerData() {
         return Rx_1.Observable.of({ totalPage: 1234, data: this.scholarList });
-    };
-    CrudExample.prototype.initScholar = function () {
-        var _this = this;
+    }
+    initScholar() {
         this.scholarGridOptions = {
             title: 'Crud Example', crud: true, pagerPos: 'header',
             columnDefs: [
@@ -60,7 +72,7 @@ var CrudExample = (function () {
                     cellRenderer: this.educationCellRender.bind(this)
                 },
                 { headerName: 'Age', field: 'age', filter: 'number', sort: true, hide: false },
-                { headerName: 'Address', field: 'address', cellRenderer: function (row) { return _this.addressList.find(function (_) { return _.value == row.address; }).text; } },
+                { headerName: 'Address', field: 'address', cellRenderer: row => this.addressList.find(_ => _.value == row.address).text },
                 { headerName: 'Description', width: 300, field: 'description' }
             ],
             formDefs: {
@@ -79,39 +91,44 @@ var CrudExample = (function () {
                     'Close': { type: 'close', cssClass: 'btn btn-default' }
                 }
             },
-            removeItem: function (data) {
-                _this.service.get('dummydata/remove_scholar/' + data.id).subscribe(function (res) {
-                    _this.scholarGridOptions.api.grid.showMessage('Data removed successfully');
-                    _this.scholarGridOptions.api.grid.removeItem(data);
+            removeItem: data => {
+                this.service.get('dummydata/remove_scholar/' + data.id).subscribe(res => {
+                    this.scholarGridOptions.api.grid.showMessage('Data removed successfully');
+                    this.scholarGridOptions.api.grid.removeItem(data);
                 });
             }
         };
-    };
-    CrudExample.prototype.submitScholar = function (e) {
-        var _this = this;
+    }
+    submitScholar(e) {
         this.service.post('dummydata/create_update_scholar', this.scholarGridOptions.api.form.getModel())
-            .subscribe(function (res) {
+            .subscribe(res => {
             console.log(res);
-            if (_this.scholarGridOptions.api.form.isUpdate) {
-                _this.scholarGridOptions.api.grid.updateItem(_this.scholarGridOptions.api.form.getModel());
+            if (this.scholarGridOptions.api.form.isUpdate) {
+                this.scholarGridOptions.api.grid.updateItem(this.scholarGridOptions.api.form.getModel());
             }
             else {
-                _this.scholarGridOptions.api.grid.addItem(_this.scholarGridOptions.api.form.getModel());
+                this.scholarGridOptions.api.grid.addItem(this.scholarGridOptions.api.form.getModel());
             }
-            _this.scholarGridOptions.api.grid.showMessage('Data updated successfully');
-            _this.scholarGridOptions.api.form.showModal(false);
+            this.scholarGridOptions.api.grid.showMessage('Data updated successfully');
+            this.scholarGridOptions.api.form.showModal(false);
         });
-    };
-    CrudExample = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: 'crud',
-            template: "\n                <div \n                     juGrid                      \n                     (onLoad)=\"onLoad($event)\" \n                     [data]=\"scholarList\" \n                     [options]=\"scholarGridOptions\">\n                        \n                </div>\n                <button class=\"btn btn-primary\" (click)=\"hideCol()\">Hide Age Column</button>",
-            encapsulation: core_1.ViewEncapsulation.None
-        }), 
-        __metadata('design:paramtypes', [app_service_1.AppService])
-    ], CrudExample);
-    return CrudExample;
-}());
+    }
+};
+CrudExample = __decorate([
+    core_1.Component({
+        moduleId: module.id,
+        selector: 'crud',
+        template: `
+                <div 
+                     juGrid                      
+                     (onLoad)="onLoad($event)" 
+                     [data]="scholarList" 
+                     [options]="scholarGridOptions">
+                        
+                </div>
+                <button class="btn btn-primary" (click)="hideCol()">Hide Age Column</button>`,
+        encapsulation: core_1.ViewEncapsulation.None
+    }), 
+    __metadata('design:paramtypes', [app_service_1.AppService])
+], CrudExample);
 exports.CrudExample = CrudExample;
-//# sourceMappingURL=crudExample.js.map

@@ -8,18 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var ConfirmDialog = (function () {
-    function ConfirmDialog() {
+const core_1 = require('@angular/core');
+let ConfirmDialog = class ConfirmDialog {
+    constructor() {
         this.onLoad = new core_1.EventEmitter();
-        this.yesCallback = function () { };
-        this.noCallback = function () { };
+        this.yesCallback = () => { };
+        this.noCallback = () => { };
     }
-    ConfirmDialog.prototype.ngOnInit = function () { this.constructForm(); };
-    ConfirmDialog.prototype.ngOnChanges = function (changes) {
-    };
-    ConfirmDialog.prototype.constructForm = function () {
-        var _this = this;
+    ngOnInit() { this.constructForm(); }
+    ngOnChanges(changes) {
+    }
+    constructForm() {
         this.formOptions = {
             title: 'Health Care Regulatory System', viewMode: 'popup', message: '',
             body: '',
@@ -27,16 +26,16 @@ var ConfirmDialog = (function () {
                 { type: 'html', content: '<div [innerHTML]="config.message"></div>' }
             ],
             buttons: {
-                'YES': { type: 'button', cssClass: 'btn btn-primary', click: function () { _this.form.showModal(false); _this.yesCallback(); } },
-                'NO': { type: 'button', cssClass: 'btn btn-primary', click: function () { _this.form.showModal(false); _this.noCallback(); } }
+                'YES': { type: 'button', cssClass: 'btn btn-primary', click: () => { this.form.showModal(false); this.yesCallback(); } },
+                'NO': { type: 'button', cssClass: 'btn btn-primary', click: () => { this.form.showModal(false); this.noCallback(); } }
             }
         };
-    };
-    ConfirmDialog.prototype.fromLoad = function (form) {
+    }
+    fromLoad(form) {
         this.form = form;
         this.onLoad.emit(this);
-    };
-    ConfirmDialog.prototype.showDialog = function (title, message, yesCallback, noCallback) {
+    }
+    showDialog(title, message, yesCallback, noCallback) {
         if (title)
             this.formOptions['title'] = title;
         this.formOptions['message'] = message;
@@ -45,20 +44,28 @@ var ConfirmDialog = (function () {
         if (noCallback)
             this.noCallback = noCallback;
         this.form.showModal();
-    };
-    __decorate([
-        core_1.Output(), 
-        __metadata('design:type', Object)
-    ], ConfirmDialog.prototype, "onLoad", void 0);
-    ConfirmDialog = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: 'confirm, [confirm], .confirm',
-            template: '<div juForm (onLoad)="fromLoad($event)" [options]="formOptions"></div>'
-        }), 
-        __metadata('design:paramtypes', [])
-    ], ConfirmDialog);
-    return ConfirmDialog;
-}());
+    }
+    showDialogPromise(title, message) {
+        if (title)
+            this.formOptions['title'] = title;
+        this.formOptions['message'] = message;
+        this.form.showModal();
+        return new Promise((resolve, reject) => {
+            this.yesCallback = () => { resolve(1); };
+            this.noCallback = () => { resolve(0); };
+        });
+    }
+};
+__decorate([
+    core_1.Output(), 
+    __metadata('design:type', Object)
+], ConfirmDialog.prototype, "onLoad", void 0);
+ConfirmDialog = __decorate([
+    core_1.Component({
+        moduleId: module.id,
+        selector: 'confirm, [confirm], .confirm',
+        template: '<div juForm (onLoad)="fromLoad($event)" [options]="formOptions"></div>'
+    }), 
+    __metadata('design:paramtypes', [])
+], ConfirmDialog);
 exports.ConfirmDialog = ConfirmDialog;
-//# sourceMappingURL=confirm.dialog.js.map

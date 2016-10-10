@@ -11,6 +11,7 @@ export class AppService {
     private baseUrl: string = '';
     public notifier$: Subject<any>;
     private headers: Headers;
+    confirmDialogInstance:any;
     constructor(private http: Http) {
         this.notifier$ = new Subject();
         this.headers = new Headers();
@@ -44,6 +45,10 @@ export class AppService {
     confirmDialog(title: string, message: string, yesCallback?, noCallback?)
     {
         this.notifyAll({ key: 'confirmDialog', value: { title: title, message: message, yesCallback: yesCallback, noCallback: noCallback } });
+    }
+    confirmDialogPromise(title: string, message: string):Promise<Number>
+    {
+       return this.confirmDialogInstance.showDialogPromise(title, message);
     }
     showMessage(message: string) {
         this.notifyAll({ key: 'message', value: message });

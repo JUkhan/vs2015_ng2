@@ -8,67 +8,65 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var juSelect_1 = require('../juForm/juSelect');
-var Datetimepicker_1 = require('../juForm/Datetimepicker');
-var Rx_1 = require('rxjs/Rx');
-var rowEditor = (function () {
-    function rowEditor(el) {
+const core_1 = require('@angular/core');
+const juSelect_1 = require('../juForm/juSelect');
+const Datetimepicker_1 = require('../juForm/Datetimepicker');
+const Rx_1 = require('rxjs/Rx');
+let rowEditor = class rowEditor {
+    constructor(el) {
         this.el = el;
         this.isUpdated = false;
         this.subsList = [];
         this.validationMsg = {};
     }
-    rowEditor.prototype.ngAfterContentInit = function () {
-        var _this = this;
+    ngAfterContentInit() {
         this.eventBinding(this.el.nativeElement.querySelectorAll('.select'), 'change');
         this.eventBinding(this.el.nativeElement.querySelectorAll('.text'), 'change');
-        this.juSelectList.toArray().forEach(function (_) {
-            _this.subsList.push(_.notifyRowEditor.subscribe(function () { _this.isUpdated = true; }));
+        this.juSelectList.toArray().forEach(_ => {
+            this.subsList.push(_.notifyRowEditor.subscribe(() => { this.isUpdated = true; }));
         });
-        this.datepickerList.toArray().forEach(function (_) {
-            _this.subsList.push(_.notifyRowEditor.subscribe(function () { _this.isUpdated = true; }));
+        this.datepickerList.toArray().forEach(_ => {
+            this.subsList.push(_.notifyRowEditor.subscribe(() => { this.isUpdated = true; }));
         });
-    };
-    rowEditor.prototype.ngOnInit = function () {
-    };
-    rowEditor.prototype.ngOnDestroy = function () {
-        this.subsList.forEach(function (_) {
+    }
+    ngOnInit() {
+    }
+    ngOnDestroy() {
+        this.subsList.forEach(_ => {
             _.unsubscribe();
             _.remove(_);
         });
-    };
-    rowEditor.prototype.isValid = function (fieldName) {
-        var def = this.config.columnDefs.find(function (_) { return _.field === fieldName; }), res = true;
+    }
+    isValid(fieldName) {
+        let def = this.config.columnDefs.find(_ => _.field === fieldName), res = true;
         if (def) {
             res = this.validate_input(this.model[fieldName], fieldName, def);
         }
         return { 'validation-msg-show': !res, 'validation-msg-hide': res };
-    };
-    rowEditor.prototype.getValidationMsg = function (fieldName) {
+    }
+    getValidationMsg(fieldName) {
         return this.validationMsg[fieldName];
-    };
-    rowEditor.prototype.setJuSelectData = function (key, value) {
+    }
+    setJuSelectData(key, value) {
         try {
-            this.juSelectList.toArray().find(function (_) { return _.propertyName === key; }).setData(value);
+            this.juSelectList.toArray().find(_ => _.propertyName === key).setData(value);
         }
         catch (er) {
-            console.error("Did not find the field name '" + key + "'");
+            console.error(`Did not find the field name '${key}'`);
         }
-    };
-    rowEditor.prototype.eventBinding = function (list, eventName) {
-        var _this = this;
+    }
+    eventBinding(list, eventName) {
         for (var i = 0; i < list.length; i++) {
-            this.subsList.push(Rx_1.Observable.fromEvent(list[i], eventName).subscribe(function (e) {
-                _this.isUpdated = true;
+            this.subsList.push(Rx_1.Observable.fromEvent(list[i], eventName).subscribe(e => {
+                this.isUpdated = true;
             }));
         }
-    };
-    rowEditor.prototype.validate_input = function (val, field, def) {
-        var res = true;
+    }
+    validate_input(val, field, def) {
+        let res = true;
         if (def.validators) {
             if (Array.isArray(def.validators) && def.validators.length > 0) {
-                var len = def.validators.length, i = 0;
+                let len = def.validators.length, i = 0;
                 while (i < len && (res = this.validate_input_helper(val, field, def.validators[i]))) {
                     i++;
                 }
@@ -78,32 +76,30 @@ var rowEditor = (function () {
             }
         }
         return res;
-    };
-    rowEditor.prototype.validate_input_helper = function (val, field, fx) {
-        var msg = fx(val, field);
+    }
+    validate_input_helper(val, field, fx) {
+        let msg = fx(val, field);
         if (typeof msg === 'string') {
             this.validationMsg[field] = msg;
             return false;
         }
         return true;
-    };
-    __decorate([
-        core_1.ContentChildren(juSelect_1.juSelect), 
-        __metadata('design:type', core_1.QueryList)
-    ], rowEditor.prototype, "juSelectList", void 0);
-    __decorate([
-        core_1.ContentChildren(Datetimepicker_1.Datetimepicker), 
-        __metadata('design:type', core_1.QueryList)
-    ], rowEditor.prototype, "datepickerList", void 0);
-    rowEditor = __decorate([
-        core_1.Directive({
-            selector: '.row-editor',
-            inputs: ['model', 'config'],
-            outputs: ['rowUpdate']
-        }), 
-        __metadata('design:paramtypes', [core_1.ElementRef])
-    ], rowEditor);
-    return rowEditor;
-}());
+    }
+};
+__decorate([
+    core_1.ContentChildren(juSelect_1.juSelect), 
+    __metadata('design:type', core_1.QueryList)
+], rowEditor.prototype, "juSelectList", void 0);
+__decorate([
+    core_1.ContentChildren(Datetimepicker_1.Datetimepicker), 
+    __metadata('design:type', core_1.QueryList)
+], rowEditor.prototype, "datepickerList", void 0);
+rowEditor = __decorate([
+    core_1.Directive({
+        selector: '.row-editor',
+        inputs: ['model', 'config'],
+        outputs: ['rowUpdate']
+    }), 
+    __metadata('design:paramtypes', [core_1.ElementRef])
+], rowEditor);
 exports.rowEditor = rowEditor;
-//# sourceMappingURL=rowEditor.js.map
