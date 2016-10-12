@@ -51,3 +51,5 @@ MessageDialog = __decorate([
     __metadata('design:paramtypes', [])
 ], MessageDialog);
 exports.MessageDialog = MessageDialog;
+
+//# sourceMappingURL=message.dialog.js.map

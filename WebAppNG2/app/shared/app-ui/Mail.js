@@ -85,3 +85,5 @@ MailComponent = __decorate([
     __metadata('design:paramtypes', [])
 ], MailComponent);
 exports.MailComponent = MailComponent;
+
+//# sourceMappingURL=Mail.js.map

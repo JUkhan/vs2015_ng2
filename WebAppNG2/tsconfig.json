@@ -1,24 +1,26 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
+    "rootDir": "src/",
+    "outDir": "app",
+    "sourceMap": true,
     "target": "es6",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "sourceMap": false,
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "removeComments": true,
-    "noImplicitAny": false,
-    "suppressImplicitAnyIndexErrors": true    
-    //"watch": true
+    "moduleResolution": "node",
+    "lib": ["es6", "dom"]
   },
-  "compileOnSave": true,
+  "filesGlob": [
+    "./src/**/*.ts"   
+  ],
   "exclude": [
-    "node_modules",    
-    "typings/index.d.ts",   
-    "typings/browser",
-    "typings/browser.d.ts",
-    "typings/main",
-    "typings/main.d.ts"
-  ]
-
+    "node_modules"
+  ],
+  "atom": {
+    "rewriteTsconfig": false
+  }
 }

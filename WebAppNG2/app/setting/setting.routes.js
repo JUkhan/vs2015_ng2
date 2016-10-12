@@ -11,3 +11,5 @@ const routes = [
     { path: 'window', component: windowExample_1.WindowComponent }
 ];
 exports.routing = router_1.RouterModule.forChild(routes);
+
+//# sourceMappingURL=setting.routes.js.map

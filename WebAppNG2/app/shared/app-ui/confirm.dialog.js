@@ -35,6 +35,10 @@ let ConfirmDialog = class ConfirmDialog {
         this.form = form;
         this.onLoad.emit(this);
     }
+    dialogClose() {
+        if (this.noCallback)
+            this.noCallback();
+    }
     showDialog(title, message, yesCallback, noCallback) {
         if (title)
             this.formOptions['title'] = title;
@@ -64,8 +68,10 @@ ConfirmDialog = __decorate([
     core_1.Component({
         moduleId: module.id,
         selector: 'confirm, [confirm], .confirm',
-        template: '<div juForm (onLoad)="fromLoad($event)" [options]="formOptions"></div>'
+        template: '<div juForm (onLoad)="fromLoad($event)" (onModalClose)="dialogClose($event)" [options]="formOptions"></div>'
     }), 
     __metadata('design:paramtypes', [])
 ], ConfirmDialog);
 exports.ConfirmDialog = ConfirmDialog;
+
+//# sourceMappingURL=confirm.dialog.js.map

@@ -36,3 +36,5 @@ WindowComponent = __decorate([
     __metadata('design:paramtypes', [juWindowService_1.juWindowService])
 ], WindowComponent);
 exports.WindowComponent = WindowComponent;
+
+//# sourceMappingURL=window.component.js.map

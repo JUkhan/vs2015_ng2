@@ -102,3 +102,5 @@ class TextFilter {
     }
 }
 exports.TextFilter = TextFilter;
+
+//# sourceMappingURL=TextFilter.js.map

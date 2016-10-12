@@ -79,3 +79,5 @@ SharedModule = SharedModule_1 = __decorate([
     __metadata('design:paramtypes', [])
 ], SharedModule);
 exports.SharedModule = SharedModule;
+
+//# sourceMappingURL=shared.module.js.map

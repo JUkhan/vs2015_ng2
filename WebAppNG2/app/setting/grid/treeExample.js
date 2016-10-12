@@ -62,3 +62,5 @@ TreeExample = __decorate([
     __metadata('design:paramtypes', [app_service_1.AppService])
 ], TreeExample);
 exports.TreeExample = TreeExample;
+
+//# sourceMappingURL=treeExample.js.map

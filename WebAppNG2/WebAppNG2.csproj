@@ -27,6 +27,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>2.0</TypeScriptToolsVersion>
+    <TypeScriptCompileBlocked>True</TypeScriptCompileBlocked>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -184,12 +185,26 @@
     <Compile Include="Services\Upload\UploadService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app\app.component.html" />
-    <Content Include="app\home\home.component.html" />
-    <Content Include="app\shared\juComponents.css" />
-    <Content Include="app\shared\juWindow\juChildWindow.html" />
-    <Content Include="app\shared\juWindow\juParentWindow.css" />
-    <Content Include="app\shared\juWindow\juParentWindow.html" />
+    <Content Include="build\tasks\lib.js" />
+    <Content Include="src\app.component.html" />
+    <Content Include="src\home\home.component.html" />
+    <Content Include="src\setting\window\window.component.ts" />
+    <Content Include="src\shared\juComponents.css" />
+    <Content Include="build\args.js" />
+    <Content Include="build\bundles.js" />
+    <Content Include="build\export.js" />
+    <Content Include="build\paths.js" />
+    <Content Include="build\tasks\build.js" />
+    <Content Include="build\tasks\bundle.js" />
+    <Content Include="build\tasks\clean.js" />
+    <Content Include="build\tasks\dev.js" />
+    <Content Include="build\tasks\e2e.js" />
+    <Content Include="build\tasks\export-release.js" />
+    <Content Include="build\tasks\lint.js" />
+    <Content Include="build\tasks\prepare-release.js" />
+    <Content Include="build\tasks\serve.js" />
+    <Content Include="build\tasks\test.js" />
+    <Content Include="build\tasks\watch.js" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
@@ -643,7 +658,14 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="gulpfile.js" />
     <Content Include="systemjs.config.js" />
+    <Content Include="typings\globals\angular-protractor\index.d.ts" />
+    <Content Include="typings\globals\jasmine\index.d.ts" />
+    <Content Include="typings\globals\node\index.d.ts" />
+    <Content Include="typings\globals\selenium-webdriver\index.d.ts" />
+    <Content Include="typings\index.d.ts" />
+    <Content Include="typings\lodash\lodash.d.ts" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -660,6 +682,7 @@
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app\" />
     <Folder Include="App_Data\" />
     <Folder Include="ClaimDataFile\" />
     <Folder Include="scripts\" />
@@ -670,65 +693,48 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="app\app.component.spec.ts" />
-    <TypeScriptCompile Include="app\app.component.ts" />
-    <TypeScriptCompile Include="app\app.module.ts" />
-    <TypeScriptCompile Include="app\app.routes.ts" />
-    <TypeScriptCompile Include="app\home\home.component.ts" />
-    <TypeScriptCompile Include="app\home\index.ts" />
-    <TypeScriptCompile Include="app\main.ts" />
-    <TypeScriptCompile Include="app\setting\grid\cellEditExample.ts" />
-    <TypeScriptCompile Include="app\setting\grid\crudExample.ts" />
-    <TypeScriptCompile Include="app\setting\grid\treeExample.ts" />
-    <TypeScriptCompile Include="app\setting\grid\windowExample.ts" />
-    <TypeScriptCompile Include="app\setting\setting.module.ts" />
-    <TypeScriptCompile Include="app\setting\setting.routes.ts" />
-    <TypeScriptCompile Include="app\shared\app-ui\confirm.dialog.ts" />
-    <TypeScriptCompile Include="app\shared\app-ui\message.dialog.ts" />
-    <TypeScriptCompile Include="app\shared\app.service.ts" />
-    <TypeScriptCompile Include="app\shared\canDeactivateGuard.service.ts" />
-    <TypeScriptCompile Include="app\shared\juForm\CkEditor.ts" />
-    <TypeScriptCompile Include="app\shared\juForm\Datetimepicker.ts" />
-    <TypeScriptCompile Include="app\shared\juForm\FV.ts" />
-    <TypeScriptCompile Include="app\shared\juForm\juForm.builder.ts" />
-    <TypeScriptCompile Include="app\shared\juForm\juForm.ts" />
-    <TypeScriptCompile Include="app\shared\juForm\juSelect.ts" />
-    <TypeScriptCompile Include="app\shared\juGrid\juGrid.builder.ts" />
-    <TypeScriptCompile Include="app\shared\juGrid\NumberFilter.ts" />
-    <TypeScriptCompile Include="app\shared\juGrid\rowEditor.ts" />
-    <TypeScriptCompile Include="app\shared\juGrid\SetFilter.ts" />
-    <TypeScriptCompile Include="app\shared\juGrid\juGrid.ts" />
-    <TypeScriptCompile Include="app\shared\juGrid\TextFilter.ts" />
-    <TypeScriptCompile Include="app\shared\juMenu\juMenu.ts" />
-    <TypeScriptCompile Include="app\shared\juPager\juPager.ts" />
-    <TypeScriptCompile Include="app\shared\juPanel\juPanel.ts" />
-    <TypeScriptCompile Include="app\shared\juPanel\juPanelContent.ts" />
-    <TypeScriptCompile Include="app\shared\juWindow\juChildWindow.ts" />
-    <TypeScriptCompile Include="app\shared\juWindow\juParentWindow.ts" />
-    <TypeScriptCompile Include="app\shared\juWindow\juWindowService.ts" />
-    <TypeScriptCompile Include="app\shared\app-ui\Mail.ts" />
-    <TypeScriptCompile Include="app\shared\shared.module.ts" />
-    <TypeScriptCompile Include="app\shared\ui.service.ts" />
-    <TypeScriptCompile Include="typings\globals\angular-protractor\index.d.ts" />
-    <TypeScriptCompile Include="typings\globals\core-js\index.d.ts" />
-    <TypeScriptCompile Include="typings\globals\jasmine\index.d.ts" />
-    <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
-    <TypeScriptCompile Include="typings\globals\selenium-webdriver\index.d.ts" />
-    <TypeScriptCompile Include="typings\index.d.ts" />
-    <TypeScriptCompile Include="typings\lodash\lodash.d.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="typings\globals\angular-protractor\typings.json" />
-    <Content Include="typings\globals\core-js\typings.json" />
-    <Content Include="typings\globals\jasmine\typings.json" />
-    <Content Include="typings\globals\node\typings.json" />
-    <Content Include="typings\globals\selenium-webdriver\typings.json" />
+    <TypeScriptCompile Include="src\app.component.spec.ts" />
+    <TypeScriptCompile Include="src\app.component.ts" />
+    <TypeScriptCompile Include="src\app.module.ts" />
+    <TypeScriptCompile Include="src\app.routes.ts" />
+    <TypeScriptCompile Include="src\home\home.component.ts" />
+    <TypeScriptCompile Include="src\home\index.ts" />
+    <TypeScriptCompile Include="src\main.ts" />
+    <TypeScriptCompile Include="src\setting\grid\cellEditExample.ts" />
+    <TypeScriptCompile Include="src\setting\grid\crudExample.ts" />
+    <TypeScriptCompile Include="src\setting\grid\treeExample.ts" />
+    <TypeScriptCompile Include="src\setting\grid\windowExample.ts" />
+    <TypeScriptCompile Include="src\setting\setting.module.ts" />
+    <TypeScriptCompile Include="src\setting\setting.routes.ts" />
+    <TypeScriptCompile Include="src\shared\app-ui\confirm.dialog.ts" />
+    <TypeScriptCompile Include="src\shared\app-ui\message.dialog.ts" />
+    <TypeScriptCompile Include="src\shared\app.service.ts" />
+    <TypeScriptCompile Include="src\shared\canDeactivateGuard.service.ts" />
+    <TypeScriptCompile Include="src\shared\juForm\CkEditor.ts" />
+    <TypeScriptCompile Include="src\shared\juForm\Datetimepicker.ts" />
+    <TypeScriptCompile Include="src\shared\juForm\FV.ts" />
+    <TypeScriptCompile Include="src\shared\juForm\juForm.builder.ts" />
+    <TypeScriptCompile Include="src\shared\juForm\juForm.ts" />
+    <TypeScriptCompile Include="src\shared\juForm\juSelect.ts" />
+    <TypeScriptCompile Include="src\shared\juGrid\juGrid.builder.ts" />
+    <TypeScriptCompile Include="src\shared\juGrid\NumberFilter.ts" />
+    <TypeScriptCompile Include="src\shared\juGrid\rowEditor.ts" />
+    <TypeScriptCompile Include="src\shared\juGrid\SetFilter.ts" />
+    <TypeScriptCompile Include="src\shared\juGrid\juGrid.ts" />
+    <TypeScriptCompile Include="src\shared\juGrid\TextFilter.ts" />
+    <TypeScriptCompile Include="src\shared\juMenu\juMenu.ts" />
+    <TypeScriptCompile Include="src\shared\juPager\juPager.ts" />
+    <TypeScriptCompile Include="src\shared\juPanel\juPanel.ts" />
+    <TypeScriptCompile Include="src\shared\juPanel\juPanelContent.ts" />
+    <TypeScriptCompile Include="src\shared\juWindow\juChildWindow.ts" />
+    <TypeScriptCompile Include="src\shared\juWindow\juParentWindow.ts" />
+    <TypeScriptCompile Include="src\shared\juWindow\juWindowService.ts" />
+    <TypeScriptCompile Include="src\shared\app-ui\Mail.ts" />
+    <TypeScriptCompile Include="src\shared\shared.module.ts" />
+    <TypeScriptCompile Include="src\shared\ui.service.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.json" />
@@ -765,9 +771,15 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Content\selectpicker\css\bootstrap-select.css.map" />
     <Content Include="Content\selectpicker\js\bootstrap-select.js.map" />
+    <Content Include="tsconfig.json" />
     <None Include="Properties\PublishProfiles\test.pubxml" />
-    <Content Include="typings.json" />
     <Content Include="README.md" />
+    <Content Include="tslint.json" />
+    <Content Include="typings.json" />
+    <Content Include="typings\globals\angular-protractor\typings.json" />
+    <Content Include="typings\globals\jasmine\typings.json" />
+    <Content Include="typings\globals\node\typings.json" />
+    <Content Include="typings\globals\selenium-webdriver\typings.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -784,7 +796,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51758</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

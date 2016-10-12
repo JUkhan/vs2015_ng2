@@ -25,25 +25,26 @@ let CrudExample = class CrudExample {
         this.service = service;
     }
     ngOnInit() {
-        this.initScholar();
         Rx_1.Observable.forkJoin(this.service.get('dummyData/getEducations'), this.service.get('dummyData/getAddress/1')).subscribe(res => {
             this.educationList = res[0];
             this.addressList = res[1];
         });
+        this.initScholar();
     }
     doSmth() {
         return __awaiter(this, void 0, void 0, function* () {
+            console.info('Info ...');
             let res = yield this.service.get('dummyData/getEducations').toPromise();
             console.log(res);
         });
     }
     hideCol() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (yield this.service.confirmDialogPromise('Column removing', 'Are you sure to remove the age column?')) {
+            if (yield this.service.confirmDialogPromise('Column removing...', 'Are you sure to remove the age column?')) {
                 this.scholarGridOptions.columnDefs[3].hide = true;
                 this.scholarGridOptions.api.grid.render();
             }
-            console.log('waiting for user input.');
+            console.log('waiting for user input...');
         });
     }
     onLoad(grid) {
@@ -132,3 +133,5 @@ CrudExample = __decorate([
     __metadata('design:paramtypes', [app_service_1.AppService])
 ], CrudExample);
 exports.CrudExample = CrudExample;
+
+//# sourceMappingURL=crudExample.js.map

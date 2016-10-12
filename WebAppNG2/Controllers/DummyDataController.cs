@@ -18,6 +18,7 @@ namespace WebAppNG2.Controllers
         };
         public JsonResult GetScholarList()
         {
+            
             return Json(scholarList, JsonRequestBehavior.AllowGet);
         }
         public JsonResult create_update_scholar(Scholar scholar)

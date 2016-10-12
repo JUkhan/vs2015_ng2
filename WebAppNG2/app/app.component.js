@@ -59,3 +59,5 @@ AppComponent = __decorate([
     __metadata('design:paramtypes', [app_service_1.AppService])
 ], AppComponent);
 exports.AppComponent = AppComponent;
+
+//# sourceMappingURL=app.component.js.map

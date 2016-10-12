@@ -23,3 +23,5 @@ describe('AppComponent with TCB', function () {
         expect(h1.innerText).toMatch(/angular 2 app/i, '<h1> should say something about "Angular 2 App"');
     });
 });
+
+//# sourceMappingURL=app.component.spec.js.map

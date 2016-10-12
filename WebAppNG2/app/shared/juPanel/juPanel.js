@@ -48,3 +48,5 @@ juPanel = __decorate([
     __metadata('design:paramtypes', [core_1.ElementRef])
 ], juPanel);
 exports.juPanel = juPanel;
+
+//# sourceMappingURL=juPanel.js.map

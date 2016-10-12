@@ -146,3 +146,5 @@ AppService = __decorate([
     __metadata('design:paramtypes', [http_1.Http])
 ], AppService);
 exports.AppService = AppService;
+
+//# sourceMappingURL=app.service.js.map

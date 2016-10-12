@@ -669,3 +669,5 @@ exports.juFormBuilder = juFormBuilder;
 function async_call(fx, time = 0) {
     let tid = setTimeout(() => { fx(); clearTimeout(tid); }, time);
 }
+
+//# sourceMappingURL=juForm.builder.js.map

@@ -294,3 +294,5 @@ exports.juGrid = juGrid;
 function async_call(fx, time = 0) {
     let tid = setTimeout(() => { fx(); clearTimeout(tid); }, time);
 }
+
+//# sourceMappingURL=juGrid.js.map

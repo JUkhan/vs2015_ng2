@@ -7,3 +7,5 @@ exports.routes = [
     { path: 'setting', loadChildren: 'app/setting/setting.module' }
 ];
 exports.routing = router_1.RouterModule.forRoot(exports.routes);
+
+//# sourceMappingURL=app.routes.js.map

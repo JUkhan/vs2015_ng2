@@ -1,0 +1,24 @@
+﻿<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a routerLink="" class="navbar-brand">juComponents</a>
+        </div>        
+        <div juMenu [menuData]="menuData">
+            <p class="nav navbar-text navbar-right">Hello, Abdulla</p>
+        </div>
+    </div>
+</div>
+<div class="container body-content">
+    <div message (onLoad)="messageLoad($event)"></div> 
+    <div confirm (onLoad)="confirmLoad($event)"></div>
+    <router-outlet></router-outlet>
+    <hr />
+    <footer>
+        <p>&copy;juComponents</p>
+    </footer>
+</div>

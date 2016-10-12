@@ -27,3 +27,5 @@ SettingModule = __decorate([
 ], SettingModule);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SettingModule;
+
+//# sourceMappingURL=setting.module.js.map

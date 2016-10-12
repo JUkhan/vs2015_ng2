@@ -37,3 +37,5 @@ UiService = __decorate([
     __metadata('design:paramtypes', [])
 ], UiService);
 exports.UiService = UiService;
+
+//# sourceMappingURL=ui.service.js.map

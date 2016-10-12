@@ -98,3 +98,5 @@ FileSelect = __decorate([
     __metadata('design:paramtypes', [core_1.ElementRef])
 ], FileSelect);
 exports.FileSelect = FileSelect;
+
+//# sourceMappingURL=CkEditor.js.map

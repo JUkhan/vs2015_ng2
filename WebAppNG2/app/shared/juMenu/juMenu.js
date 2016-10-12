@@ -69,3 +69,5 @@ juMenu = __decorate([
     __metadata('design:paramtypes', [])
 ], juMenu);
 exports.juMenu = juMenu;
+
+//# sourceMappingURL=juMenu.js.map

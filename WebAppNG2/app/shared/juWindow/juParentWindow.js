@@ -112,3 +112,5 @@ juParentWindow = __decorate([
     __metadata('design:paramtypes', [core_1.Renderer, Object, core_1.Injector, core_1.ApplicationRef, juWindowService_1.juWindowService])
 ], juParentWindow);
 exports.juParentWindow = juParentWindow;
+
+//# sourceMappingURL=juParentWindow.js.map
