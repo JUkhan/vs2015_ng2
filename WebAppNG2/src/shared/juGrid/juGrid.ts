@@ -21,7 +21,7 @@ declare var jQuery: any;
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Default,
     template: `<div class="grid-toolbar">
-                    <div class="quickSearch" *ngIf="options.quickSearch">             
+                    <div class="quickSearch" *ngIf="options?.quickSearch">             
                             <div class="input-group stylish-input-group">
                                 <input type="text" class="form-control" (keyup)="search($event.target.value)" placeholder="Search">
                                 <span class="input-group-addon">                        
@@ -29,11 +29,11 @@ declare var jQuery: any;
                                 </span>
                             </div>            
                     </div>
-                  <div [style.left.px]="options.quickSearch?144:0" class="tool-items"><template [ngTemplateOutlet]="toolbar"></template></div>
+                  <div [style.left.px]="options?.quickSearch?144:0" class="tool-items"><template [ngTemplateOutlet]="toolbar"></template></div>
 	            </div> 
-                <div *ngIf="options.quickSearch||toolbar" style="height:33px">&nbsp;</div> 
+                <div *ngIf="options?.quickSearch||toolbar" style="height:33px">&nbsp;</div> 
                 <div #dynamicContentPlaceHolder></div>  
-                <div class="juForm" *ngIf="options.crud" (onLoad)="onFormLoad($event)" [options]="options.formDefs"></div>`
+                <div class="juForm" *ngIf="options?.crud" (onLoad)="onFormLoad($event)" [options]="options.formDefs"></div>`
 })
 
 export class juGrid implements OnInit, OnChanges, OnDestroy

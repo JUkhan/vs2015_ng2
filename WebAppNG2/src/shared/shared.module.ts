@@ -20,6 +20,7 @@ import {juWindowService}        from './juWindow/juWindowService';
 import {MailComponent}          from './app-ui/Mail';
 import {MessageDialog}          from './app-ui/message.dialog';
 import {ConfirmDialog}          from './app-ui/confirm.dialog';
+import {ReportViewer}          from './app-ui/report.viewer';
 
 import {UiService}              from './ui.service';
 import {AppService}             from './app.service';
@@ -41,7 +42,7 @@ import {juGridBuilder} from './juGrid/juGrid.builder';
         Datetimepicker,
         juGrid,
         rowEditor,
-        MailComponent, MessageDialog, ConfirmDialog
+        MailComponent, MessageDialog, ConfirmDialog, ReportViewer
     ],
     exports: [
         CommonModule,
@@ -57,7 +58,7 @@ import {juGridBuilder} from './juGrid/juGrid.builder';
         Datetimepicker,
         juGrid,
         rowEditor,
-        MailComponent, MessageDialog, ConfirmDialog
+        MailComponent, MessageDialog, ConfirmDialog, ReportViewer
     ],
     providers: [COMPILER_PROVIDERS]
 })

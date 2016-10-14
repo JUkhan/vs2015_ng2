@@ -2,6 +2,7 @@
 import {juForm, FormElement, FormOptions} from '../shared/juForm/juForm';
 import {FV} from '../shared/juForm/FV';
 import {MailComponent} from '../shared/app-ui/mail';
+import {ReportViewerOpptions} from '../shared/app-ui/report.viewer';
 import {SelectOptions} from '../shared/juForm/juSelect';
 import {Observable} from 'rxjs/Rx';
 
@@ -10,7 +11,17 @@ import {Observable} from 'rxjs/Rx';
     selector: 'my-home',
     templateUrl: './home.component.html'
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy
+{
+    rvOptions: ReportViewerOpptions = <ReportViewerOpptions>{
+        title: 'Hello World', approvedGroup: '2348567',
+        grid: {
+            viewMode: '!panel', columnDefs: [
+                { headerName: 'Test', field: 'test' },
+                { headerName: 'Comment', field: 'comment' }
+            ]
+        }
+    };
     msg = 'say:Hello World...'; 
     dataList = [
         { text: 'Beautiful Bangladesg', value: 1, disabled: !true },
