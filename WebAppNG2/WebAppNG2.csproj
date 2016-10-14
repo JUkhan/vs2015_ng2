@@ -708,6 +708,7 @@
     <TypeScriptCompile Include="src\setting\setting.routes.ts" />
     <TypeScriptCompile Include="src\shared\app-ui\confirm.dialog.ts" />
     <TypeScriptCompile Include="src\shared\app-ui\message.dialog.ts" />
+    <TypeScriptCompile Include="src\shared\app-ui\report.viewer.ts" />
     <TypeScriptCompile Include="src\shared\app.service.ts" />
     <TypeScriptCompile Include="src\shared\canDeactivateGuard.service.ts" />
     <TypeScriptCompile Include="src\shared\juForm\CkEditor.ts" />
@@ -729,7 +730,7 @@
     <TypeScriptCompile Include="src\shared\juWindow\juChildWindow.ts" />
     <TypeScriptCompile Include="src\shared\juWindow\juParentWindow.ts" />
     <TypeScriptCompile Include="src\shared\juWindow\juWindowService.ts" />
-    <TypeScriptCompile Include="src\shared\app-ui\Mail.ts" />
+    <TypeScriptCompile Include="src\shared\app-ui\mail.ts" />
     <TypeScriptCompile Include="src\shared\shared.module.ts" />
     <TypeScriptCompile Include="src\shared\ui.service.ts" />
   </ItemGroup>

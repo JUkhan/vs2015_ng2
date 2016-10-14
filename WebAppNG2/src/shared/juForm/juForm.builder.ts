@@ -39,6 +39,7 @@ export class juFormBuilder {
                         <div [style.display]="message?'block':'none'" [class]="messageCss">{{message}}</div>                    
                         `);
         }
+        
         template.push('<div class="form-horizontal">');
 
         if (this.options.inputs) {

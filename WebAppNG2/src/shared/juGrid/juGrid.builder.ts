@@ -479,8 +479,9 @@ export class juGridBuilder
     //end of calculte header
     private getTemplate(): string
     {
+        this.options = this.options || {};
         var tpl: any[] = [];
-        if (this.options.viewMode && this.options.viewMode === "panel")
+        if ( this.options.viewMode && this.options.viewMode === "panel")
         {
             if (this.options.pagerPos === 'header')
             {
@@ -588,7 +589,7 @@ export class juGridBuilder
             }
             ngOnInit()
             {
-                if (this.config.colResize)
+                if (this.config && this.config.colResize)
                 {
                     this.columnResizing();
                 }
