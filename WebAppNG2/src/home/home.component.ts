@@ -14,7 +14,7 @@ import {Observable} from 'rxjs/Rx';
 export class HomeComponent implements OnInit, OnDestroy
 {
     rvOptions: ReportViewerOpptions = <ReportViewerOpptions>{
-        title: 'Hello World', approvedGroup: '2348567',
+        title: 'Hello World', approvedGroup: '2348567', height:100,
         grid: {
             viewMode: '!panel', columnDefs: [
                 { headerName: 'Test', field: 'test' },

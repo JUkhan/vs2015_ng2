@@ -11,10 +11,10 @@ declare var jQuery: any;
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
+          <h4 class="modal-title">{{options.title}}</h4>
         </div>
         <div class="modal-body">
-                <div class="report-viewer">
+                <div class="report-viewer" [style.height.px]="options.height" style="overflow:auto">
                     <div class="header">
                             <span>{{options.title}}</span>
                     </div> 
@@ -29,6 +29,7 @@ declare var jQuery: any;
                 </div>
            </div>
             <div class="modal-footer">
+				 <button type="button" (click)="print()" class="btn btn-default">Print</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -44,7 +45,14 @@ export class ReportViewer implements OnInit, OnChanges
     constructor(private _elementRef: ElementRef) { }
     private gridOptions: GridOptions;
     private formOprions: FormOptions = <FormOptions>{ viewMode:'panel' };
-    public ngOnInit() {  }
+    public ngOnInit() {
+		jQuery('.modal',this._elementRef.nativeElement).on('hidden.bs.modal', (e: any) => {
+               // this.onModalClose.next(null);
+        });
+		if ('width' in this.options) {
+			jQuery('.modal-dialog').css('width', this.options.width);
+        }
+	}
     public ngOnChanges(changes)
     {
 
@@ -58,17 +66,26 @@ export class ReportViewer implements OnInit, OnChanges
        
     }
     public showModal(isDisplayed: boolean = true)
-    {
-        console.log(this._elementRef.nativeElement);
-        jQuery(this._elementRef.nativeElement.firstChild).modal(isDisplayed ? 'show' : 'hide');
+    {       
+        jQuery('.modal',this._elementRef.nativeElement).modal(isDisplayed ? 'show' : 'hide');
               
     }
+	private print(){	
+		const divElements =jQuery('.report-viewer',this._elementRef.nativeElement).html();
+		var newWin=window.open('','Print-Window');
+		newWin.document.open();
+		newWin.document.write('<html><body onload="window.print()">'+divElements+'</body></html>');
+		newWin.document.close();
+		setTimeout(function(){newWin.close();},10);
+	}
 }
 
 export interface ReportViewerOpptions
 {
-    title: string;
-    grid: GridOptions;
-    approvedGroup: string;
+    title?: string;
+    grid?: GridOptions;
+    approvedGroup?: string;
     [key: string]: any;
+	width?:number;
+	height?:number;
 }
