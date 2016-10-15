@@ -1,9 +1,10 @@
-﻿import {Component, ElementRef, OnChanges, OnDestroy, OnInit, Input, Output, EventEmitter, TemplateRef, ViewContainerRef, ContentChild} from '@angular/core';
+﻿import {Component, ElementRef, OnChanges,ViewEncapsulation, OnDestroy, OnInit, Input, Output, EventEmitter, TemplateRef, ViewContainerRef, ContentChild} from '@angular/core';
 import {juForm, FormOptions, FormElement} from '../juForm/juForm';
 import {juGrid, GridOptions} from '../juGrid/juGrid';
 declare var jQuery: any;
 @Component({
     moduleId: module.id,
+	 encapsulation: ViewEncapsulation.None,
     selector: 'rv, [rv] .rv',
     template: `
 <div class="modal fade" id="myModal" role="dialog">
@@ -17,8 +18,7 @@ declare var jQuery: any;
                 <div class="report-viewer" [style.height.px]="options.height" style="overflow:auto">
                     <div class="header">
                             <span>{{options.title}}</span>
-                    </div> 
-                    <div *ngIf="options.approvedGroup"><b>Check Approved Group: {{options.approvedGroup}}</b></div>                   
+                    </div>                                    
                     <div class="form-options">
                         <template [ngTemplateOutlet]="formTemplate" [ngOutletContext]="{ref:options}">
                         </template>
@@ -71,21 +71,28 @@ export class ReportViewer implements OnInit, OnChanges
               
     }
 	private print(){	
-		const divElements =jQuery('.report-viewer',this._elementRef.nativeElement).html();
+		const divElements =jQuery('.report-viewer',this._elementRef.nativeElement).html();		
 		var newWin=window.open('','Print-Window');
 		newWin.document.open();
-		newWin.document.write('<html><body onload="window.print()">'+divElements+'</body></html>');
+		newWin.document.write(`<html><head><style>${this.getStyle()}</style></head><body onload="window.print()">${divElements}</body></html>`);
 		newWin.document.close();
 		setTimeout(function(){newWin.close();},10);
+	}
+	private getStyle(){
+		const style=`
+		.filter-window{display:none}
+
+		`;
+		return style;
 	}
 }
 
 export interface ReportViewerOpptions
 {
     title?: string;
-    grid?: GridOptions;
-    approvedGroup?: string;
+    grid?: GridOptions;   
     [key: string]: any;
 	width?:number;
 	height?:number;
+	api?:ReportViewer;
 }
