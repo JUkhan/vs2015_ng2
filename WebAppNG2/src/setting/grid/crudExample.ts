@@ -31,8 +31,8 @@ export class CrudExample implements OnInit {
             this.service.get('dummyData/getAddress/1')
         ).subscribe(res => {          
             this.educationList = res[0];
-            this.addressList = res[1]
-        });
+            this.addressList = res[1];			
+        });       
        this.initScholar();
     }
     async doSmth(){
