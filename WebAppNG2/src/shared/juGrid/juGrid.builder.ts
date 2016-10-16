@@ -31,9 +31,9 @@ export class juGridBuilder
         return totalWidth + 25;
     }
     private getPager(isHeader=false)
-    {  
+    {		
         const style=isHeader? `style="position:absolute;top:7px;left:${this.options.pagerLeftPos}px"` :'';
-        return `<div ${style} [style.display]="viewList?.length?'block':'none'" class="juPager" [linkPages]="config.linkPages" [enablePowerPage]="config.enablePowerPage" [enablePageSearch]="config.enablePageSearch" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`;
+        return `<div ${style} [style.display]="viewList?.length && !config.noPager?'block':'none'" class="juPager" [linkPages]="config.linkPages" [enablePowerPage]="config.enablePowerPage" [enablePageSearch]="config.enablePageSearch" [pageSize]="config.pageSize" [data]="data" (onInit)="pagerInit($event)" (pageChange)="onPageChange($event)"></div>`;
     }
     private renderTable(tpl: any[])
     {
@@ -45,7 +45,7 @@ export class juGridBuilder
         }
         tpl.push(`<div class="ju-grid" [ngStyle]="getStyle(tc1, tc2)">
             <div style="overflow:hidden" #headerDiv>
-                <div [style.width.px]="config.width">
+                <div [style.width.px]="config.width" class="tbl-header-content">
                     <table  class="${this.options.classNames} theader ${this.options.colResize ? 'tbl-resize' : ''}">
                         <thead>
                             ${this.getHeader(this.options.columnDefs)}
@@ -64,7 +64,7 @@ export class juGridBuilder
                 </div>
             </div>            
         </div>`);
-        if (this.options.pagerPos === 'bottom')
+        if ( this.options.pagerPos === 'bottom')
         {
             tpl.push('<div style="height:5px;"></div>');
             tpl.push(this.getPager());
@@ -160,6 +160,12 @@ export class juGridBuilder
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
+				case 'ckeditor': console.log(config)
+				    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><textarea ckeditor [config]="${config}" [model]="row"  [(ngModel)]="row.${item.field}" ></textarea>`);
+					tpl.push('</div>');
+                    tpl.push(validation);
+                    tpl.push('</td>');
+					break;
                 default:
                     tpl.push(this.getNormalTD(item, index));
                     break;

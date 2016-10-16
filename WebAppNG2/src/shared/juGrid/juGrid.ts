@@ -114,6 +114,10 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
         {
             this.options.level = 5;
         }
+		if (!('noPager' in this.options))
+        {
+            this.options.noPager = false;
+        }
         if (this.options.formDefs)
         {
             this.options.formDefs.viewMode = 'popup';
@@ -414,7 +418,7 @@ export interface GridOptions
     level?: number;
     enableCellEditing?: boolean;
     [key: string]: any;
-
+	noPager?:boolean;
 }
 export interface BaseFilter
 {

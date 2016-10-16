@@ -14,11 +14,11 @@ import {Observable} from 'rxjs/Rx';
 export class HomeComponent implements OnInit, OnDestroy
 {
     rvOptions: ReportViewerOpptions = <ReportViewerOpptions>{
-        title: 'Hello World', approvedGroup: '2348567', height:100,
-        grid: {
+        title: 'Hello World is nothing but mistery', approvedGroup: '2348567',  height:400, width:900,
+        grid: {enableCellEditing:true,
             viewMode: '!panel', columnDefs: [
-                { headerName: 'Test', field: 'test' },
-                { headerName: 'Comment', field: 'comment' }
+                { headerName: 'Name', field: 'name' },
+                { headerName: 'Comment', field: 'comment', type:'ckeditor', width:700 }
             ]
         }
     };

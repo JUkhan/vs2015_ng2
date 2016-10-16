@@ -10,7 +10,7 @@
     </content>
     <content title="title 2" [active]="true">
         <button class="btn btn-primary" type="button" (click)="mx.showModal()">Show</button>
-        <rv #mx [options]="rvOptions">
+        <rv #mx [options]="rvOptions" [data]="[{name:'adbulla',comment:'tngail'},{name:'Arif',comment:'comment...'}]">
             <template let-ref="ref">
                 <h1>Hello world!{{ref.approvedGroup}}</h1>
             </template>

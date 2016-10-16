@@ -6,10 +6,17 @@ declare var CKEDITOR: any;
 })
 export class CkEditor implements OnInit, OnDestroy {
     @Input() config: any = {};
-
+	@Input() model:any=null;
+	ckeditorInstance:any;
     constructor(private el: ElementRef) { }
     ngOnInit() {
-        this.config.api = CKEDITOR.replace(this.el.nativeElement);
+		this.ckeditorInstance= CKEDITOR.replace(this.el.nativeElement);
+        this.config.api =this.ckeditorInstance;
+		if(this.model){			
+			this.ckeditorInstance.on('change', ()=>{			
+				this.model[this.config.field]=this.ckeditorInstance.getData();
+			});
+		}
     }
     ngOnDestroy() { }
 }
