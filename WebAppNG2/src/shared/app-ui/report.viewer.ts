@@ -33,9 +33,9 @@ declare var jQuery: any;
                     </div>                
                 </div>
 				 <div class="modal-footer">
-				 <button type="button" (click)="print()" class="btn btn-primary">Print</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+				    <button type="button" (click)="print()" class="btn btn-primary">Print</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
            </div>
            
         </div>
@@ -132,7 +132,11 @@ export class ReportViewer implements OnInit, OnChanges
 			line-height: 1.42857143;
 			vertical-align: top;
 			border-top: 1px solid #ddd;
-		}
+		  }
+          .marker
+           {
+	            background-color: Yellow;
+           }
 		`;
 		return style;
 	}

@@ -706,6 +706,7 @@
     <TypeScriptCompile Include="src\setting\grid\windowExample.ts" />
     <TypeScriptCompile Include="src\setting\setting.module.ts" />
     <TypeScriptCompile Include="src\setting\setting.routes.ts" />
+    <TypeScriptCompile Include="src\shared\app-ui\attachment.ts" />
     <TypeScriptCompile Include="src\shared\app-ui\confirm.dialog.ts" />
     <TypeScriptCompile Include="src\shared\app-ui\message.dialog.ts" />
     <TypeScriptCompile Include="src\shared\app-ui\report.viewer.ts" />

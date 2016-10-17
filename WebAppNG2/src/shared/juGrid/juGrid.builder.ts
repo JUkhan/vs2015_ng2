@@ -101,6 +101,7 @@ export class juGridBuilder
                 validation = ` <i [ngClass]="isValid('${item.field}', i)" class="validation fa fa-info-circle" [title]="getValidationMsg('${item.field}', i)"></i>`;
             }
             item.width = item.width || 120;
+            item.inputExp=item.inputExp||'';
             style = item.width ? `style="display:inline-block;" [style.width.px]="(config.columnDefs[${index}].width-(isValid('${item.field}', i)['validation-msg-hide']?18:40))"` : '';
             item.headerName = item.headerName || '';
             header = item.headerName.replace(/(<([^>]+)>)/ig, '');            
@@ -108,7 +109,7 @@ export class juGridBuilder
             {                  
                 case 'juSelect':
                     change = item.change ? ` (option-change)="${config}.change($event)"` : '';
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style} ${item.inputExp}>
                     <juSelect 
                         ${change} 
                         [config]="${config}"
@@ -125,7 +126,7 @@ export class juGridBuilder
                     break;
                 case 'select':
                     change = item.change ? `(change)="${config}.change(row, i)"` : '';
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><select ${style} ${change} class="select form-control" [(ngModel)]="row.${item.field}" >
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><select ${style} ${change} ${item.inputExp} class="select form-control" [(ngModel)]="row.${item.field}" >
                             <option value="">{{${config}.emptyOptionText||'Select option'}}</option>
                             <option *ngFor="let v of ${this.getDataExpression(item, config)}" [value]="v.value">{{v.name}}</option>
                         </select>`);
@@ -136,7 +137,7 @@ export class juGridBuilder
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width">${item.content}</td>`);
                     break;
                 case 'datepicker':
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style} ${item.inputExp}>
                     <div class="input-group date" [pickers]="${config}.config" picker-name="${item.type}" [model]="row" property="${item.field}" [config]="${config}" [form]="myForm" >
                         <input type="text" [disabled]="${config}.disabled" [(ngModel)]="row.${item.field}" class="form-control" placeholder="Enter ${header}">
                         <span class="input-group-addon">
@@ -149,19 +150,19 @@ export class juGridBuilder
 
                 case 'text':
                 case 'number':
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><input ${style} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}">`);
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><input ${style} ${item.inputExp} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}">`);
                     tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'textarea':
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><textarea ${style} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><textarea ${style} ${item.inputExp} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
                     tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
-				case 'ckeditor': console.log(config)
-				    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><textarea ckeditor [config]="${config}" [model]="row"  [(ngModel)]="row.${item.field}" ></textarea>`);
+				case 'ckeditor': 
+				    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style} ${item.inputExp}><textarea ckeditor [config]="${config}" [model]="row"  [(ngModel)]="row.${item.field}" ></textarea>`);
 					tpl.push('</div>');
                     tpl.push(validation);
                     tpl.push('</td>');

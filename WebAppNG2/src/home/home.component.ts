@@ -14,7 +14,7 @@ import {Observable} from 'rxjs/Rx';
 export class HomeComponent implements OnInit, OnDestroy
 {
     rvOptions: ReportViewerOpptions = <ReportViewerOpptions>{
-        title: 'Hello World is nothing but mistery', approvedGroup: '2348567',  height:400, width:900,
+        title: 'Hello World is nothing but mistery', approvedGroup: '2348567',  height:700, width:900,
         grid: {enableCellEditing:true,
             viewMode: '!panel', columnDefs: [
                 { headerName: 'Name', field: 'name' },
@@ -35,7 +35,11 @@ export class HomeComponent implements OnInit, OnDestroy
         { text: 'UK', value: 9 },
         { text: 'Austrlia', value: 10 }
     ];
-    mySelectOptions: SelectOptions ;
+    mySelectOptions: SelectOptions;
+    attachmentList: any[] = [
+        { name: 'Abdulla', description:'description'},
+         { name: 'Jamil', description:'description'}
+    ]
     ngOnInit() {
         this.initForm();
         this.mySelectOptions = {

@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { FormsModule }          from '@angular/forms';
 import { RouterModule }         from '@angular/router';
-import { COMPILER_PROVIDERS } from '@angular/compiler';
+import { COMPILER_PROVIDERS }   from '@angular/compiler';
 
 import {juPanel}                from './juPanel/juPanel';
 import {juPanelContent}         from './juPanel/juPanelContent';
@@ -20,13 +20,14 @@ import {juWindowService}        from './juWindow/juWindowService';
 import {MailComponent}          from './app-ui/Mail';
 import {MessageDialog}          from './app-ui/message.dialog';
 import {ConfirmDialog}          from './app-ui/confirm.dialog';
-import {ReportViewer}          from './app-ui/report.viewer';
+import {ReportViewer}           from './app-ui/report.viewer';
+import {Attachment}             from './app-ui/attachment';
 
 import {UiService}              from './ui.service';
 import {AppService}             from './app.service';
-import {CanDeactivateGuard} from './canDeactivateGuard.service';
-import {juFormBuilder} from './juForm/juForm.builder';
-import {juGridBuilder} from './juGrid/juGrid.builder';
+import {CanDeactivateGuard}     from './canDeactivateGuard.service';
+import {juFormBuilder}          from './juForm/juForm.builder';
+import {juGridBuilder}          from './juGrid/juGrid.builder';
 
 @NgModule({
     imports: [CommonModule, RouterModule, FormsModule],
@@ -42,7 +43,7 @@ import {juGridBuilder} from './juGrid/juGrid.builder';
         Datetimepicker,
         juGrid,
         rowEditor,
-        MailComponent, MessageDialog, ConfirmDialog, ReportViewer
+        MailComponent, MessageDialog, ConfirmDialog, ReportViewer, Attachment
     ],
     exports: [
         CommonModule,
@@ -58,7 +59,7 @@ import {juGridBuilder} from './juGrid/juGrid.builder';
         Datetimepicker,
         juGrid,
         rowEditor,
-        MailComponent, MessageDialog, ConfirmDialog, ReportViewer
+        MailComponent, MessageDialog, ConfirmDialog, ReportViewer, Attachment
     ],
     providers: [COMPILER_PROVIDERS]
 })
