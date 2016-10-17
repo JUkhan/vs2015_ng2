@@ -418,7 +418,8 @@ export interface GridOptions
     level?: number;
     enableCellEditing?: boolean;
     [key: string]: any;
-	noPager?:boolean;
+    noPager?: boolean;
+    colResize?: boolean;
 }
 export interface BaseFilter
 {

@@ -160,7 +160,7 @@ export class juGridBuilder
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
-				case 'ckeditor': console.log(config)
+				case 'ckeditor': 
 				    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><textarea ckeditor [config]="${config}" [model]="row"  [(ngModel)]="row.${item.field}" ></textarea>`);
 					tpl.push('</div>');
                     tpl.push(validation);
