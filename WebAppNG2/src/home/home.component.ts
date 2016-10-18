@@ -37,7 +37,8 @@ export class HomeComponent implements OnInit, OnDestroy
     ];
     mySelectOptions: SelectOptions;
     attachmentList: any[] = [
-        { name: 'Abdulla', description:'description'}
+        { name: 'Abdulla', description:'description'},
+         { name: 'Jamil', description:'description'}
     ]
     ngOnInit() {
         this.initForm();

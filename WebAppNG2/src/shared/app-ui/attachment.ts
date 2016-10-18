@@ -58,19 +58,26 @@ export class Attachment implements OnInit, OnChanges {
 
         } 
     }
-
+    private selectedRow:any=null;
     private getGridOption() {
         return this.gridOptions = {
             enableCellEditing: true, viewMode: '!panel', colResize: !true, noPager: true, pageSize:1000,
-            quickSearch: false, rowHeight:50,
+            quickSearch: false, rowHeight:50, classNames:'table table-bordered',
+            rowEvents:'(click)="config.rowClick(row)"',
+            trClass:row=>({selected:row.selected}),
             columnDefs: [
                 { headerName: 'Attachment Name', field: 'name',width:220  },
-                { headerName: 'Attachment Description', field: 'description', type: 'text', width: 220 },
+                { headerName: 'Attachment Description', field: 'description', type:'text', width: 220 },
                 { headerName: 'Status', field: 'status' },
                 { headerName: 'Created Date', field: 'createdDate' },
                 { headerName: 'Modified Date', field: 'modifiedDate' },
                 { headerName: 'Modified By', field: 'ModifiedBy' }
-            ]
+            ],
+            rowClick:(row:any)=>{
+                if(this.selectedRow) this.selectedRow.selected=false; 
+                row.selected=true;
+                this.selectedRow=row;
+            }
         };
     }
 

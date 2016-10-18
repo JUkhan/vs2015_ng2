@@ -374,13 +374,13 @@ export interface ColumnDefs
     params?: { cellRenderer?: (row: any, index?: number) => any, apply?: boolean, valueGetter?: (row: any) => any, value?: string[] };
     dataSrc?: any[] | any;
     change?: (row: any, index?: number) => void;
-    content?: string;
-    viewMode?: 'select' | 'checkbox' | 'radio';
+    content?: string;    
     validators?: Function | Array<Function>;
     search?: boolean;
     exp?: string;
     options?: SelectOptions;
     hide?: boolean;
+    inputExp?:string;
 }
 export interface GridOptions
 {
@@ -420,6 +420,7 @@ export interface GridOptions
     [key: string]: any;
     noPager?: boolean;
     colResize?: boolean;
+    rowEvents?:string;
 }
 export interface BaseFilter
 {

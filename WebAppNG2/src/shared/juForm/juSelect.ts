@@ -11,8 +11,8 @@ declare var jQuery: any;
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Default,
     template: `
-    <div #maincontent [class.open]="isEditable" [ngClass]="getDropdownStyle()" class="btn-group bootstrap-select" [style.width]="options.width">
-        <button *ngIf="!options.editable" [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" (click)="setFocusToValidate($event)">
+    <div #maincontent [class.open]="isEditable" [ngClass]="getDropdownStyle()" class="btn-group bootstrap-select" [style.width]="options.width" data-container="body">
+        <button *ngIf="!options.editable" [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" #btn (click)="setFocusToValidate(btn)">
             <span class="filter-option pull-left"> 
                 <i *ngIf="selectedItem[options.iconProp]||options.iconRenderer" [class]="getSelectedIconStyle()"></i>               
                 <span class="{{options.multiselect?'':selectedItem[options.styleProp]}}">{{getFormatedText()}}</span>
@@ -27,7 +27,7 @@ declare var jQuery: any;
                 <button (click)="isEditable=!isEditable" class="btn btn-default" type="button"><span class="caret"></span></button>
           </span>
         </div>
-        <div class="dropdown-menu open" role="combobox" [style.max-height.px]="options.height?options.height:'none'" style="overflow: hidden; min-height: 0px;">            
+        <div #dropdown class="dropdown-menu open" role="combobox" [style.position]="options.fixedPosition?'fixed':'absolute'" [style.max-height.px]="options.height?options.height:'none'" style="overflow: hidden; min-height: 0px;">            
             <div class="search-checkall" *ngIf="options.liveSearch||(options.multiselect && options.checkAll)">
                 <label (click)="$event.stopPropagation()" *ngIf="options.checkAll"><input (click)="checkAll(chkAll.checked)" #chkAll type="checkbox">Select All</label>
                 <input #searchEl *ngIf="options.liveSearch" [style.width.%]="options.checkAll?50:100" autofocus type="text" class="form-control" role="textbox" placeholder="Search...">
@@ -68,7 +68,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     @ViewChild('searchEl')     private searchEl: ElementRef;
     @ViewChild('maincontent')  private containerEl: ElementRef;
     @ViewChild('editableText') private editableText: ElementRef;
-
+    @ViewChild('dropdown')     private dropdownContent: ElementRef;
     private previousValue: any = '';
     private selectedItem: any = {};
     private dataList_bckup: any[];
@@ -124,6 +124,10 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         {
             this.options.showMenuArrow = false;
         }
+        if (!('fixedPosition' in this.options))
+        {
+            this.options.fixedPosition = false;
+        }
         if (this.options.editable)
         {
             Observable.fromEvent(document.body, 'mouseup').subscribe(_ =>
@@ -170,19 +174,29 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     public ngOnDestroy() {
 
     }
-    private setFocusToValidate(e:any){
+    private getPositionStyle(){
+        console.log( this.options.fixedPosition);
+        this.options.fixedPosition?'fixed;':'absolute';
+    }
+    private setFocusToValidate(buttonEl:any){
         this.focusToValidate = true;
-        if (!this.tableBodyContent)
-        {
-            this.tableBodyContent = jQuery(this.containerEl.nativeElement).parents('.tbl-body-content');
+        // if (!this.tableBodyContent)
+        // {
+        //     this.tableBodyContent = jQuery(this.containerEl.nativeElement).parents('.tbl-body-content');
+        // }
+        // if (this.tableBodyContent.length==0) return;
+        // const containerOffset = this.tableBodyContent.offset();
+        // const containerHeight = this.tableBodyContent.height()  - this.tableBodyContent.scrollTop();
+        // const comPos = jQuery(e.target).offset().top - containerOffset.top;
+        // const comHeight = jQuery(this.containerEl.nativeElement)[0].offsetHeight +
+        //     jQuery('.dropdown-menu', this.containerEl.nativeElement).height();
+        // this.options.dropup = comPos + comHeight > containerHeight;
+        if(this.options.fixedPosition){
+            let button=jQuery(buttonEl), dropdown=jQuery(this.dropdownContent.nativeElement);
+            let dropDownTop = button.offset().top + button.outerHeight();
+            dropdown.css('top', dropDownTop + "px");
+            dropdown.css('left', button.offset().left + "px");
         }
-        if (this.tableBodyContent.length==0) return;
-        const containerOffset = this.tableBodyContent.offset();
-        const containerHeight = this.tableBodyContent.height()  - this.tableBodyContent.scrollTop();
-        const comPos = jQuery(e.target).offset().top - containerOffset.top;
-        const comHeight = jQuery(this.containerEl.nativeElement)[0].offsetHeight +
-            jQuery('.dropdown-menu', this.containerEl.nativeElement).height();
-        this.options.dropup = comPos + comHeight > containerHeight;
         
     }
     private checkAll(checked)
@@ -372,4 +386,5 @@ export interface SelectOptions {
     showMenuArrow?: boolean;
     multipleSeparator?: string;
     editable?: boolean;   
+    fixedPosition?:boolean;
 }
