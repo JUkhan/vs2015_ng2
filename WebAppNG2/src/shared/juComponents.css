@@ -494,7 +494,9 @@ legend {
 }
 
 /*juSelect New*/
-
+/*.dropdown-menu{
+    position:fixed;
+}*/
 select.bs-select-hidden,
 select.selectpicker {
   display: none !important;
@@ -800,4 +802,5 @@ select.selectpicker {
       background-color: #337ab7;
       color:#fff;
 }
+
 /*End juSelect*/

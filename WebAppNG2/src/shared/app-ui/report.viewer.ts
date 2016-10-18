@@ -44,7 +44,7 @@ declare var jQuery: any;
 `
             
 })
-export class ReportViewer implements OnInit, OnChanges
+export class ReportViewer implements OnInit
 {
 	@Input() data:any[];
     @Input() options: ReportViewerOpptions = <ReportViewerOpptions>{ grid: {}};
@@ -67,19 +67,7 @@ export class ReportViewer implements OnInit, OnChanges
             this.options.grid.noPager = true;
         }
 		this.options.grid.pageSize = this.options.grid.pageSize||10000;
-	}
-    public ngOnChanges(changes)
-    {
-
-    }
-    ngAfterContentInit()
-    {
-
-    }    
-    private gridLoad(grid: juGrid)
-    {
-       
-    }
+	}    
     public showModal(isDisplayed: boolean = true)
     {       
         jQuery('.modal',this._elementRef.nativeElement).modal(isDisplayed ? 'show' : 'hide');
