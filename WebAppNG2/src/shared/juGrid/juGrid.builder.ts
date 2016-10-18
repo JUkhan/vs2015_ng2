@@ -574,6 +574,10 @@ export class juGridBuilder
             {
 
             }
+            public get valid()
+            {
+                return !(jQuery('.validation-msg-show', this.el.nativeElement).length>0);
+            }
             @ViewChildren(rowEditor) editors: QueryList<rowEditor>;
             @ViewChild('filterWindow') filterWindowRef: ElementRef;
             isValid(fieldName, index)

@@ -192,12 +192,24 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         //     jQuery('.dropdown-menu', this.containerEl.nativeElement).height();
         // this.options.dropup = comPos + comHeight > containerHeight;
         if(this.options.fixedPosition){
-            let button=jQuery(buttonEl), dropdown=jQuery(this.dropdownContent.nativeElement);
-            let dropDownTop = button.offset().top + button.outerHeight();
-            dropdown.css('top', dropDownTop + "px");
-            dropdown.css('left', button.offset().left + "px");
+            let button = jQuery(buttonEl), dropdown = jQuery(this.dropdownContent.nativeElement);           
+            let offset = this.getOffset(buttonEl);
+            console.log(buttonEl);
+            dropdown.css('top', offset[1] + button.outerHeight() + "px");
+            dropdown.css('left', offset[0] + "px");
         }
         
+    }
+    getOffset(elm)
+    {
+        let offset:any[] = [elm.offsetLeft, elm.offsetTop];
+        while (elm.offsetParent != null)
+        {
+            elm = elm.offsetParent;
+            offset[0] = offset[0] + elm.offsetLeft;
+            offset[1] = offset[1] + elm.offsetTop;
+        }
+        return offset;
     }
     private checkAll(checked)
     {
@@ -304,7 +316,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
             });
         } else
         {
-            let item = this.dataList.find(_ => _[this.options.valueProp].toString() === value.toString());
+            let item = this.dataList.find(_ => _[this.options.valueProp||'value'].toString() === value.toString());
             if (item)
             {
                 item.selected = true;

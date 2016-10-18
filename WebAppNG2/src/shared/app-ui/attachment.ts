@@ -39,7 +39,7 @@ export class Attachment implements OnInit, OnChanges {
             title: this.title, width: 1000, 
             gridOptions: this.getGridOption(),
             viewMode: 'popup', data: this.data,
-            inputs: [
+            inputs: [               
                 <FormElement>{
                     type: 'html', content: `<div style="text-align:right;padding-right:20px"><label><input type="checkbox">Show Deleted</label></div>
                         <div juGrid [options]="config.gridOptions" [data]="config.data"></div>
@@ -66,7 +66,7 @@ export class Attachment implements OnInit, OnChanges {
             rowEvents:'(click)="config.rowClick(row)"',
             trClass:row=>({selected:row.selected}),
             columnDefs: [
-                { headerName: 'Attachment Name', field: 'name',width:220  },
+                { headerName: 'Attachment Name', field: 'name', width: 220, dataSrc: [{ value: 1, text: 'Abdulla' }, { value: 2, text: 'Jamil' }], type: 'juSelect', options: { width:'100%', fixedPosition:true } },
                 { headerName: 'Attachment Description', field: 'description', type:'text', width: 220 },
                 { headerName: 'Status', field: 'status' },
                 { headerName: 'Created Date', field: 'createdDate' },

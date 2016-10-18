@@ -9,13 +9,14 @@ import { SelectOptions}                      from '../../shared/juForm/JuSelect'
     moduleId: module.id,
     selector: 'cellEdit',
     template: `
-            <div 
+            <div  #gd
                   class="juGrid"                                   
                   (onLoad)="gridLoad($event)" 
                   [data]="list" 
                   [options]="gridOptions">
-                   <template><button class="btn btn-primary" (click)="saveRecords()">Save Records</button></template>
-            </div>           
+                   <template><button class="btn btn-primary" [disabled]="!gd.valid" (click)="saveRecords()">Save Records</button></template>
+            </div> 
+                      
             `
 })
 

@@ -266,6 +266,12 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
         this.componentRef.instance.addItem(item);
 
     }
+    public get valid()
+    {
+        if (this.componentRef && this.componentRef.instance)
+            return this.componentRef.instance.valid;
+        return true;
+    }
     public getData()
     {
         return this.data.length ? this.data : this.componentRef.instance.viewList;
