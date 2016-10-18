@@ -1,5 +1,5 @@
 import {Directive, OnInit, Input, ElementRef, OnDestroy, AfterViewInit} from '@angular/core';
-import {Subject} from 'rxjs/Rx';
+import {Subject, Observable, Subscription} from 'rxjs/Rx';
 declare var jQuery: any;
 //declare var CKEDITOR:any;
 
@@ -15,12 +15,18 @@ export class Datetimepicker implements OnInit, OnDestroy {
     @Input() config: any;
     @Input() form: any;
     notifyRowEditor: Subject<any> = new Subject();
+    inputSubscription:Subscription;
     private pickerObject: any;
     constructor(private el: ElementRef) { }
     ngOnInit() {
         switch (this.pickerName) {
             case 'datepicker':
-                this.pickerObject = jQuery(this.el.nativeElement).datepicker(this.pickers);
+                this.pickerObject = jQuery('.input-group-addon',this.el.nativeElement).datepicker(this.pickers);
+                  this.inputSubscription=Observable.fromEvent(jQuery('input',this.el.nativeElement), 'keyup')
+                            .debounceTime(500)
+                            .distinctUntilChanged()
+                            .pluck('target', 'value')
+                            .subscribe(_ => this.setDate(_));               
                 this.pickerObject.on('changeDate', (e) => {
                     if (this.property.indexOf('.') !== -1) {
                         let arr = this.property.split('.'), len = arr.length - 1, obj = this.model;
@@ -54,8 +60,9 @@ export class Datetimepicker implements OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.pickerName === 'datepicker') {
             this.pickerObject.datepicker('destroy');
-        }
-
+        }        
+        this.inputSubscription.unsubscribe();
+       
     }
 }
 
