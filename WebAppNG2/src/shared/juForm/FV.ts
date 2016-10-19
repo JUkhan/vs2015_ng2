@@ -42,4 +42,12 @@ export class FV {
             return true;
         }
     }
+    static validate(fx: (val: any) => boolean, message: string): Function
+    {
+        return function (val: any, fieldName): any
+        {            
+            if (!fx(val)) return message;             
+            return true;
+        }
+    }
 }

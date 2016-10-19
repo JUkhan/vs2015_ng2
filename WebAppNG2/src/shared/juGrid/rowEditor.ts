@@ -63,7 +63,8 @@ export class rowEditor implements OnInit {
             }));
         }
     }
-    private validationMsg:any={};
+    private validationMsg: any = {};
+    private validationRecords: any = {};
     private validate_input(val: any, field: any, def: any) {        
             let res = true;
             if (def.validators) {
@@ -80,12 +81,22 @@ export class rowEditor implements OnInit {
             return res;
         }
        private validate_input_helper(val: any, field: any, fx: Function) {           
-            let msg = fx(val, field);            
+           let msg = fx(val, field); 
+           this.validationRecords[field] = true;            
             if (typeof msg === 'string') {               
-                this.validationMsg[field] = msg;                
+                this.validationMsg[field] = msg;
+                this.validationRecords[field] = false;               
                 return false;
             }
             return true;
             
         }
+       public isErrorFree()
+       {           
+           for (let prop in this.validationRecords)
+           {
+               if (!this.validationRecords[prop]) return false;
+           }
+           return true;
+       }
 }

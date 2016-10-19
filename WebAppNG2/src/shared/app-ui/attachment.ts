@@ -66,7 +66,7 @@ export class Attachment implements OnInit, OnChanges {
             rowEvents:'(click)="config.rowClick(row)"',
             trClass:row=>({selected:row.selected}),
             columnDefs: [
-                { headerName: 'Attachment Name', field: 'name', width: 220, dataSrc: [{ value: 1, text: 'Abdulla' }, { value: 2, text: 'Jamil' }], type: 'juSelect', options: { width:'100%', fixedPosition:true } },
+                { headerName: 'Attachment Name', field: 'name', width: 220, dataSrc: [{ value: 1, text: 'Abdulla' }, { value: 2, text: 'Jamil' }], type: 'juSelect', options: { width:'100%', fixedPosition:true, title:'Select option' } },
                 { headerName: 'Attachment Description', field: 'description', type:'text', width: 220 },
                 { headerName: 'Status', field: 'status' },
                 { headerName: 'Created Date', field: 'createdDate' },

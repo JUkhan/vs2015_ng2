@@ -494,9 +494,7 @@ legend {
 }
 
 /*juSelect New*/
-/*.dropdown-menu{
-    position:fixed;
-}*/
+
 select.bs-select-hidden,
 select.selectpicker {
   display: none !important;
@@ -619,10 +617,10 @@ select.selectpicker {
   width: 100%;
 }
 .bootstrap-select.btn-group .dropdown-menu {
-  /*min-width: 100%;*/
+  min-width: 100%;
   -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .bootstrap-select.btn-group .dropdown-menu.inner {
   position: static;

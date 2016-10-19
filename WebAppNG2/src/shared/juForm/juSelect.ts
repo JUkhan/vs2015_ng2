@@ -12,7 +12,7 @@ declare var jQuery: any;
     changeDetection: ChangeDetectionStrategy.Default,
     template: `
     <div #maincontent [class.open]="isEditable" [ngClass]="getDropdownStyle()" class="btn-group bootstrap-select" [style.width]="options.width" data-container="body">
-        <button *ngIf="!options.editable" [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" #btn (click)="setFocusToValidate(btn)">
+        <button *ngIf="!options.editable" [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" #btn (click)="setFocusToValidate(btn, $event)">
             <span class="filter-option pull-left"> 
                 <i *ngIf="selectedItem[options.iconProp]||options.iconRenderer" [class]="getSelectedIconStyle()"></i>               
                 <span class="{{options.multiselect?'':selectedItem[options.styleProp]}}">{{getFormatedText()}}</span>
@@ -27,7 +27,7 @@ declare var jQuery: any;
                 <button (click)="isEditable=!isEditable" class="btn btn-default" type="button"><span class="caret"></span></button>
           </span>
         </div>
-        <div #dropdown class="dropdown-menu open" role="combobox" [style.position]="options.fixedPosition?'fixed':'absolute'" [style.max-height.px]="options.height?options.height:'none'" style="overflow: hidden; min-height: 0px;">            
+        <div #dropdown class="dropdown-menu open" role="combobox" [style.min-width]="getMinwidth()" style="overflow: hidden; min-height: 0px;">            
             <div class="search-checkall" *ngIf="options.liveSearch||(options.multiselect && options.checkAll)">
                 <label (click)="$event.stopPropagation()" *ngIf="options.checkAll"><input (click)="checkAll(chkAll.checked)" #chkAll type="checkbox">Select All</label>
                 <input #searchEl *ngIf="options.liveSearch" [style.width.%]="options.checkAll?50:100" autofocus type="text" class="form-control" role="textbox" placeholder="Search...">
@@ -169,7 +169,21 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
                 .debounceTime(300).distinctUntilChanged()
                 .map((e: any) => e.target.value)
                 .subscribe(e => this.setModelValue(e));
+        }        
+        if (this.options.fixedPosition)
+        {            
+            this.renderer.setElementStyle(this.dropdownContent.nativeElement, 'position', 'fixed');                     
+        }       
+        if (this.options.height)
+        {
+            this.renderer.setElementStyle(this.dropdownContent.nativeElement, 'max-height', this.options.height+'px'); 
         }
+    }
+    private getMinwidth()
+    {
+        if (this.options.fixedPosition)
+            return (jQuery(this.containerEl.nativeElement).width()||120)+'px';
+        return '100%';
     }
     public ngOnDestroy() {
 
@@ -178,39 +192,26 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         console.log( this.options.fixedPosition);
         this.options.fixedPosition?'fixed;':'absolute';
     }
-    private setFocusToValidate(buttonEl:any){
+    private setFocusToValidate(buttonEl:any, e:any){
         this.focusToValidate = true;
-        // if (!this.tableBodyContent)
-        // {
-        //     this.tableBodyContent = jQuery(this.containerEl.nativeElement).parents('.tbl-body-content');
-        // }
-        // if (this.tableBodyContent.length==0) return;
-        // const containerOffset = this.tableBodyContent.offset();
-        // const containerHeight = this.tableBodyContent.height()  - this.tableBodyContent.scrollTop();
-        // const comPos = jQuery(e.target).offset().top - containerOffset.top;
-        // const comHeight = jQuery(this.containerEl.nativeElement)[0].offsetHeight +
-        //     jQuery('.dropdown-menu', this.containerEl.nativeElement).height();
-        // this.options.dropup = comPos + comHeight > containerHeight;
         if(this.options.fixedPosition){
-            let button = jQuery(buttonEl), dropdown = jQuery(this.dropdownContent.nativeElement);           
-            let offset = this.getOffset(buttonEl);
-            console.log(buttonEl);
-            dropdown.css('top', offset[1] + button.outerHeight() + "px");
-            dropdown.css('left', offset[0] + "px");
+            let button = jQuery(buttonEl),
+                dropdown = jQuery(this.dropdownContent.nativeElement),
+                offset = button.offset(),
+                modelContent = jQuery(this.containerEl.nativeElement).parents('.modal-content'),
+                top = 0, left = 0;
+            if (modelContent.length == 1)
+            {
+                let modelOffset = modelContent.offset();
+                top = modelOffset.top;
+                left = modelOffset.left; 
+            }
+            dropdown.css('top', offset.top + button.outerHeight()-top + "px");
+            dropdown.css('left', offset.left-left + "px");
         }
         
     }
-    getOffset(elm)
-    {
-        let offset:any[] = [elm.offsetLeft, elm.offsetTop];
-        while (elm.offsetParent != null)
-        {
-            elm = elm.offsetParent;
-            offset[0] = offset[0] + elm.offsetLeft;
-            offset[1] = offset[1] + elm.offsetTop;
-        }
-        return offset;
-    }
+   
     private checkAll(checked)
     {
         if(this.dataList ===undefined)return;

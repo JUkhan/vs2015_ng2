@@ -578,6 +578,19 @@ export class juGridBuilder
             {
                 return !(jQuery('.validation-msg-show', this.el.nativeElement).length>0);
             }
+            public getValidRows():any[]
+            {
+                let res: any[] = [];
+                let arr = this.editors.toArray();
+                this.data.forEach((row: any, index: number) =>
+                {
+                    if (arr[index].isErrorFree())
+                    {
+                        res.push(row);
+                    }
+                });
+                return res;
+            }
             @ViewChildren(rowEditor) editors: QueryList<rowEditor>;
             @ViewChild('filterWindow') filterWindowRef: ElementRef;
             isValid(fieldName, index)

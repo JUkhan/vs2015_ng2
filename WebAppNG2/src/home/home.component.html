@@ -1,10 +1,9 @@
-﻿
-<div juSelect [data]="dataList" [options]="mySelectOptions" ></div>
+﻿ 
 <button (click)="m.show()">Mail</button>
 <button (click)="att.show()">Attachment</button>
 <div #m mail (onLoad)="mailLoad($event)"  (onSend)="mailData($event)"></div>
 <div juForm (onLoad)="myFormLoad($event)" [options]="myOptions"> </div>
-<div #att attachment  [data]="attachmentList"></div> 
+<div #att attachment  [data]="attachmentList" ></div> 
 <juPanel viewMode="tab">
     <content title="title 1">
         <p>content---1</p>
@@ -18,3 +17,4 @@
         </rv>
     </content>
 </juPanel>
+<!--<div juSelect [data]="dataList" [options]="mySelectOptions"></div>-->
