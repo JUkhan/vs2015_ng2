@@ -54,7 +54,7 @@ export class juGridBuilder
                 </div>
             </div>
 
-            <div #tc1 style="max-height:${this.options.height}px;overflow:auto;" class="tbl-body-content" (scroll)="tblScroll($event, headerDiv)">
+            <div #tc1 style="max-height:${this.options.height}px;overflow:auto;" class="tbl-body-content ${this.options.enableCellEditing?'enableCellEditing':''}" (scroll)="tblScroll($event, headerDiv)">
                 <div #tc2 [style.width.px]="config.width - 22">
                     <table class="${this.options.classNames} tbody ${this.options.colResize ? 'tbl-resize' : ''}">
                         <tbody (click)="hideFilterWindow()">
@@ -102,7 +102,7 @@ export class juGridBuilder
             }
             item.width = item.width || 120;
             item.inputExp=item.inputExp||'';
-            style = item.width ? `style="display:inline-block;" [style.width.px]="(config.columnDefs[${index}].width-(isValid('${item.field}', i)['validation-msg-hide']?18:40))"` : '';
+            style = item.width ? `style="display:inline-block;" [style.width.px]="(config.columnDefs[${index}].width-(isValid('${item.field}', i)['validation-msg-hide']?6:20))"` : '';
             item.headerName = item.headerName || '';
             header = item.headerName.replace(/(<([^>]+)>)/ig, '');            
             switch (item.type)
@@ -230,7 +230,7 @@ export class juGridBuilder
         }
         else if (item.field)
         {
-            tpl.push(`>{{row.${item.field}}}`);
+            tpl.push(`><div class="cell">{{row.${item.field}}}</div>`);
         } else
         {
             tpl.push(`>`);

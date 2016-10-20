@@ -62,7 +62,7 @@ export class Attachment implements OnInit, OnChanges {
     private getGridOption() {
         return this.gridOptions = {
             enableCellEditing: true, viewMode: '!panel', colResize: !true, noPager: true, pageSize:1000,
-            quickSearch: false, rowHeight:50, classNames:'table table-bordered',
+            quickSearch: false, rowHeight:39, classNames:'table table-bordered',
             rowEvents:'(click)="config.rowClick(row)"',
             trClass:row=>({selected:row.selected}),
             columnDefs: [
