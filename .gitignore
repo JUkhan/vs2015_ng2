@@ -1,5 +1,6 @@
 .idea
 app/
+app2/
 typings
 scripts
 node_modules

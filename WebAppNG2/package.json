@@ -18,7 +18,8 @@
     "typings": "typings",
     "webdriver:update": "webdriver-manager update",
     "publish": "gulp move.libs",
-    "move.libs": "gulp move.libs"
+    "move.libs": "gulp move.libs",
+    "build": "babel app -d app2"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +42,7 @@
     "zone.js": "^0.6.23"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.16.0",
     "browser-sync": "^2.13.0",
     "conventional-changelog": "1.1.0",
     "del": "^2.2.1",

@@ -102,7 +102,7 @@ export class juGridBuilder
             }
             item.width = item.width || 120;
             item.inputExp=item.inputExp||'';
-            style = item.width ? `style="display:inline-block;" [style.width.px]="(config.columnDefs[${index}].width-(isValid('${item.field}', i)['validation-msg-hide']?6:20))"` : '';
+            style = item.width ? `style="display:inline-block;" [style.width.px]="(config.columnDefs[${index}].width-(isValid('${item.field}', i)['validation-msg-hide']?6:23))"` : '';
             item.headerName = item.headerName || '';
             header = item.headerName.replace(/(<([^>]+)>)/ig, '');            
             switch (item.type)
