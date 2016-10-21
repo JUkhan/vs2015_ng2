@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy
         this.initForm();
         this.mySelectOptions = {
             title: 'Select item', disabled: !true, fitWidth: true, liveSearch: true, checkAll: true,
-            height: 250, multiselect: !true, selectedTextFormat: 'count>2', editable:true
+            height: 250, multiselect: true, selectedTextFormat: 'count>2', editable:!true
         };
         
     }
@@ -155,7 +155,8 @@ export class HomeComponent implements OnInit, OnDestroy
         //.subscribe(res=>console.log(res));
         form.valueChanges('form').filter(_ => form.valid)
             .subscribe(res => console.log(res));
-			
+		 form.valueChanges('name')
+            .subscribe(res => console.log(res));	
         //form.disabled('address1.country', true);
     }
 

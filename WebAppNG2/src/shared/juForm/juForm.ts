@@ -193,6 +193,9 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
                 case 'select':
                     return Observable.fromEvent(div.querySelector('.' + item.field.field.split('.').join('_')), 'change')
                         .map((_: any) => ({ value: _.target.value, sender: _.target, form: this }));
+                case 'file':
+                    return Observable.fromEvent(div.querySelector('.' + item.field.field.split('.').join('_')), 'change')
+                        .map((_: any) => ({ value: _.target.value, sender: _.target, form: this }));
                 default:
                     return Observable.fromEvent(div.querySelector('.' + item.field.field.split('.').join('_')), 'keyup')
                         .map((_: any) => _.target.value);
@@ -362,7 +365,7 @@ export interface FormOptions
     refreshBy?: {};
     inputs?: [FormElement | any];
     tabs?: TABS;
-    buttons?: { [key: string]: { type: 'submit' | 'close' | 'button', cssClass?: string, click?: (event: any) => void } };
+    buttons?: { [key: string]: { type: 'submit' | 'close' | 'button', exp?:string, cssClass?: string, click?: (event: any) => void } };
     api?: juForm;
     [key: string]: any;
 

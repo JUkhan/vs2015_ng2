@@ -773,6 +773,7 @@
     <Content Include="Content\selectpicker\css\bootstrap-select.css.map" />
     <Content Include="Content\selectpicker\js\bootstrap-select.js.map" />
     <Content Include="tsconfig.json" />
+    <Content Include=".babelrc" />
     <None Include="Properties\PublishProfiles\test.pubxml" />
     <Content Include="README.md" />
     <Content Include="tslint.json" />

@@ -243,17 +243,18 @@ export class juFormBuilder {
         if (this.options.buttons) {
             template.push('<div class="modal-footer">');
             for (var prop in this.options.buttons) {
+                let exp=this.options.buttons[prop].exp||'';
                 switch (this.options.buttons[prop].type) {
                     case 'submit':
-                        template.push(`<button type="submit" [disabled]="!isValid()" 
+                        template.push(`<button type="submit" [disabled]="!isValid()" ${exp} 
                         class="${this.options.buttons[prop].cssClass || 'btn btn-primary'}" (click)="config.buttons['${prop}'].click($event)" >${prop}</button>`);
                         break;
                     case 'close':
-                        template.push(`<button type="button" data-dismiss="modal" 
+                        template.push(`<button type="button" data-dismiss="modal" ${exp}  
                         class="${this.options.buttons[prop].cssClass || 'btn btn-default'}" (click)="config.buttons['${prop}'].click($event)" >${prop}</button>`);
                         break;
                     default:
-                        template.push(`<button type="button" class="${this.options.buttons[prop].cssClass || 'btn btn-default'}" (click)="config.buttons['${prop}'].click($event)" >${prop}</button>`);
+                        template.push(`<button type="button" ${exp} class="${this.options.buttons[prop].cssClass || 'btn btn-default'}" (click)="config.buttons['${prop}'].click($event)" >${prop}</button>`);
                         break;
                 }
 
@@ -337,7 +338,7 @@ export class juFormBuilder {
         let labelSize = input.labelSize || this.options.labelSize || 3,
             labelPos = input.labelPos || this.options.labelPos || 'top',
             cfield = fieldName.split('.').join('_'),
-            element = `<input type="file" fileSelect [model]="model" propName="${fieldName}" [ext]="${config}.ext" ${input.multiple ? 'multiple' : ''} (click)="vlidate_input(model.${fieldName}, ${config})" [form]="myForm" [config]="${config}" [disabled]="${config}.disabled" class="form-control" placeholder="Select file(s)...">
+            element = `<input type="file" fileSelect [model]="model" propName="${fieldName}" [ext]="${config}.ext" ${input.multiple ? 'multiple' : ''} (click)="vlidate_input(model.${fieldName}, ${config})" [form]="myForm" [config]="${config}" [disabled]="${config}.disabled" class="form-control ${cfield}" placeholder="Select file(s)...">
                     <div *ngIf="!${config}.hideMsg" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
         return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
     }
@@ -346,7 +347,7 @@ export class juFormBuilder {
             labelPos = input.labelPos || this.options.labelPos || 'top',
             cfield = fieldName.split('.').join('_'),
             element =
-                `<textarea ckeditor [config]="${config}" (click)="fieldClick('${fieldName}', ${config})" [disabled]="${config}.disabled" [(ngModel)]="model.${fieldName}" class="form-control" placeholder="Enter ${input.label || fieldName}"></textarea>
+                `<textarea ckeditor [config]="${config}" (click)="fieldClick('${fieldName}', ${config})" [disabled]="${config}.disabled" [(ngModel)]="model.${fieldName}" class="form-control ${cfield}" placeholder="Enter ${input.label || fieldName}"></textarea>
                  <div *ngIf="!${config}.hideMsg" class="alert alert-danger" [innerHTML]="${config}.message"></div>`;
         return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
 
@@ -356,7 +357,7 @@ export class juFormBuilder {
             labelPos = input.labelPos || this.options.labelPos || 'top',
             cfield = fieldName.split('.').join('_'),
             element = `<div (click)="vlidate_input(model.${fieldName}, ${config})" class="input-group date" [pickers]="${config}.config" picker-name="${input.type}" [model]="model" property="${fieldName}" [config]="${config}" [form]="myForm" >
-                        <input type="text" [disabled]="${config}.disabled" [(ngModel)]="model.${fieldName}" class="form-control" placeholder="Enter ${input.label || fieldName}">
+                        <input type="text" [disabled]="${config}.disabled" [(ngModel)]="model.${fieldName}" class="form-control ${cfield}" placeholder="Enter ${input.label || fieldName}">
                         <span class="input-group-addon">
                             <span class="fa fa-calendar"></span>
                         </span>
