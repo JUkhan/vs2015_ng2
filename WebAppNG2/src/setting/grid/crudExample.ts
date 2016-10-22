@@ -72,6 +72,8 @@ export class CrudExample implements OnInit {
     private initScholar() {
         this.scholarGridOptions = {
             title:'Crud Example', crud: true, pagerPos:'header',
+            additionalActionInCrud:[{title:'Detail', icon:'fa fa-gear', click:row=>console.log(row)}],
+            crudColumnWidth:70,
             //sspFn: this.getPagerData.bind(this),
             columnDefs: [
                 { headerName: 'Name', field: 'name', sort: true, filter: 'set'},

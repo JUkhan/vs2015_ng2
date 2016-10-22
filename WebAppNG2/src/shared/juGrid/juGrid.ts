@@ -170,6 +170,13 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
                         }
                     }]
             });
+            if(this.options.additionalActionInCrud && this.options.additionalActionInCrud.length>0){
+                this.options.additionalActionInCrud.forEach(_=>_.enable=true);
+                this.options.columnDefs[0].action.push(...this.options.additionalActionInCrud);
+            }
+            if(this.options.crudColumnWidth){
+                this.options.columnDefs[0].width=this.options.crudColumnWidth;
+            }
         }
         //this.refreshContent();
         this.options.api = { grid: this, form: null };
@@ -409,7 +416,7 @@ export interface GridOptions
     enablePageSearch?: boolean;
     linkPages?: number;
     pageSize?: number;
-    confirmMessage?: number;
+    confirmMessage?: string;
     crud?: boolean;
     create?: boolean;
     update?: boolean;
@@ -433,6 +440,8 @@ export interface GridOptions
     noPager?: boolean;
     colResize?: boolean;
     rowEvents?:string;
+    crudColumnWidth?:number;
+    additionalActionInCrud?: [{ title: string, icon: string, click: (row: any) => void }];
 }
 export interface BaseFilter
 {

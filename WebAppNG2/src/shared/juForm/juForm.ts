@@ -172,6 +172,9 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
     {
         return Object.keys(this.options._events).filter(_ => _ !== 'undefined');
     }
+    public validate(key:string, value:any){
+         this.componentRef.instance.vlidate_input(value, this.options._events[key].field);
+    }
     public valueChanges(key: string): Observable<any> {
         if (key === 'form') {
             let _observers: any[] = [];

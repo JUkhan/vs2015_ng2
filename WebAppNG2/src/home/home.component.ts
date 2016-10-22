@@ -5,7 +5,7 @@ import {MailComponent} from '../shared/app-ui/mail';
 import {ReportViewerOpptions} from '../shared/app-ui/report.viewer';
 import {SelectOptions} from '../shared/juForm/juSelect';
 import {Observable} from 'rxjs/Rx';
-
+import {Router} from '@angular/router'
 @Component({
     moduleId: module.id,
     selector: 'my-home',
@@ -13,6 +13,7 @@ import {Observable} from 'rxjs/Rx';
 })
 export class HomeComponent implements OnInit, OnDestroy
 {
+    constructor(private router:Router){}
     rvOptions: ReportViewerOpptions = <ReportViewerOpptions>{
         title: 'Hello World is nothing but mistery', approvedGroup: '2348567',  height:700, width:900,
         grid: {enableCellEditing:true,
@@ -133,8 +134,8 @@ export class HomeComponent implements OnInit, OnDestroy
                 'Save Changes': { type: 'submit', cssClass: 'btn btn-success', click: _ => { console.log(this.myOptions.api.getModel()); } },
                 'Set Data': {
                     type: 'button', click: () => {
-                        this.myOptions.api.setModel({ products: [{ name: 'Jasim', price: 2 }, { name: 'JArif', price: 34 }, { name: 'Abdulla', price: 134, district: 1, Thana: 2 }], address1: { post: '07/14/2016' }, address2: {country:2}, aboutMe: 'I love JS' });
-
+                        this.myOptions.api.setModel({address:'tangail', products: [{ name: 'Jasim', price: 2 }, { name: 'JArif', price: 34 }, { name: 'Abdulla', price: 134, district: 1, Thana: 2 }], address1: { post: '07/14/2016' }, address2: {country:2}, aboutMe: 'I love JS' });
+                      
                     }
                 }
             },
