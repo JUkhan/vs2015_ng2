@@ -229,6 +229,7 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
     }
     public refresh(): juForm {
         this.setModel(this.options.refreshBy || {});
+        jQuery('input[type=file]', this._elementRef.nativeElement).val('');
         this.isUpdate = false;
         return this;
     }

@@ -218,6 +218,13 @@ export class juPager implements OnInit, OnChanges
         this.activePage = 1;
         this.firePageChange();
     }
+    public empty()
+    {
+        this.groupNumber = 1;
+        this.activePage = 1;
+        this.totalPage = 0;
+        this.pageChange.next([]);
+    }
     public firePageChange(isFire: boolean = false)
     {
 
