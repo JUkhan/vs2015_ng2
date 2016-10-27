@@ -107,47 +107,49 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
         });*/
     }
     ///end of set detail data//
-    public render() {
-        this.refreshContent();
+    public render() : Promise<juForm> {
+        return this.refreshContent();
     }
-    protected refreshContent() {       
+    protected refreshContent() : Promise<juForm> {       
         this.initOptions();
        
         if (this.componentRef) {           
             this.componentRef.destroy();
         }
-        this.typeBuilder
-            .createComponentFactory(this.options)
-            .then((factory: ComponentFactory<any>) => {                
-                this.componentRef = this
-                    .dynamicComponentTarget
-                    .createComponent(factory);               
-                const component = this.componentRef.instance;               
+		return new Promise((resolve, reject) => {  
+			this.typeBuilder
+				.createComponentFactory(this.options)
+				.then((factory: ComponentFactory<any>) => {                
+					this.componentRef = this
+						.dynamicComponentTarget
+						.createComponent(factory);               
+					const component = this.componentRef.instance;               
                
-                component.setConfig(this.options, this);
-                if (this.options.refreshBy) {
-                    this.setModel(this.options.refreshBy);
-                }
-                if (this.options.isTab) {
-                    let firstProp, index = 0;
-                    for (var prop in this.options.activeTabs) {
-                        component.tabClick(prop, null, this.options.activeTabs[prop]);
-                        if (index == 0) {
-                            firstProp = prop;
-                        }
-                        index++;
-                    }
-                    component.tabClick(firstProp, null, this.options.activeTabs[firstProp]);
-                } else {
-                    component.focus();
-                }
+					component.setConfig(this.options, this);
+					if (this.options.refreshBy) {
+						this.setModel(this.options.refreshBy);
+					}
+					if (this.options.isTab) {
+						let firstProp, index = 0;
+						for (var prop in this.options.activeTabs) {
+							component.tabClick(prop, null, this.options.activeTabs[prop]);
+							if (index == 0) {
+								firstProp = prop;
+							}
+							index++;
+						}
+						component.tabClick(firstProp, null, this.options.activeTabs[firstProp]);
+					} else {
+						component.focus();
+					}
                 
-                if (this.model) {                    
-                    this.setModel(this.model);
-                }
-                async_call(() => { this.onLoad.emit(this); });               
-                
-            });
+					if (this.model) {                    
+						this.setModel(this.model);
+					}
+					async_call(() => { this.onLoad.emit(this); });               
+					resolve(this);
+				});
+			});
     }    
     public ngAfterViewInit(): void {
         this.wasViewInitialized = true;

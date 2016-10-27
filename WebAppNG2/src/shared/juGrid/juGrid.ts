@@ -178,7 +178,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
                 this.options.columnDefs[0].width=this.options.crudColumnWidth;
             }
         }
-        //this.refreshContent();
+       
         this.options.api = { grid: this, form: null };
         Observable.fromEvent(document, 'keyup').subscribe(e =>
         {
@@ -227,35 +227,38 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
                 return false;
             });
     }
-    public render() {
-        this.refreshContent();
+    public render(): Promise<juGrid> {
+        return this.refreshContent();
     }
-    protected refreshContent()
+    protected refreshContent() : Promise<juGrid>
     {        
         if (this.componentRef)
         {
             this.componentRef.destroy();
         }
-        this.typeBuilder
-            .createComponentFactory(this.options)
-            .then((factory: ComponentFactory<any>) =>
-            {
-                this.componentRef = this
-                    .dynamicComponentTarget
-                    .createComponent(factory);
+		return new Promise((resolve, reject) => {  
+ 
+				this.typeBuilder
+					.createComponentFactory(this.options)
+					.then((factory: ComponentFactory<any>) =>
+					{
+						this.componentRef = this
+							.dynamicComponentTarget
+							.createComponent(factory);
 
-                const component = this.componentRef.instance;
-                component.config = this.options;
-                if (this.options.data || this.data)
-                {
-                    component.setData(this.data || this.options.data);
-                }
-                if (!this.options.crud)
-                {
-                    async_call(() => { this.onLoad.emit(this); });
-                }                
-
-            });
+						const component = this.componentRef.instance;
+						component.config = this.options;
+						if (this.options.data || this.data)
+						{
+							component.setData(this.data || this.options.data);
+						}
+						if (!this.options.crud)
+						{
+							async_call(() => { this.onLoad.emit(this); });
+						}                
+						resolve(this);
+					});
+		});
     }   
     public getUpdatedRecords()
     {

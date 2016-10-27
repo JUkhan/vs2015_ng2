@@ -134,7 +134,7 @@ export class HomeComponent implements OnInit, OnDestroy
                 'Save Changes': { type: 'submit', cssClass: 'btn btn-success', click: _ => { console.log(this.myOptions.api.getModel()); } },
                 'Set Data': {
                     type: 'button', click: () => {
-                        this.myOptions.api.setModel({address:'tangail', products: [{ name: 'Jasim', price: 2 }, { name: 'JArif', price: 34 }, { name: 'Abdulla', price: 134, district: 1, Thana: 2 }], address1: { post: '07/14/2016' }, address2: {country:2}, aboutMe: 'I love JS' });
+                        this.myOptions.api.setModel({ country:1, address:'tangail', products: [{ name: 'Jasim', price: 2 }, { name: 'JArif', price: 34 }, { name: 'Abdulla', price: 134, district: 1, Thana: 2 }], address1: { post: '07/14/2016' }, address2: {country:2}, aboutMe: 'I love JS' });
                       
                     }
                 }

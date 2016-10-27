@@ -531,8 +531,8 @@ export class juGridBuilder
             tpl.push('</div></div>');
         }
         return tpl.join('');
-    }
-    public createComponentFactory(options: any)
+    }   
+	public createComponentFactory(options: any)
         : Promise<ComponentFactory<any>>
     {
         this.options = options;
