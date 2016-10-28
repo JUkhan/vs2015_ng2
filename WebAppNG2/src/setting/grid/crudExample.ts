@@ -43,9 +43,10 @@ export class CrudExample implements OnInit {
     async hideCol() { 
         //this.service.messageDialog('Column removing', 'Column removed successfully');
         if(await this.service.confirmDialogPromise('Column removing', 'Are you sure to remove the age column?'))
-        {
+        {		
             this.scholarGridOptions.columnDefs[3].hide = true;
             this.scholarGridOptions.api.grid.render().then(_=>console.log('rendered successfully'));
+			//this.scholarGridOptions.api.grid.empty();
         }
         console.log('waiting for user inputs.'); 
     }

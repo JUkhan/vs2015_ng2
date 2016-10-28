@@ -327,6 +327,10 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
     {
         this.componentRef.instance.setJuSelectData(key, value, index);
     }
+	public empty()
+    {
+        this.componentRef.instance.empty();
+    }
     public slideToggle()
     {
         this.componentRef.instance.slideToggle();

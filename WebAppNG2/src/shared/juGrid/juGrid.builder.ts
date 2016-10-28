@@ -1010,6 +1010,9 @@ export class juGridBuilder
                     this.currentFilter.filterCss = { 'icon-hide': true, 'icon-show': false };
                 }
             }
+			public empty(){
+				this.pager.empty();
+			}
             
         }
 
