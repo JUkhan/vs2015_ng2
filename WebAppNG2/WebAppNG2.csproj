@@ -188,6 +188,7 @@
     <Content Include="build\tasks\lib.js" />
     <Content Include="src\app.component.html" />
     <Content Include="src\home\home.component.html" />
+    <Content Include="src\minesweeper\minesweeper.ts" />
     <Content Include="src\setting\window\window.component.ts" />
     <Content Include="src\shared\juComponents.css" />
     <Content Include="build\args.js" />

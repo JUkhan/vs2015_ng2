@@ -7,7 +7,9 @@ import {  RouterModule } from '@angular/router';
 
 import { AppComponent }  from './app.component';
 import { HomeComponent } from './home/home.component';
-
+import {minesweeper} from './minesweeper/minesweeper';
+import {Square} from './minesweeper/square.component';
+import {Board} from './minesweeper/Board';
 //modules
 import { SharedModule }   from './shared/shared.module';
 
@@ -23,7 +25,7 @@ import {routing} from './app.routes';
         routing,
         SharedModule.forRoot()        
     ],
-    declarations: [AppComponent, HomeComponent],
+    declarations: [AppComponent, HomeComponent, minesweeper, Square, Board],
     bootstrap: [AppComponent],
     //providers: [{ provide: APP_BASE_HREF, useValue: '/' }]
     providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}]
