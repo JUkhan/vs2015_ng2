@@ -3,7 +3,7 @@ import { Component, Input, Output, ChangeDetectionStrategy, EventEmitter, OnInit
 
 @Component({
     moduleId: module.id,
-    selector:'Square',
+    selector: 'Square',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `<button [ngClass]="{'square':options.mode,'square-d':!options.mode, 'boom':options.boom,'won' : options.won}"
             (click)="clickSquare.emit(null)" (contextmenu)="mouseRightClick($event)">
@@ -12,22 +12,23 @@ import { Component, Input, Output, ChangeDetectionStrategy, EventEmitter, OnInit
 })
 export class Square implements OnInit {
     @Input() options: { mode: boolean, value: any, boom: boolean, won: boolean } = <any>{};
-    @Output() clickSquare= new EventEmitter();
+    @Output() clickSquare = new EventEmitter();
     constructor() {
 
     }
-    
-    getValue() {         
+
+    getValue() {
         if (this.options.value && this.options.mode) {
             return this.options.value >= 100 ? '*' : this.options.value;
         }
         return '';
     }
-    mouseRightClick(e:any){console.log('boom');
-         e.preventDefault();
-         this.options.boom=true;
+    mouseRightClick(e: any) {
+        e.preventDefault();        
+        if (!this.options.mode)
+            this.options.boom = true;
     }
-    ngOnInit(){        
-      
+    ngOnInit() {
+
     }
 }
