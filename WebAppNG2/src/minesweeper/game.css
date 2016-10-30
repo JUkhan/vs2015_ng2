@@ -61,3 +61,38 @@ ol, ul {
 }
 .boom{background-color: #933;}
 .won{background-color: #0099FF; color: red;}
+
+/*New Grid*/
+.juTable{
+  background-color: transparent;
+}
+.juRow{
+     background-color: transparent;
+}
+.juRow:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.juCol{
+  background: #fff;
+  border: 1px solid #ddd;
+  float: left;
+  font-size: 12px;  
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center; 
+  color:#333;
+  width:120px;
+}
+.juHeader{
+    /*background: #ddd;*/
+    font-weight: bold;
+}
+
+.juTable .juRow .juCol:first-child{
+  border-left: none;
+}

@@ -3,15 +3,49 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 @Component({
     moduleId: module.id,
     template: `
-        <div className="game">
+        <div class="game">
                 <div class="game-board">
                     <Board [squares]="squares" (squareclickHandler)="handleClick($event)" ></Board>
                 </div>
                 <div class="game-info">
                     <div><a href="script:0;" (click)="startGame($event)">Start Game</a></div>
                     <div>{{status}}</div>
+                </div>                
+            </div><br>
+            <div class="juTable" style="width:200px;">
+                <div>Table title</div>
+                <div style="border:solid 1px #ddd;">
+                    <div style="overflow:hidden;" #headerDiv>
+                        <div style="width:380px;">
+                            <div class="juRow">
+                                <div class="juCol juHeader">Name</div>
+                                <div class="juCol juHeader">Address</div>
+                                <div class="juCol juHeader">Age</div>
+                                <div class="juCol" style="width:20px;border-right: none;">&nbsp;</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="max-height:100px;overflow:auto;" (scroll)="tblScroll($event, headerDiv)">
+                        <div style="width:360px;">   
+                            <div class="juRow">
+                                <div class="juCol">Jasim</div>
+                                <div class="juCol">Tangail</div>
+                                <div class="juCol">32</div>
+                            </div>
+                            <div class="juRow">
+                                <div class="juCol">Ripon</div>
+                                <div class="juCol">Tangail</div>
+                                <div class="juCol">32</div>
+                            </div>
+                            <div class="juRow">
+                                <div class="juCol">Nahida</div>
+                                <div class="juCol">Tangail</div>
+                                <div class="juCol">56</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+           </div>          
     `,
     templateUrl: './game.css',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,7 +57,9 @@ export class minesweeper {
     constructor() {
         this.squares = this.getInitialSquare();
     }
-
+    private tblScroll(e, headerDiv) {
+        headerDiv.scrollLeft = e.target.scrollLeft;
+    }
     getInitialSquare() {
         let arr = [], booms = 20, squares = 108, boomObj = {};
 
@@ -75,8 +111,8 @@ export class minesweeper {
     calculateWiner() {
         return this.squares.filter(_ => !_.mode).length == 20;
     }
-    handleClick(i) {       
-        let square = this.squares[i]; 
+    handleClick(i) {
+        let square = this.squares[i];
         if (this.status === 'GAME OVER' || square.mode) return;
         if (square.boom) {
             square.boom = false;
@@ -88,7 +124,7 @@ export class minesweeper {
         else if (square.value >= 100) {
             this.squares.forEach((item: any, index: number) => {
                 if (!item.mode)
-                    this.squares[index] = Object.assign({}, item, { mode: true, boom:item.value>=100 });
+                    this.squares[index] = Object.assign({}, item, { mode: true, boom: item.value >= 100 });
             });
             this.status = 'GAME OVER';
         }
