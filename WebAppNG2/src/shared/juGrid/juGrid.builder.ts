@@ -531,8 +531,8 @@ export class juGridBuilder
             tpl.push('</div></div>');
         }
         return tpl.join('');
-    }
-    public createComponentFactory(options: any)
+    }   
+	public createComponentFactory(options: any)
         : Promise<ComponentFactory<any>>
     {
         this.options = options;
@@ -1010,6 +1010,9 @@ export class juGridBuilder
                     this.currentFilter.filterCss = { 'icon-hide': true, 'icon-show': false };
                 }
             }
+			public empty(){
+				this.pager.empty();
+			}
             
         }
 

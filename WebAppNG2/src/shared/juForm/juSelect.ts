@@ -298,6 +298,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     public setValue(value: any)
     {
         if (this.options.editable && this.editableText) this.editableText.nativeElement.value = '';  
+		let tempValue=this.previousValue;
         this.previousValue=value;    
         this.checkAll(false);
         this.selectedItem = {};  
@@ -324,6 +325,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
                 this.selectedItem = item;
             }
         }
+		if( this.myForm){this.previousValue=tempValue;}
         this.setModelValue(value);
     }
     public getValue()
