@@ -11,7 +11,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
                     <div><a href="script:0;" (click)="startGame($event)">Start Game</a></div>
                     <div>{{status}}</div>
                 </div>                
-            </div><br>
+            </div>
+            <br>
             <div class="juTable" style="width:200px;">
                 <div>Table title</div>
                 <div style="border:solid 1px #ddd;">

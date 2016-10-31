@@ -150,8 +150,8 @@ export class HomeComponent implements OnInit, OnDestroy
         form.setData('country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
             .setData('address1.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
             .setData('address2.country', [{ text: 'Bangladesh', value: 1 }, { text: 'India', value: 2 }])
-            .setLabel('age', 'Age').setLabel('aboutMe', 'Ambot Me');
-
+            .setLabel('age', 'Age').setLabel('aboutMe', 'Ambot Me')
+            .setSelectValue('address1.country', 2).valueChanges('address1.country').subscribe(res=>console.log('address1.country',res))
         //form.valueChanges('address')       
         //.subscribe(res=>console.log(res));
         form.valueChanges('form').filter(_ => form.valid)
