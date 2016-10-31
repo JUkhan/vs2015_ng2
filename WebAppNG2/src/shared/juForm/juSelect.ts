@@ -142,9 +142,13 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         {
             this.dataList = changes.dataList.currentValue.map(item => Object.assign({}, item, { selected: false }));
             this.dataList_bckup = this.dataList;
-            if (this.previousValue && this.dataList && this.dataList.length>0)
-            {               
+            if (this.previousValue && this.dataList && this.dataList.length > 0)
+            {                             
                 this.setValue(this.previousValue);
+                if (this.myForm)
+                {
+                    this.publishChanges(this.previousValue);
+                }
             }  
         }       
     }
@@ -188,8 +192,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     public ngOnDestroy() {
 
     }
-    private getPositionStyle(){
-        console.log( this.options.fixedPosition);
+    private getPositionStyle(){         
         this.options.fixedPosition?'fixed;':'absolute';
     }
     private setFocusToValidate(buttonEl:any, e:any){
@@ -302,7 +305,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         this.previousValue=value;    
         this.checkAll(false);
         this.selectedItem = {};  
-        if(!this.dataList)return;     
+        if (!this.dataList) { return; } 
         if (!value) {            
             this.setModelValue('');
             this.focusToValidate = false;
@@ -361,13 +364,18 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
             obj[props[index]] = val;
         }
         else { this.model[this.propertyName] = val; }
-        //subscribing...
-        if(val!==this.previousValue && val){
-            this.notifyRowEditor.next({});
-            this.onChange.next({ value: val, sender: this, form: this.myForm, index: this.index });
-            this.valueChanges.next({ value: val, sender: this, form: this.myForm, index: this.index });
+        //publishChanges...
+        if (val !== this.previousValue && val)
+        {
+            this.publishChanges(val);
         }
         this.previousValue=val;
+    }
+    private publishChanges(val: any)
+    {
+        this.notifyRowEditor.next({});
+        this.onChange.next({ value: val, sender: this, form: this.myForm, index: this.index });
+        this.valueChanges.next({ value: val, sender: this, form: this.myForm, index: this.index });
     }
     public hasError() { 
         this.myForm.componentRef.instance.vlidate_input( this.getValue(), this.config, !this.focusToValidate);        
