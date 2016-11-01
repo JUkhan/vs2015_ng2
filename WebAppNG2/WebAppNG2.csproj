@@ -188,6 +188,7 @@
     <Content Include="build\tasks\lib.js" />
     <Content Include="src\app.component.html" />
     <Content Include="src\home\home.component.html" />
+    <Content Include="src\minesweeper\game.css" />
     <Content Include="src\minesweeper\minesweeper.ts" />
     <Content Include="src\setting\window\window.component.ts" />
     <Content Include="src\shared\juComponents.css" />
@@ -700,6 +701,8 @@
     <TypeScriptCompile Include="src\home\home.component.ts" />
     <TypeScriptCompile Include="src\home\index.ts" />
     <TypeScriptCompile Include="src\main.ts" />
+    <TypeScriptCompile Include="src\minesweeper\Board.ts" />
+    <TypeScriptCompile Include="src\minesweeper\square.component.ts" />
     <TypeScriptCompile Include="src\setting\grid\cellEditExample.ts" />
     <TypeScriptCompile Include="src\setting\grid\crudExample.ts" />
     <TypeScriptCompile Include="src\setting\grid\treeExample.ts" />

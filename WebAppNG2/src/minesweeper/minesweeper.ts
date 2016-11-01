@@ -43,6 +43,11 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
                                 <div class="juCol">Tangail</div>
                                 <div class="juCol">56</div>
                             </div>
+                            <div class="juRow">
+                                <div class="juCol">Arif</div>
+                                <div class="juCol">Tangail</div>
+                                <div class="juCol">56</div>
+                            </div>
                         </div>
                     </div>
                 </div>
