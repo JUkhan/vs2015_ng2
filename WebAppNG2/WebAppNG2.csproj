@@ -190,6 +190,7 @@
     <Content Include="src\home\home.component.html" />
     <Content Include="src\minesweeper\game.css" />
     <Content Include="src\minesweeper\minesweeper.ts" />
+    <Content Include="src\MyGrid\grid.css" />
     <Content Include="src\setting\window\window.component.ts" />
     <Content Include="src\shared\juComponents.css" />
     <Content Include="build\args.js" />
@@ -700,9 +701,14 @@
     <TypeScriptCompile Include="src\app.routes.ts" />
     <TypeScriptCompile Include="src\home\home.component.ts" />
     <TypeScriptCompile Include="src\home\index.ts" />
+    <TypeScriptCompile Include="src\MyGrid\CellComponent.ts" />
+    <TypeScriptCompile Include="src\MyGrid\HeaderComponent.ts" />
+    <TypeScriptCompile Include="src\MyGrid\MyGrid.module.ts" />
+    <TypeScriptCompile Include="src\MyGrid\MyGrid.ts" />
     <TypeScriptCompile Include="src\main.ts" />
     <TypeScriptCompile Include="src\minesweeper\Board.ts" />
     <TypeScriptCompile Include="src\minesweeper\square.component.ts" />
+    <TypeScriptCompile Include="src\MyGrid\RowsComponent.ts" />
     <TypeScriptCompile Include="src\setting\grid\cellEditExample.ts" />
     <TypeScriptCompile Include="src\setting\grid\crudExample.ts" />
     <TypeScriptCompile Include="src\setting\grid\treeExample.ts" />

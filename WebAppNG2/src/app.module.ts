@@ -12,6 +12,7 @@ import {Square} from './minesweeper/square.component';
 import {Board} from './minesweeper/Board';
 //modules
 import { SharedModule }   from './shared/shared.module';
+import {MyGridModule} from './MyGrid/MyGrid.module';
 
 import {routing} from './app.routes';
 
@@ -22,7 +23,7 @@ import {routing} from './app.routes';
         CommonModule,
         HttpModule,
         RouterModule,
-        routing,
+        routing, MyGridModule,
         SharedModule.forRoot()        
     ],
     declarations: [AppComponent, HomeComponent, minesweeper, Square, Board],

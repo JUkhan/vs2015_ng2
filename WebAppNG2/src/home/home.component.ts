@@ -5,7 +5,8 @@ import {MailComponent} from '../shared/app-ui/mail';
 import {ReportViewerOpptions} from '../shared/app-ui/report.viewer';
 import {SelectOptions} from '../shared/juForm/juSelect';
 import {Observable} from 'rxjs/Rx';
-import {Router} from '@angular/router'
+import {Router} from '@angular/router';
+
 @Component({
     moduleId: module.id,
     selector: 'my-home',
@@ -13,7 +14,30 @@ import {Router} from '@angular/router'
 })
 export class HomeComponent implements OnInit, OnDestroy
 {
-    constructor(private router:Router){}
+    myGridOptions: any = {
+        rowSelect: (row, isSelected) => console.log(row, isSelected),
+        multiselect:true,
+        columns: [
+            { header: 'Name', field: 'name', },
+            { header: 'Address', field: 'address' },
+            { header: 'Age', field: 'age', textAlign:'right' }
+        ]
+    };
+    myGridData = [
+        { name: 'Abdulla', address: 'Borisal', age: 18 },
+        { name: 'Abdul Rahim', address: 'Tangail', age: 23 },
+        { name: 'Abdul Razzak', address: 'Borisal', age: 22 }
+    ];
+    changeGridRow()
+    {
+        this.myGridData[0].name = 'Abdulla-up';
+        this.myGridData=this.myGridData.slice();
+        console.log('Change done');
+    }
+    constructor(private router: Router)
+    {
+        
+    }
     rvOptions: ReportViewerOpptions = <ReportViewerOpptions>{
         title: 'Hello World is nothing but mistery', approvedGroup: '2348567',  height:700, width:900,
         grid: {enableCellEditing:true,
@@ -158,9 +182,10 @@ export class HomeComponent implements OnInit, OnDestroy
             .subscribe(res => console.log(res));
 		 form.valueChanges('name')
             .subscribe(res => console.log(res));	
-        //form.disabled('address1.country', true);
+         //form.disabled('address1.country', true);
+         
     }
-
+    
     changeThana(e) {
         if (e.value && e.value == 1) {
             e.form.setData('Thana', [{ text: 'asd', value: 1 }, { text: 'MXZ', value: 2 }]);

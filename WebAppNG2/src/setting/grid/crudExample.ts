@@ -49,6 +49,7 @@ export class CrudExample implements OnInit {
 			//this.scholarGridOptions.api.grid.empty();
         }
         console.log('waiting for user inputs.'); 
+        this.scholarGridOptions.api.grid.exportToCSV(this.scholarList, 'my_data.csv');
     }
     private onLoad(grid: juGrid)
     {         
@@ -83,7 +84,7 @@ export class CrudExample implements OnInit {
                     params: { valueGetter: this.educationCellRender.bind(this) },
                     cellRenderer: this.educationCellRender.bind(this)
                 },
-                { headerName: 'Age', field: 'age', filter: 'number', sort: true, hide:false },
+                { headerName: 'Age', field: 'age', filter: 'number', sort: true, hide: false, formatter: val => Number(val).toFixed(3) },
                 { headerName: 'Address', field: 'address', cellRenderer: row => this.addressList.find(_ => _.value == row.address).text },
                 { headerName: 'Description', width: 300, field: 'description' }
             ],
