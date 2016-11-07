@@ -187,6 +187,27 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
             this.ctrlKey = false;
         });
     }
+    
+    public exportToCSV(data: any, fileName: string)
+    {        
+        const replacer = (key, value) => value === null ? '' : value; 
+       
+        const header = this.options.columnDefs.filter(_=>_.field).map(_ => _);
+        let csv: any[] = data.map(row => header.map(_ => _.formatter ? _.formatter(row[_.field]): JSON.stringify(row[_.field], replacer)).join(','));
+      
+        csv.unshift(header.map(_=>_.field).join(','));
+
+        let csvContent = "data:text/csv;charset=utf-8,"+ csv.join('\r\n');
+
+        let encodedUri = encodeURI(csvContent);
+        let link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", fileName);
+        //document.body.appendChild(link); // Required for FF
+
+        link.click();
+       
+    }
     public ngOnChanges(changes)
     {
         if (this.data && this.wasViewInitialized)
@@ -406,7 +427,8 @@ export interface ColumnDefs
     exp?: string;
     options?: SelectOptions;
     hide?: boolean;
-    inputExp?:string;
+    inputExp?: string;
+    formatter?: (val: any) => any;
 }
 export interface GridOptions
 {
