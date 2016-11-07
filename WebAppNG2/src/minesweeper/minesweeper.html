@@ -1,0 +1,111 @@
+<div class="game">
+    <div class="game-board">
+        <Board [squares]="squares" (squareclickHandler)="handleClick($event)"></Board>
+    </div>
+    <div class="game-info">
+        <div><a href="script:0;" (click)="startGame($event)">Start Game</a></div>
+        <div>{{status}}</div>
+        <div class="juTable" style="width:640px;">
+            <div>Table Freeze column</div>
+            <div style="border:solid 1px #ddd;">
+                <div class="juRow">
+                    <div class="juCol" style="width:240px">
+                        <div class="juRow">
+                            <div class="juCol juHeader">Freeze1</div>
+                            <div class="juCol juHeader">Freeze2</div>
+                        </div>
+                    </div>
+                    <div class="juCol" style="width:400px">
+                        <div style="overflow:hidden;" #headerDiv>
+                            <div style="width:720px;">
+                                <div class="juRow">
+                                    <div class="juCol juHeader">Name</div>
+                                    <div class="juCol juHeader">Address</div>
+                                    <div class="juCol juHeader">Age</div>
+                                    <div class="juCol juHeader">District</div>
+                                    <div class="juCol juHeader">Thana</div>
+                                    <div class="juCol juHeader">Village</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="juRow">
+                    <div class="juCol" style="width:240px;height:auto">
+                        <div class="juRow">
+                            <div class="juCol">Jasim</div>
+                            <div class="juCol">Tangail</div>
+                        </div>
+                        <div class="juRow">
+                            <div class="juCol">Jasim</div>
+                            <div class="juCol">Tangail</div>
+                        </div>
+                        <div class="juRow">
+                            <div class="juCol">Jasim</div>
+                            <div class="juCol">Tangail</div>
+                        </div>
+                        <div class="juRow">
+                            <div class="juCol">Jasim</div>
+                            <div class="juCol">Tangail</div>
+                        </div>
+                        <div class="juRow">
+                            <div class="juCol">Jasim</div>
+                            <div class="juCol">Tangail</div>
+                        </div>
+                    </div>
+                    <div class="juCol" style="width:400px;height:auto">
+                        <div style="overflow:hidden;" #contentDiv>
+                            <div style="width:720px;">
+                                <div class="juRow">
+                                    <div class="juCol">Jasim</div>
+                                    <div class="juCol">Tangail</div>
+                                    <div class="juCol">32</div>
+                                    <div class="juCol">Tngail</div>
+                                    <div class="juCol">Ghatail</div>
+                                    <div class="juCol">Shait Shaila</div>
+                                </div>
+                                <div class="juRow">
+                                    <div class="juCol">Ripon</div>
+                                    <div class="juCol">Tangail</div>
+                                    <div class="juCol">32</div>
+                                    <div class="juCol">Tngail</div>
+                                    <div class="juCol">Ghatail</div>
+                                    <div class="juCol">Shait Shaila</div>
+                                </div>
+                                <div class="juRow">
+                                    <div class="juCol">Nahida</div>
+                                    <div class="juCol">Tangail</div>
+                                    <div class="juCol">56</div>
+                                    <div class="juCol">Tngail</div>
+                                    <div class="juCol">Ghatail</div>
+                                    <div class="juCol">Shait Shaila</div>
+                                </div>
+                                <div class="juRow">
+                                    <div class="juCol">Arif</div>
+                                    <div class="juCol">Tangail</div>
+                                    <div class="juCol">56</div>
+                                    <div class="juCol">Tngail</div>
+                                    <div class="juCol">Ghatail</div>
+                                    <div class="juCol">Shait Shaila</div>
+                                </div>
+                                <div class="juRow">
+                                    <div class="juCol">Arif</div>
+                                    <div class="juCol">Tangail</div>
+                                    <div class="juCol">56</div>
+                                    <div class="juCol">Tngail</div>
+                                    <div class="juCol">Ghatail</div>
+                                    <div class="juCol">Shait Shaila</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div style="width:640px;overflow-x:scroll;height:16px" (scroll)="tblScroll($event, headerDiv, contentDiv)" ><div style="width:938px;display:inline-block"></div></div>
+        </div>
+    </div>
+</div>
+  
+    
