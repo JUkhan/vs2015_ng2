@@ -6,7 +6,7 @@ import {ReportViewerOpptions} from '../shared/app-ui/report.viewer';
 import {SelectOptions} from '../shared/juForm/juSelect';
 import {Observable} from 'rxjs/Rx';
 import {Router} from '@angular/router';
-
+import {GridOptions} from '../MyGrid/MyGrid';
 @Component({
     moduleId: module.id,
     selector: 'my-home',
@@ -14,19 +14,33 @@ import {Router} from '@angular/router';
 })
 export class HomeComponent implements OnInit, OnDestroy
 {
-    myGridOptions: any = {
+    myGridOptions: GridOptions = {
         rowSelect: (row, isSelected) => console.log(row, isSelected),
-        multiselect:true,
+        //multiSelect:!true, 
+        singleSelect: true,
         columns: [
-            { header: 'Name', field: 'name', },
-            { header: 'Address', field: 'address' },
-            { header: 'Age', field: 'age', textAlign:'right' }
+            {
+                header: 'Action', field: 'age', align: 'left', type: 'checkbox',
+                style: () => ({ position: 'absolute', top: '1px', width: '97%' }),
+                class: () => ({ 'btn btn-primary btn-sm': true }),
+                text: 'Click Me', disabled: (val, row) => row.age < 20,
+                title: 'Click Me for nothing', click: (val) => alert(val)
+            },
+            { header: 'Name', field: 'name', change: (obj) => console.log(obj), selectOptions: { width: '100%', fixedPosition: true, title: 'Select education' }, data: [{ text: 'option1', value: 1 }, { text: 'option2', value: 2 }] },
+            { header: 'Address', field: 'address', render: val => `<button class="btn btn-primary btn-sm" type="button" (click)="alert(123)">${val}</button>` },
+            { header: 'Age', field: 'age', align:'right' }
         ]
     };
     myGridData = [
         { name: 'Abdulla', address: 'Borisal', age: 18 },
         { name: 'Abdul Rahim', address: 'Tangail', age: 23 },
-        { name: 'Abdul Razzak', address: 'Borisal', age: 22 }
+        { name: 'Abdul Razzak', address: 'Borisal', age: 22 },
+        { name: 'Abdulla', address: 'Borisal', age: 18 },
+        { name: 'Abdul Rahim', address: 'Tangail', age: 23 },
+        { name: 'Abdul Razzak', address: 'Borisal', age: 22 },
+        { name: 'Abdulla', address: 'Borisal', age: 18 }
+       
+      
     ];
     changeGridRow()
     {

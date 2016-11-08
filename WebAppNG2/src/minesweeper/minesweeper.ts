@@ -1,59 +1,11 @@
 ﻿
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
 @Component({
     moduleId: module.id,
-    template: `
-        <div class="game">
-                <div class="game-board">
-                    <Board [squares]="squares" (squareclickHandler)="handleClick($event)" ></Board>
-                </div>
-                <div class="game-info">
-                    <div><a href="script:0;" (click)="startGame($event)">Start Game</a></div>
-                    <div>{{status}}</div>
-                </div>                
-            </div><br>
-            <div class="juTable" style="width:200px;">
-                <div>Table title</div>
-                <div style="border:solid 1px #ddd;">
-                    <div style="overflow:hidden;" #headerDiv>
-                        <div style="width:380px;">
-                            <div class="juRow">
-                                <div class="juCol juHeader">Name</div>
-                                <div class="juCol juHeader">Address</div>
-                                <div class="juCol juHeader">Age</div>
-                                <div class="juCol" style="width:20px;border-right: none;">&nbsp;</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="max-height:100px;overflow:auto;" (scroll)="tblScroll($event, headerDiv)">
-                        <div style="width:360px;">   
-                            <div class="juRow">
-                                <div class="juCol">Jasim</div>
-                                <div class="juCol">Tangail</div>
-                                <div class="juCol">32</div>
-                            </div>
-                            <div class="juRow">
-                                <div class="juCol">Ripon</div>
-                                <div class="juCol">Tangail</div>
-                                <div class="juCol">32</div>
-                            </div>
-                            <div class="juRow">
-                                <div class="juCol">Nahida</div>
-                                <div class="juCol">Tangail</div>
-                                <div class="juCol">56</div>
-                            </div>
-                            <div class="juRow">
-                                <div class="juCol">Arif</div>
-                                <div class="juCol">Tangail</div>
-                                <div class="juCol">56</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-           </div>          
-    `,
-    templateUrl: './game.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl:'minesweeper.html',
+    styleUrls:['./game.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation:ViewEncapsulation.None
 })
 export class minesweeper {
 
@@ -62,8 +14,18 @@ export class minesweeper {
     constructor() {
         this.squares = this.getInitialSquare();
     }
-    private tblScroll(e, headerDiv) {
+    private tblScroll(e, headerDiv, contentDiv) {       
         headerDiv.scrollLeft = e.target.scrollLeft;
+        contentDiv.scrollLeft = e.target.scrollLeft;
+    }
+    tblScrollFreeze(e, leftContent, rightContent)
+    {
+        leftContent.scrollTop = e.target.scrollTop;
+        rightContent.scrollTop = e.target.scrollTop;
+    }
+    private tblScroll2(e, headerDiv)
+    {
+        headerDiv.scrollLeft = e.target.scrollLeft;       
     }
     getInitialSquare() {
         let arr = [], booms = 20, squares = 108, boomObj = {};

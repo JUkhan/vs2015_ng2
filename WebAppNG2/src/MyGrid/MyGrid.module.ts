@@ -4,14 +4,16 @@ import { CommonModule }         from '@angular/common';
 import { FormsModule }          from '@angular/forms';
 
 import {MyGrid} from './MyGrid';
-import {HeaderComponent} from './HeaderComponent';
-import {RowsComponent} from './RowsComponent';
-import {CellComponent} from './CellComponent';
+import {Header} from './Header';
+import {Row} from './Row';
+import {Cell, SafeHtmlPipe} from './Cell';
+import {Renderer} from './Renderer';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, SharedModule],
     declarations: [
-        MyGrid, HeaderComponent, RowsComponent, CellComponent
+        MyGrid, Header, Row, Cell, Renderer, SafeHtmlPipe
     ],
     exports: [
         MyGrid

@@ -49,7 +49,7 @@ export class CrudExample implements OnInit {
 			//this.scholarGridOptions.api.grid.empty();
         }
         console.log('waiting for user inputs.'); 
-        this.scholarGridOptions.api.grid.exportToCSV(this.scholarList, 'my_data.csv');
+        //this.scholarGridOptions.api.grid.exportToCSV(this.scholarList, 'my_data.csv');
     }
     private onLoad(grid: juGrid)
     {         
