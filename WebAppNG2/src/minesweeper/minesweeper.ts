@@ -18,6 +18,15 @@ export class minesweeper {
         headerDiv.scrollLeft = e.target.scrollLeft;
         contentDiv.scrollLeft = e.target.scrollLeft;
     }
+    tblScrollFreeze(e, leftContent, rightContent)
+    {
+        leftContent.scrollTop = e.target.scrollTop;
+        rightContent.scrollTop = e.target.scrollTop;
+    }
+    private tblScroll2(e, headerDiv)
+    {
+        headerDiv.scrollLeft = e.target.scrollLeft;       
+    }
     getInitialSquare() {
         let arr = [], booms = 20, squares = 108, boomObj = {};
 

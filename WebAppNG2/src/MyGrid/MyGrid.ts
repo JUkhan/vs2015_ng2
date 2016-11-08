@@ -24,7 +24,7 @@ import {Observable, Subscription} from 'rxjs/Rx';
                </div>`,
     selector: 'my-grid',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    styleUrls: ['./grid.css'],
+    //styleUrls: ['./grid.css'],
     encapsulation: ViewEncapsulation.None
 })
 export class MyGrid implements AfterViewInit, OnDestroy, OnInit
