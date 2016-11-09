@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit, OnDestroy
     myGridOptions: GridOptions = {
         rowSelect: (row, isSelected) => console.log(row, isSelected),
         //multiSelect:!true, 
-        singleSelect: true,
+        singleSelect: true,  
         columns: [
             {
                 header: 'Action', field: 'age', align: 'left', type: 'checkbox',
@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit, OnDestroy
         this.myOptions = {
             viewMode:'panel', panelMode:'primary',
             labelPos: 'left', title: 'Complex Form Example',
-            labelSize: 2,
+            labelSize: 2, 
             refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {}, aboutMe:'I love c#' },           
             tabs: {
                 'Tab-1': [

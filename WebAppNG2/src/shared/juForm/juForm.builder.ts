@@ -694,12 +694,13 @@ export class juFormBuilder {
         return DynamicFormComponent;
     }
     protected createComponentModule(componentType: any) {
+        const childComponents:any[] = this.options.childComponents || [];
         @NgModule({
             imports: [
                  SharedModule
             ],
             declarations: [
-                componentType
+                componentType, ...childComponents
             ],
         })
         class RuntimeComponentModuleForJuForm {

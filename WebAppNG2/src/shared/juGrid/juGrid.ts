@@ -470,7 +470,7 @@ export interface GridOptions
     colResize?: boolean;
     rowEvents?:string;
     crudColumnWidth?:number;
-    additionalActionInCrud?: [{ title: string, icon: string, click: (row: any) => void }];
+    additionalActionInCrud?: [{ title: string, icon: string, click: (row: any) => void }];    
 }
 export interface BaseFilter
 {

@@ -374,6 +374,6 @@ export interface FormOptions
     buttons?: { [key: string]: { type: 'submit' | 'close' | 'button', exp?:string, cssClass?: string, click?: (event: any) => void } };
     api?: juForm;
     [key: string]: any;
-
+    childComponents?: any[];
 }
 
