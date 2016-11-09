@@ -471,6 +471,7 @@ export interface GridOptions
     rowEvents?:string;
     crudColumnWidth?:number;
     additionalActionInCrud?: [{ title: string, icon: string, click: (row: any) => void }];
+    childComponents?:any[]
 }
 export interface BaseFilter
 {
