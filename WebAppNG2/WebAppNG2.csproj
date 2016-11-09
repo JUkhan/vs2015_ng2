@@ -705,6 +705,7 @@
     <TypeScriptCompile Include="src\minesweeper\Board.ts" />
     <TypeScriptCompile Include="src\minesweeper\square.component.ts" />
     <TypeScriptCompile Include="src\MyGrid\Cell.ts" />
+    <TypeScriptCompile Include="src\MyGrid\Grid.builder.ts" />
     <TypeScriptCompile Include="src\MyGrid\Header.ts" />
     <TypeScriptCompile Include="src\MyGrid\MyGrid.module.ts" />
     <TypeScriptCompile Include="src\MyGrid\MyGrid.ts" />

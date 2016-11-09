@@ -16,8 +16,8 @@ export class HomeComponent implements OnInit, OnDestroy
 {
     myGridOptions: GridOptions = {
         rowSelect: (row, isSelected) => console.log(row, isSelected),
-        //multiSelect:!true, 
-        singleSelect: true,  
+        multiSelect:true, 
+        //singleSelect: true,  
         columns: [
             {
                 header: 'Action', field: 'age', align: 'left', type: 'checkbox',

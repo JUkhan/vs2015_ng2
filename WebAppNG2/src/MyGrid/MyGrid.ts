@@ -1,30 +1,17 @@
 ﻿import {Component, Input, ChangeDetectionStrategy, ViewEncapsulation,
-    QueryList, ViewChildren, AfterViewInit, OnInit, OnDestroy
+    QueryList, ViewChildren, AfterViewInit, OnInit,
+    OnDestroy, ComponentRef, ViewContainerRef, ViewChild, ComponentFactory
 } from '@angular/core';
 
 import {Row} from './Row';
 import {Observable, Subscription} from 'rxjs/Rx';
+import {GridBuilder} from './Grid.builder';
+
 @Component({
     moduleId: module.id,
-    template: `<div class="juTable" [style.width.px]="width+20">
-                    <div style="border:solid 1px #ddd;">
-                        <div style="overflow:hidden;" #headerDiv>
-			                <div [style.width.px]="width+20">
-				                 <header-com [options]="options"></header-com>
-			                </div>
-		                </div>
-                        <div [style.max-height.px]="options.height||500" style="overflow:auto;" (scroll)="tblScroll($event, headerDiv)">
-			                <div [style.width.px]="width" class="rows">
-                                <template ngFor let-row [ngForOf]="data" let-index="index" let-even="even">
-                                    <row-com [options]="options" [row]="row" (onSelect)="rowSelect($event)" [index]="index" [even]="even"></row-com>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-               </div>`,
+    template: `<div #dynamicContentPlaceHolder></div>`,
     selector: 'my-grid',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    //styleUrls: ['./grid.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,    
     encapsulation: ViewEncapsulation.None
 })
 export class MyGrid implements AfterViewInit, OnDestroy, OnInit
@@ -34,16 +21,48 @@ export class MyGrid implements AfterViewInit, OnDestroy, OnInit
     @ViewChildren(Row) _rows = new QueryList<Row>();
     protected ctrlKey: boolean = false;
     protected subscriptionList: Subscription[] = [];
-    protected width: number = 320;    
-    constructor() { }
+    protected width: number = 320;
+    protected componentRef: ComponentRef<any>;
+    @ViewChild('dynamicContentPlaceHolder', { read: ViewContainerRef }) 
+    protected dynamicComponentTarget: ViewContainerRef;     
+    constructor(protected typeBuilder: GridBuilder) { }
     public ngOnInit() {
         this.setWidth();
     }
+    public render(): Promise<MyGrid>
+    {
+        return this.refreshContent();
+    }
+    protected refreshContent(): Promise<MyGrid>
+    {
+        if (this.componentRef)
+        {
+            this.componentRef.destroy();
+        }
+        return new Promise((resolve, reject) =>
+        {
+
+            this.typeBuilder
+                .createComponentFactory(this.options)
+                .then((factory: ComponentFactory<any>) =>
+                {
+                    this.componentRef = this
+                        .dynamicComponentTarget
+                        .createComponent(factory);
+
+                    const component = this.componentRef.instance;
+                    component.config = this.options;
+                    
+                    resolve(this);
+                });
+        });
+    }  
     protected mxd() {
         alert('hello mamm');
     }
     public ngAfterViewInit()
-    {       
+    {  
+        this.refreshContent();     
         //this._rows.changes.subscribe(res => console.log(res));
         if (this.options.multiSelect)
         {
@@ -53,6 +72,11 @@ export class MyGrid implements AfterViewInit, OnDestroy, OnInit
     public ngOnDestroy()
     {
         this.subscriptionList.forEach(_ => _.unsubscribe());
+        if (this.componentRef)
+        {
+            this.componentRef.destroy();
+            this.componentRef = null;
+        }
         console.log('Destroy Grid');
     }
     protected setWidth() {

@@ -9,6 +9,7 @@ import {Row} from './Row';
 import {Cell, SafeHtmlPipe} from './Cell';
 import {Renderer} from './Renderer';
 import {SharedModule} from '../shared/shared.module';
+import {GridBuilder} from './Grid.builder';
 
 @NgModule({
     imports: [CommonModule, FormsModule, SharedModule],
@@ -18,17 +19,10 @@ import {SharedModule} from '../shared/shared.module';
     exports: [
         MyGrid
     ],
-    providers: []
+    providers: [GridBuilder]
 })
 export class MyGridModule
-{
-
-    //static forRoot(): ModuleWithProviders
-    //{
-    //    return {
-    //        ngModule: SharedModule,
-    //        providers: [AppService, UiService, CanDeactivateGuard, juWindowService, juFormBuilder, juGridBuilder]
-    //    };
-    //}
+{ 
+   
 }
 
