@@ -128,8 +128,7 @@ export class GridBuilder {
                         this._cd.markForCheck();
                         if (this.options.columns[activeIndex - 1].parent) {
                             this.setParentWidth(this.options.columns[activeIndex - 1].parent, e);
-                        }                        
-                        console.log(w1 - e);
+                        } 
                     });
             }
             private InitParentWidth(col: any) {
@@ -182,7 +181,7 @@ export class GridBuilder {
     //calculate header
     protected headerHtml: any[] = [];
     protected getHeader(hederDef) {
-        this._colIndex = 0;
+        this._colIndex = 0; this.headers = [];
         var colDef = [], rc = this.row_count(hederDef), i = 0;
         while (i < rc) {
             this.headerHtml[i] = [];
