@@ -1,4 +1,4 @@
-﻿import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+﻿import {Component, Directive, OnInit, ViewEncapsulation} from '@angular/core';
 import {juWindowService} from '../../shared/juWindow/juWindowService';
 
 import { CrudExample }         from './crudExample';
@@ -15,7 +15,26 @@ import { FV}          from '../../shared/juForm/FV';
 @Component({
     moduleId: module.id,
     selector: 'test-component',
-    template: `<div juForm [options]="formDefs"></div>`,
+    //directives: [LogLifecycleDirective],
+    template: `<div juForm [options]="formDefs"></div>
+        <p>
+            <a (click)="setThings( 'apples' )">Set Apples</a> &mdash;
+            <a (click)="setThings( 'bananas' )">Set Bananas</a> &mdash;
+            <a (click)="incrementCounter()">Increment counter</a>
+        </p>
+        <template
+            [ngTemplateOutlet]="myTemplate"
+            [ngOutletContext]="{ items: things }">
+        </template>
+        <template #myTemplate let-items="items">
+            <p logLifecycle>
+                How do you like them {{ items }}?!
+            </p>
+            <p>
+                Counter: {{ counter }} <em>(from lexical context)</em>.
+            </p>
+        </template>
+    `,
    
     styles: [`
           .wnav{margin-top:1px;}  
@@ -25,7 +44,10 @@ import { FV}          from '../../shared/juForm/FV';
 
 export class WindowComponent implements OnInit {
 
-    constructor(private service: juWindowService) { }
+    constructor(private service: juWindowService) {
+        this.counter = 0;
+        this.things = "apples";
+    }
     
     ngOnInit() {
         //this.service.windowConfig = {
@@ -57,4 +79,57 @@ export class WindowComponent implements OnInit {
     submitScholar() {
         alert('submitted');
     }
+    // I hold the counter (which is being rendered in the template via a lexical binding).
+    public counter: number;
+
+    // I hold the type of things (which is being rendered in the template via the
+    // ngOutletContext and the template-local bindings).
+    public things: string;
+
+
+    
+
+
+    // ---
+    // PUBLIC METHODS.
+    // ---
+
+
+    // I increment the counter by one.
+    public incrementCounter(): void {
+
+        this.counter++;
+
+    }
+
+
+    // I set the things.
+    public setThings(newThings: string): void {
+
+        this.things = newThings;
+
+    }
+}
+
+@Directive({
+    selector: "[logLifecycle]"
+})
+export class LogLifecycleDirective  {
+
+    // I get called once when the directive is being destroyed.
+    public ngOnDestroy() {
+
+        console.log("Directive destroyed.");
+
+    }
+
+
+    // I get called once when the directive has been initialized and the inputs have
+    // been bound for the first time.
+    public ngOnInit() {
+
+        console.log("Directive initialized.");
+
+    }
+
 }

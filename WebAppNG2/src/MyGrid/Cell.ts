@@ -1,6 +1,6 @@
 ﻿
 import {Component, Input, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ElementRef, AfterViewInit, ChangeDetectorRef} from '@angular/core';
-import {Columns} from './MyGrid';
+import {ColumnDefs} from './MyGrid';
 @Component({
     moduleId: module.id,
     template: `<div [ngSwitch]="getSwitch()" style="position:relative">
@@ -42,7 +42,7 @@ import {Columns} from './MyGrid';
 })
 export class Cell implements OnInit, AfterViewInit
 {
-    @Input() options: Columns = <Columns>{};   
+    @Input() options: ColumnDefs = <ColumnDefs>{};   
     @Input() row: any;
     @Input() index: number=0;
     isActive: boolean = true;

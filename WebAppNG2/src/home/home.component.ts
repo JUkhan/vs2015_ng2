@@ -16,19 +16,17 @@ export class HomeComponent implements OnInit, OnDestroy
 {
     myGridOptions: GridOptions = {
         rowSelect: (row, isSelected) => console.log(row, isSelected),
-        //multiSelect:!true, 
-        singleSelect: true,
+        multiSelect: true, colResize:true,
+        //singleSelect: true,  
         columns: [
+            { header: '#', field: 'age',  },
             {
-                header: 'Action', field: 'age', align: 'left', type: 'checkbox',
-                style: () => ({ position: 'absolute', top: '1px', width: '97%' }),
-                class: () => ({ 'btn btn-primary btn-sm': true }),
-                text: 'Click Me', disabled: (val, row) => row.age < 20,
-                title: 'Click Me for nothing', click: (val) => alert(val)
+                header: 'Action', field: 'age', width: 239, align: 'left', type: 'checkbox',
+                children: [{ header: '', width: 120, children: [{ header: 'Action1', field: 'c1', width:120 }] }, { header: 'Action2', field: 'ac2', children: [{ header: 'dx', width: 61 }, { header: 'ox', width: 60 }] }]
             },
             { header: 'Name', field: 'name', change: (obj) => console.log(obj), selectOptions: { width: '100%', fixedPosition: true, title: 'Select education' }, data: [{ text: 'option1', value: 1 }, { text: 'option2', value: 2 }] },
             { header: 'Address', field: 'address', render: val => `<button class="btn btn-primary btn-sm" type="button" (click)="alert(123)">${val}</button>` },
-            { header: 'Age', field: 'age', align:'right' }
+            { header: 'Age', field: 'age', align: 'right', sort:!true }
         ]
     };
     myGridData = [
@@ -95,7 +93,7 @@ export class HomeComponent implements OnInit, OnDestroy
         this.myOptions = {
             viewMode:'panel', panelMode:'primary',
             labelPos: 'left', title: 'Complex Form Example',
-            labelSize: 2,
+            labelSize: 2, 
             refreshBy: { products: [{ name: 'Jasim', price: 2 }, { name: 'JArif' }], address1: {}, address2: {}, aboutMe:'I love c#' },           
             tabs: {
                 'Tab-1': [

@@ -58,6 +58,12 @@
     background-color:#f9f9f9;
     color:#333;
 }
+.data-not-found{
+    margin:10px;color:steelblue;
+}
+.grid-border {
+    border:solid 1px #ddd;
+}
 /*.rows  div.juRow  div.juCol:nth-of-type(odd) {
   background-color: #f9f9f9;
     color:#333;

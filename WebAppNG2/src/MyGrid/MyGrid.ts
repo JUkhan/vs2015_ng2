@@ -1,58 +1,92 @@
 ﻿import {Component, Input, ChangeDetectionStrategy, ViewEncapsulation,
-    QueryList, ViewChildren, AfterViewInit, OnInit, OnDestroy
+    QueryList, ViewChildren, AfterViewInit, OnInit,
+    OnDestroy, ComponentRef, ViewContainerRef, ViewChild, ComponentFactory
 } from '@angular/core';
 
 import {Row} from './Row';
 import {Observable, Subscription} from 'rxjs/Rx';
+import {GridBuilder} from './Grid.builder';
+
 @Component({
     moduleId: module.id,
-    template: `<div class="juTable" [style.width.px]="width+20">
-                    <div style="border:solid 1px #ddd;">
-                        <div style="overflow:hidden;" #headerDiv>
-			                <div [style.width.px]="width+20">
-				                 <header-com [options]="options"></header-com>
-			                </div>
-		                </div>
-                        <div [style.max-height.px]="options.height||500" style="overflow:auto;" (scroll)="tblScroll($event, headerDiv)">
-			                <div [style.width.px]="width" class="rows">
-                                <template ngFor let-row [ngForOf]="data" let-index="index" let-even="even">
-                                    <row-com [options]="options" [row]="row" (onSelect)="rowSelect($event)" [index]="index" [even]="even"></row-com>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-               </div>`,
+    template: `<div #dynamicContentPlaceHolder></div>`,
     selector: 'my-grid',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    //styleUrls: ['./grid.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,    
     encapsulation: ViewEncapsulation.None
 })
 export class MyGrid implements AfterViewInit, OnDestroy, OnInit
 {
-    @Input() options: any = {};
-    @Input() data: any[];
-    @ViewChildren(Row) _rows = new QueryList<Row>();
+    @Input() options: GridOptions = <GridOptions>{};
+    @Input()
+    set data(val: any[]) {
+        this._data = val;
+        if (this.gridRef) {
+            this.gridRef.instance.data = val;
+            console.log(val);
+        }
+    }
+    get data() { return this._data; }
+    protected _data: any[];
+    //@ViewChildren(Row) _rows = new QueryList<Row>();
     protected ctrlKey: boolean = false;
     protected subscriptionList: Subscription[] = [];
-    protected width: number = 320;    
-    constructor() { }
+    protected width: number = 320;
+    protected gridRef: ComponentRef<any>;
+    @ViewChild('dynamicContentPlaceHolder', { read: ViewContainerRef }) 
+    protected dynamicComponentTarget: ViewContainerRef;     
+    constructor(protected typeBuilder: GridBuilder) { }
     public ngOnInit() {
-        this.setWidth();
+        //this.setWidth();
+        this.options.width = this.options.width || '100%';
     }
-    protected mxd() {
-        alert('hello mamm');
+    public render(): Promise<MyGrid>
+    {
+        return this.refreshContent();
     }
+    protected refreshContent(): Promise<MyGrid>
+    {
+        if (this.gridRef)
+        {
+            this.gridRef.destroy();
+        }
+        return new Promise((resolve, reject) =>
+        {
+
+            this.typeBuilder
+                .createComponentFactory(this.options)
+                .then((factory: ComponentFactory<any>) =>
+                {
+                    this.gridRef = this
+                        .dynamicComponentTarget
+                        .createComponent(factory);
+                   
+                    resolve(this);
+                });
+        });
+    }  
+    
     public ngAfterViewInit()
-    {       
+    {
+        this.refreshContent().then(_ => {
+            this.gridRef.instance.options = this.options;
+            this.gridRef.instance.data = this.data;
+            this.gridRef.changeDetectorRef.detectChanges();
+            console.log(this.options, this.data);
+        });     
         //this._rows.changes.subscribe(res => console.log(res));
         if (this.options.multiSelect)
         {
-            this.handle_CTRL_key();
+            //this.handle_CTRL_key();
         }       
     }
     public ngOnDestroy()
     {
         this.subscriptionList.forEach(_ => _.unsubscribe());
+        if (this.gridRef)
+        {
+            this.gridRef.destroy();
+            this.gridRef = null;
+        }
         console.log('Destroy Grid');
     }
     protected setWidth() {
@@ -60,7 +94,7 @@ export class MyGrid implements AfterViewInit, OnDestroy, OnInit
         this.options.columns.forEach(_ => sum += _.width || 120);
         this.width = sum;
     }    
-    protected rowSelect(row: Row)
+    /*protected rowSelect(row: Row)
     {
         if (!(this.options.singleSelect || this.options.multiSelect)) return;
         if (this.ctrlKey)
@@ -108,28 +142,76 @@ export class MyGrid implements AfterViewInit, OnDestroy, OnInit
         let rowArray = this._rows.toArray();
         if (rowArray[index])
             rowArray[index].setRowSelection(isSelect);
-    }
+    }*/
 }
 
-export interface Columns{
-    header: string;
-    field: string;
+export interface ColumnDefs {
+    type?: 'select' | 'html' | 'juSelect' | 'datepicker' | string;
     align?: 'left' | 'center' | 'right';
-    type?: 'text' | 'textarea' | 'checkbox' | 'select';
-    style?: (val:any, row: any) => any;
-    class?: (val: any,row: any) => any;
-    text?: string;
-    disabled?: (val: any, row: any) => boolean;
-    title?: string;
-    click?: (val: any, row: any) => void;
-    change?: (event: { value: any, sender: any, index: number }) => void;
-    selectOptions?: any;
-    data?: any[];
-    render?: (val: any, row: any) => any;
+    width?: number;
+    header?: string;
+    field?: string;
+    tdClass?: (row: any, index: number, isFirst: boolean, isLast: boolean) => {};
+    render?: (row: any, index: number, isFirst: boolean, isLast: boolean) => any;
+    action?: [{ title: string, icon: string, click: (row: any) => void }];
+    children?: ColumnDefs[];
+    sort?: boolean;
+    comparator?: (a: any, b: any) => boolean;
+    filter?: 'set' | 'text' | 'number' | any;
+    params?: { cellRenderer?: (row: any, index?: number) => any, apply?: boolean, valueGetter?: (row: any) => any, value?: string[] };
+    data?: any[] | any;
+    change?: (row: any, index?: number) => void;
+    content?: string;
+    validators?: Function | Array<Function>;
+    search?: boolean;
+    exp?: string;
+    selectOptions?: any;//SelectOptions;
+    hide?: boolean;
+    inputExp?: string;
+    formatter?: (val: any) => any;
 }
 export interface GridOptions {
+    title?: string;
+    panelMode?: 'default' | 'primary' | 'success' | 'info' | 'warning' | 'danger';
+    viewMode?: 'panel' | string;
+    pagerPos?: 'top' | 'bottom' | 'header';
+    pagerLeftPos?: number;
+    width?: string;
+    height?: number;
+    rowHeight?: number;
+    headerHeight?: number;
+    classNames?: string;
+    enablePowerPage?: boolean;
+    enablePageSearch?: boolean;
+    linkPages?: number;
+    pageSize?: number;
+    confirmMessage?: string;
+    crud?: boolean;
+    create?: boolean;
+    update?: boolean;
+    remove?: boolean;
+    quickSearch?: boolean;
+    //update_CB?: (form: juForm, model: any) => void;
+    //insert_CB?: (form: juForm) => void;
+    trClass?: (row: any, index: number, isFirst: boolean, isLast: boolean) => {};
+    //formDefs?: FormOptions;
+    columns?: ColumnDefs[];
+    removeItem?: (data: any) => void;
+    //api?: { form: juForm, grid: juGrid, pager: juPager };
+    sspFn?: (params: { pageSize: number, pageNo: number, searchText: string, sort: string, filter: any[] }) => Observable<{ totalRecords: number, data: any[] }>;
+    //onFormLoad?: (form: juForm) => void;
+    trackBy?: string;
+    enableTreeView?: boolean;
+    lazyLoad?: (row: any) => Observable<Array<any>>;
+    level?: number;
+    enableCellEditing?: boolean;
+    [key: string]: any;
+    noPager?: boolean;
+    colResize?: boolean;
+    rowEvents?: string;
+    crudColumnWidth?: number;
+    additionalActionInCrud?: [{ title: string, icon: string, click: (row: any) => void }];
     rowSelect?: (row: any, isSelected: boolean) => void;
-    multiSelect?: boolean; 
+    multiSelect?: boolean;
     singleSelect?: boolean;
-    columns: Columns[]; 
 }
