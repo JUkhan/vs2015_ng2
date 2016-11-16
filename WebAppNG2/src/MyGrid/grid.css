@@ -64,6 +64,11 @@
 .grid-border {
     border:solid 1px #ddd;
 }
+.resize-marker{
+    border-left:solid 1px #333;
+    position:absolute;
+    display:none
+}
 /*.rows  div.juRow  div.juCol:nth-of-type(odd) {
   background-color: #f9f9f9;
     color:#333;

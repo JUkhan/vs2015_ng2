@@ -1,4 +1,17 @@
-﻿import {Component, ChangeDetectorRef, AfterContentInit, ComponentFactory, NgModule, Input, Output, EventEmitter, ChangeDetectionStrategy, Injectable, ElementRef, ViewEncapsulation} from '@angular/core';
+﻿import {Component, 
+        Renderer, 
+        ChangeDetectorRef, 
+        ViewChild, 
+        AfterContentInit, 
+        ComponentFactory, 
+        NgModule, 
+        Input, 
+        Output, 
+        EventEmitter, 
+        ChangeDetectionStrategy, 
+        Injectable, 
+        ElementRef, 
+        ViewEncapsulation} from '@angular/core';
 import {RuntimeCompiler} from '@angular/compiler';
 import { CommonModule }         from '@angular/common';
 import { FormsModule }          from '@angular/forms';
@@ -42,12 +55,18 @@ export class GridBuilder {
             @Input() data: any[];
             dataList: any[] = [];
             isColResize: boolean = false;
+            @ViewChild('resizable')      resizable:ElementRef;
+            @ViewChild('resizeMarker')   resizeMarker:ElementRef;
+            @ViewChild('dataContainer')  dataContainer:ElementRef;
             protected subsList: Subscription[] = [];                      
-            constructor(private el: ElementRef, private _cd: ChangeDetectorRef) { }
+            constructor(
+                private el: ElementRef, 
+                private _cd: ChangeDetectorRef,
+                private renderer: Renderer) { }
 
             ngAfterViewInit() {
-                if (this.options.colResize) {
-                    this.columnResizing();
+                if (this.options.colResize) { 
+                    this.columnResizing();                   
                 }
             }
             ngOnDestroy() {
@@ -74,9 +93,9 @@ export class GridBuilder {
             private sortIcon(colDef: any): any {
                 let hidden = typeof colDef.reverse === 'undefined';
                 return { 'fa-sort not-active': hidden, 'fa-caret-up': colDef.reverse === false, 'fa-caret-down': colDef.reverse === true };  // for default sort icon  ('fa-sort': hidden, )
-            }            
+            }                        
             private columnResizing() {
-                let thList: any[] = this.el.nativeElement.querySelectorAll('div.resizable .juCol'),
+                let thList: any[] = this.resizable.nativeElement.querySelectorAll('.juCol'),
                     mousemove$ = Observable.fromEvent(document, 'mousemove'),
                     mouseup$ = Observable.fromEvent(document, 'mouseup'),
                     startX = 0, w1 = 0, w2 = 0, not_mousedown = true, tblWidth = this.options.cwidth, activeIndex = 1;
@@ -110,7 +129,8 @@ export class GridBuilder {
                                     w2 = 0;                                    
                                     if (this.options.columns[activeIndex - 1].parent) {
                                         this.InitParentWidth(this.options.columns[activeIndex - 1].parent);
-                                    }  
+                                    } 
+                                    this.positionResizeMarker(startX); 
                                 });
                         })
                         .subscribe());
@@ -126,6 +146,7 @@ export class GridBuilder {
                             this.setParentWidth(this.options.columns[activeIndex - 1].parent, w2);
                         }
                         this._cd.markForCheck();
+                        this.renderer.setElementStyle(this.resizeMarker.nativeElement, 'display', 'none');
                     }
                     not_mousedown = true;
                                          
@@ -134,16 +155,21 @@ export class GridBuilder {
                     .map((e: any) => e.x - startX)
                     .filter(e => w1 + e > 20 && !not_mousedown)
                     .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } })
-                    .debounceTime(30)
+                    //.debounceTime(30)
                     .subscribe(e => { 
-                        w2 = e;                       
-                        //this.options.columns[activeIndex - 1].width = w1 + e;
-                        //this.options.cwidth = tblWidth + e;                        
-                        //if (this.options.columns[activeIndex - 1].parent) {
-                        //    this.setParentWidth(this.options.columns[activeIndex - 1].parent, e);
-                        //}
-                        //this._cd.markForCheck(); 
+                        w2 = e; 
+                        this.positionResizeMarker(e+startX);
                     }));
+            }
+            private positionResizeMarker(left:number){
+                 const rect = this.resizable.nativeElement.getBoundingClientRect();
+                 const bodyRect=document.body.getBoundingClientRect();
+                 const resizeElement=this.resizeMarker.nativeElement;
+                 const height=this.dataContainer.nativeElement.clientHeight+this.resizable.nativeElement.clientHeight;
+                 this.renderer.setElementStyle(resizeElement, 'top', (rect.top-bodyRect.top)+'px');
+                 this.renderer.setElementStyle(resizeElement, 'height', height+'px');
+                 this.renderer.setElementStyle(resizeElement, 'left', left+'px');
+                this.renderer.setElementStyle(resizeElement, 'display', 'block');
             }
             private InitParentWidth(col: any) {
                 col.w1 = col.width;
@@ -183,13 +209,14 @@ export class GridBuilder {
                            ${this.getHeader(this.options.columns)}                           
                     </div>
                 </div>
-                <div style="overflow:auto;max-height:${this.options.height || 350}px" (scroll)="normalTableScroll($event, headerDiv)">
+                <div #dataContainer style="overflow:auto;max-height:${this.options.height || 350}px" (scroll)="normalTableScroll($event, headerDiv)">
                     <div [style.width.px]="options.cwidth">
                         <div class="data-not-found" *ngIf="!dataList.length"><b>Data Not Found</b></div>                       
                     </div>
                 </div>
             </div>
-        </div>`;
+        </div>
+        <span #resizeMarker class="resize-marker"></span>`;
         return html;
     }
     //calculate header
@@ -212,7 +239,7 @@ export class GridBuilder {
         this.options.headers = this.headers;
         this.options.cwidth = this.options.columns.map(_ => _.width).reduce((a, b) => a + b, 0);
         const len= this.headerHtml.length;
-        return this.headerHtml.map((_,i) => `<div class="juRow${(len-1)==i?' resizable':''}">${_.join('')}</div>`).reduce((p, c) => p + c, '');
+        return this.headerHtml.map((_,i) => `<div ${(len-1)==i?'#resizable':''} class="juRow">${_.join('')}</div>`).reduce((p, c) => p + c, '');
     }
     protected _colIndex: number = 0;
     protected headers: any[] = [];
