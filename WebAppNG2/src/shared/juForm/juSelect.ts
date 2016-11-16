@@ -59,6 +59,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     @Input() config: any = {};
     @Input('myForm') myForm: any;
     @Output('option-change') onChange = new EventEmitter();
+    @Output() onLoad = new EventEmitter();
     @Input() index: number;
     @Input() set value(val: any)
     { 
@@ -136,6 +137,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
                
             });
         }
+        this.onLoad.emit(this);
     }
     public ngOnChanges(changes: any) {                          
         if (changes.dataList && changes.dataList.currentValue && changes.dataList.currentValue !== changes.dataList.previousValue)

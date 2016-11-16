@@ -3,7 +3,7 @@ import {RuntimeCompiler} from '@angular/compiler';
 import { CommonModule }         from '@angular/common';
 import { FormsModule }          from '@angular/forms';
 import {MyGridModule} from './MyGrid.module';
-import {Observable} from 'rxjs/Rx';
+import {Observable, Subscription} from 'rxjs/Rx';
 declare var jQuery: any;
 
 @Injectable()
@@ -42,13 +42,16 @@ export class GridBuilder {
             @Input() data: any[];
             dataList: any[] = [];
             isColResize: boolean = false;
-                                  
+            protected subsList: Subscription[] = [];                      
             constructor(private el: ElementRef, private _cd: ChangeDetectorRef) { }
 
             ngAfterViewInit() {
                 if (this.options.colResize) {
                     this.columnResizing();
                 }
+            }
+            ngOnDestroy() {
+                this.subsList.forEach(_ => _.unsubscribe());                
             }
             public sort(colDef: any) {
                 console.log('sort', colDef);
@@ -80,7 +83,7 @@ export class GridBuilder {
                 
                 for (let index = 0; index < thList.length; index++) {
                     let th = thList[index];
-                    Observable.fromEvent(th, 'mousemove')
+                    this.subsList.push(Observable.fromEvent(th, 'mousemove')
                         .filter(_ => index !== 0 /*&& index + 1 !== thList.length*/)
                         .filter((e: any) => {
                             if (e.target.tagName === 'DIV') {
@@ -104,32 +107,43 @@ export class GridBuilder {
                                     startX = e.x;
                                     tblWidth = this.options.cwidth;
                                     w1 = this.options.columns[index - 1].width;
-                                    //w2 = this.options.columns[index].width;
+                                    w2 = 0;                                    
                                     if (this.options.columns[activeIndex - 1].parent) {
                                         this.InitParentWidth(this.options.columns[activeIndex - 1].parent);
                                     }  
                                 });
                         })
-                        .subscribe();
+                        .subscribe());
 
                 }
-                mouseup$.subscribe(e => {
+                this.subsList.push(mouseup$.subscribe(e => {
                     document.body.style.cursor = 'default';
-                    not_mousedown = true;                    
-                });
-                mousemove$
+                    if (!not_mousedown)
+                    {
+                        this.options.columns[activeIndex - 1].width = w1 + w2;
+                        this.options.cwidth = tblWidth + w2;
+                        if (this.options.columns[activeIndex - 1].parent) {
+                            this.setParentWidth(this.options.columns[activeIndex - 1].parent, w2);
+                        }
+                        this._cd.markForCheck();
+                    }
+                    not_mousedown = true;
+                                         
+                }));
+                this.subsList.push(mousemove$
                     .map((e: any) => e.x - startX)
                     .filter(e => w1 + e > 20 && !not_mousedown)
                     .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } })
                     .debounceTime(30)
-                    .subscribe(e => {
-                        this.options.columns[activeIndex - 1].width = w1 + e;
-                        this.options.cwidth = tblWidth + e;
-                        this._cd.markForCheck();
-                        if (this.options.columns[activeIndex - 1].parent) {
-                            this.setParentWidth(this.options.columns[activeIndex - 1].parent, e);
-                        } 
-                    });
+                    .subscribe(e => { 
+                        w2 = e;                       
+                        //this.options.columns[activeIndex - 1].width = w1 + e;
+                        //this.options.cwidth = tblWidth + e;                        
+                        //if (this.options.columns[activeIndex - 1].parent) {
+                        //    this.setParentWidth(this.options.columns[activeIndex - 1].parent, e);
+                        //}
+                        //this._cd.markForCheck(); 
+                    }));
             }
             private InitParentWidth(col: any) {
                 col.w1 = col.width;
