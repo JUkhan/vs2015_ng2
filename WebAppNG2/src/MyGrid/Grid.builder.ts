@@ -190,10 +190,10 @@ export class GridBuilder {
         return DynamicGridComponent2;
     }
     protected createComponentModule(componentType: any) {
-        const childComponents: any[] = this.options.childComponents || [];
+        const modules: any[] = this.options.modules || [];
         @NgModule({
-            imports: [CommonModule, FormsModule, MyGridModule],
-            declarations: [componentType, ...childComponents],
+            imports: [CommonModule, FormsModule, MyGridModule, ...modules],
+            declarations: [componentType],
         })
         class RuntimeComponentModuleForGrid {
         }
