@@ -106,7 +106,9 @@ export class HomeComponent implements OnInit, OnDestroy
                                     { field: 'address', label: 'Address', type: 'text', validators: FV.required },
                                     [{ field: 'age', labelSize: 4, size: 6 }, { field: 'address1.post', label: 'Post', type: 'datepicker', size: 4, offset: 2, validators: FV.required }],
                                     { field: 'Gender', label: 'Gender', type: 'juSelect', data: [{ text: 'Male', value: 1 }, { text: 'Female', value: 2 }], options:<SelectOptions>{title:'Select gender'} },
-                                    { field: 'description', label: 'Description', type: 'textarea' }
+                                    { field: 'description', label: 'Description', type: 'textarea' },
+                                    { field: 'check', type: 'checkbox', label: 'Check Me' },
+                                    [{ field: 'Gender007', type: 'radio', label: 'Male', exp: 'value="male"', size: 2 }, { field: 'Gender007', type: 'radio', label: 'Female', exp: 'value="female"', size:2 }]
                                 ]
                             },
                                 {
