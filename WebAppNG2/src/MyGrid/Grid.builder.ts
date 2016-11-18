@@ -140,7 +140,7 @@ export class GridBuilder {
                                     document.body.style.cursor = 'col-resize';
                                     not_mousedown = false;
                                     activeIndex = index;
-                                    startX = e.x; console.log(e.x);
+                                    startX = e.x; 
                                     tblWidth = this.options.cwidth;
                                     w1 = this.options.columns[index - 1].width;
                                     w2 = 0;
