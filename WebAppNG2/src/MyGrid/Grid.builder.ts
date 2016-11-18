@@ -1,17 +1,17 @@
-﻿import {Component, 
-        Renderer, 
-        ChangeDetectorRef, 
-        ViewChild, 
-        AfterContentInit, 
-        ComponentFactory, 
-        NgModule, 
-        Input, 
-        Output, 
-        EventEmitter, 
-        ChangeDetectionStrategy, 
-        Injectable, 
-        ElementRef, 
-        ViewEncapsulation} from '@angular/core';
+﻿import {Component,
+    Renderer,
+    ChangeDetectorRef,
+    ViewChild,
+    AfterContentInit,
+    ComponentFactory,
+    NgModule,
+    Input,
+    Output,
+    EventEmitter,
+    ChangeDetectionStrategy,
+    Injectable,
+    ElementRef,
+    ViewEncapsulation} from '@angular/core';
 import {RuntimeCompiler} from '@angular/compiler';
 import { CommonModule }         from '@angular/common';
 import { FormsModule }          from '@angular/forms';
@@ -50,27 +50,27 @@ export class GridBuilder {
             encapsulation: ViewEncapsulation.None,
             changeDetection: ChangeDetectionStrategy.OnPush
         })
-        class DynamicGridComponent2  {
+        class DynamicGridComponent2 {
             @Input() options: any = {};
             @Input() data: any[];
             dataList: any[] = [];
             isColResize: boolean = false;
-            @ViewChild('resizable')      resizable:ElementRef;
-            @ViewChild('resizeMarker')   resizeMarker:ElementRef;
-            @ViewChild('dataContainer')  dataContainer:ElementRef;
-            protected subsList: Subscription[] = [];                      
+            @ViewChild('resizable') resizable: ElementRef;
+            @ViewChild('resizeMarker') resizeMarker: ElementRef;
+            @ViewChild('dataContainer') dataContainer: ElementRef;
+            protected subsList: Subscription[] = [];
             constructor(
-                private el: ElementRef, 
+                private el: ElementRef,
                 private _cd: ChangeDetectorRef,
                 private renderer: Renderer) { }
 
             ngAfterViewInit() {
-                if (this.options.colResize) { 
-                    this.columnResizing();                   
+                if (this.options.colResize) {
+                    this.columnResizing();
                 }
             }
             ngOnDestroy() {
-                this.subsList.forEach(_ => _.unsubscribe());                
+                this.subsList.forEach(_ => _.unsubscribe());
             }
             public sort(colDef: any) {
                 console.log('sort', colDef);
@@ -93,13 +93,26 @@ export class GridBuilder {
             private sortIcon(colDef: any): any {
                 let hidden = typeof colDef.reverse === 'undefined';
                 return { 'fa-sort not-active': hidden, 'fa-caret-up': colDef.reverse === false, 'fa-caret-down': colDef.reverse === true };  // for default sort icon  ('fa-sort': hidden, )
-            }                        
+            }
+            private getParentNode(node: any) {
+                while (!node.classList.contains('juHeader')) {
+                    node = node.parentNode;
+                }
+                return node;
+            }
+            private removeSelection() {
+                if ((<any>document).selection) {
+                    (<any>document).selection.empty();
+                } else {
+                    window.getSelection().removeAllRanges();
+                }
+            }
             private columnResizing() {
                 let thList: any[] = this.resizable.nativeElement.querySelectorAll('.juCol'),
                     mousemove$ = Observable.fromEvent(document, 'mousemove'),
                     mouseup$ = Observable.fromEvent(document, 'mouseup'),
                     startX = 0, w1 = 0, w2 = 0, not_mousedown = true, tblWidth = this.options.cwidth, activeIndex = 1;
-                
+
                 for (let index = 0; index < thList.length; index++) {
                     let th = thList[index];
                     this.subsList.push(Observable.fromEvent(th, 'mousemove')
@@ -119,17 +132,21 @@ export class GridBuilder {
                         })
                         .flatMap((e: any) => {
                             return Observable.fromEvent(e.target, 'mousedown')
+                                .filter((e: any) => {
+                                    const left = this.getParentNode(e.target).getBoundingClientRect().left;
+                                    return e.x - left <= 10;
+                                })
                                 .do((e: any) => {
                                     document.body.style.cursor = 'col-resize';
                                     not_mousedown = false;
                                     activeIndex = index;
-                                    startX = e.x;
+                                    startX = e.x; console.log(e.x);
                                     tblWidth = this.options.cwidth;
                                     w1 = this.options.columns[index - 1].width;
-                                    w2 = 0;                                    
+                                    w2 = 0;
                                     if (this.options.columns[activeIndex - 1].parent) {
                                         this.InitParentWidth(this.options.columns[activeIndex - 1].parent);
-                                    } 
+                                    }
                                     this.positionResizeMarker(startX); 
                                 });
                         })
@@ -138,8 +155,7 @@ export class GridBuilder {
                 }
                 this.subsList.push(mouseup$.subscribe(e => {
                     document.body.style.cursor = 'default';
-                    if (!not_mousedown)
-                    {
+                    if (!not_mousedown) {
                         this.options.columns[activeIndex - 1].width = w1 + w2;
                         this.options.cwidth = tblWidth + w2;
                         if (this.options.columns[activeIndex - 1].parent) {
@@ -149,26 +165,27 @@ export class GridBuilder {
                         this.renderer.setElementStyle(this.resizeMarker.nativeElement, 'display', 'none');
                     }
                     not_mousedown = true;
-                                         
+                    this.removeSelection();
                 }));
                 this.subsList.push(mousemove$
                     .map((e: any) => e.x - startX)
                     .filter(e => w1 + e > 20 && !not_mousedown)
                     .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } })
                     //.debounceTime(30)
-                    .subscribe(e => { 
-                        w2 = e; 
-                        this.positionResizeMarker(e+startX);
+                    .subscribe(e => {
+                        w2 = e;
+                        this.positionResizeMarker(e + startX);
+                        this.removeSelection();
                     }));
             }
-            private positionResizeMarker(left:number){
-                 const rect = this.resizable.nativeElement.getBoundingClientRect();
-                 const bodyRect=document.body.getBoundingClientRect();
-                 const resizeElement=this.resizeMarker.nativeElement;
-                 const height=this.dataContainer.nativeElement.clientHeight+this.resizable.nativeElement.clientHeight;
-                 this.renderer.setElementStyle(resizeElement, 'top', (rect.top-bodyRect.top)+'px');
-                 this.renderer.setElementStyle(resizeElement, 'height', height+'px');
-                 this.renderer.setElementStyle(resizeElement, 'left', left+'px');
+            private positionResizeMarker(left: number) {
+                const rect = this.resizable.nativeElement.getBoundingClientRect();
+                const bodyRect = document.body.getBoundingClientRect();
+                const resizeElement = this.resizeMarker.nativeElement;
+                const height = this.dataContainer.nativeElement.clientHeight + this.resizable.nativeElement.clientHeight;
+                this.renderer.setElementStyle(resizeElement, 'top', (rect.top - bodyRect.top) + 'px');
+                this.renderer.setElementStyle(resizeElement, 'height', height + 'px');
+                this.renderer.setElementStyle(resizeElement, 'left', left + 'px');
                 this.renderer.setElementStyle(resizeElement, 'display', 'block');
             }
             private InitParentWidth(col: any) {
@@ -184,7 +201,7 @@ export class GridBuilder {
                 }
             }
             private normalTableScroll(e, headerDiv) {
-                headerDiv.scrollLeft = e.target.scrollLeft;  
+                headerDiv.scrollLeft = e.target.scrollLeft;
             }
         }
         return DynamicGridComponent2;
@@ -238,8 +255,8 @@ export class GridBuilder {
         }
         this.options.headers = this.headers;
         this.options.cwidth = this.options.columns.map(_ => _.width).reduce((a, b) => a + b, 0);
-        const len= this.headerHtml.length;
-        return this.headerHtml.map((_,i) => `<div ${(len-1)==i?'#resizable':''} class="juRow">${_.join('')}</div>`).reduce((p, c) => p + c, '');
+        const len = this.headerHtml.length;
+        return this.headerHtml.map((_, i) => `<div ${(len - 1) == i ? '#resizable' : ''} class="juRow">${_.join('')}</div>`).reduce((p, c) => p + c, '');
     }
     protected _colIndex: number = 0;
     protected headers: any[] = [];
@@ -247,9 +264,9 @@ export class GridBuilder {
         this.headers.push(cell);
         if (!cell.width) { cell.width = 120; }
         if (cell.children) {
-            this.headerHtml[headerRowFlag].push('<div class="juCol juHeader"');            
+            this.headerHtml[headerRowFlag].push('<div class="juCol juHeader"');
             const index = this.headers.indexOf(cell);
-            this.headerHtml[headerRowFlag].push(` [style.width.px]="options.headers[${index}].width"`);            
+            this.headerHtml[headerRowFlag].push(` [style.width.px]="options.headers[${index}].width"`);
             this.headerHtml[headerRowFlag].push(`>${cell.header}</div>`);
             headerRowFlag++
             let rc = rs, hf = headerRowFlag;
@@ -277,9 +294,9 @@ export class GridBuilder {
             this._colIndex = colDef.indexOf(cell);
             let rh = this.options.headerHeight > 0 ? `style="height:${this.options.headerHeight}px"` : '';
             this.headerHtml[headerRowFlag].push(`<div class="juCol juHeader" ${rh} `);
-                                  
+
             this.headerHtml[headerRowFlag].push(` [style.width.px]="options.columns[${this._colIndex}].width"`);
-           
+
             if (cell.sort) {
                 this.headerHtml[headerRowFlag].push(` (click)="sort(options.columns[${this._colIndex}])"`);
             }
