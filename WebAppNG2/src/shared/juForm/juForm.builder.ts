@@ -582,6 +582,9 @@ export class juFormBuilder {
                 this.active = tabName;
                 this.acriveTab = tab;
                 this.focus();
+                if (this.config.tabClick) {
+                    this.config.tabClick(tabName, this.model, this.myForm);
+                }
             }
             setConfig(options: any, mform: any) {
                 this.config = options;

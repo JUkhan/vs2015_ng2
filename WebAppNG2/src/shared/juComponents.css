@@ -191,7 +191,9 @@ legend {
 .enableCellEditing .table>tbody>tr>td .cell{
     padding:6px; 
 }
-.ju-grid tr.selected{ background-color: #286090; color: white; }
+.ju-grid tr.selected{
+     background-color: #286090 !important;
+      color: white !important; }
 .table {
     margin-bottom: 3px;
     width: auto;

@@ -51,8 +51,11 @@ export class CrudExample implements OnInit {
         console.log('waiting for user inputs.'); 
         //this.scholarGridOptions.api.grid.exportToCSV(this.scholarList, 'my_data.csv');
     }
+    xgrid: juGrid;
     private onLoad(grid: juGrid)
-    {         
+    {
+        this.xgrid = grid;
+        grid.keydown('ctrl').subscribe();     
         this.service.get('dummydata/GetScholarList')
             .subscribe(list => {
                 this.scholarGridOptions.api.form
@@ -71,11 +74,26 @@ export class CrudExample implements OnInit {
     {
         return Observable.of({ totalPage: 1234, data: this.scholarList})
     }
+    selectedList: any[] = [];
     private initScholar() {
         this.scholarGridOptions = {
             title:'Crud Example', crud: true, pagerPos:'header',
             additionalActionInCrud:[{title:'Detail', icon:'fa fa-gear', click:row=>console.log(row)}],
-            crudColumnWidth:70,
+            crudColumnWidth: 70,
+            trClass: row => ({ selected: row.selected }),
+            rowEvents: '(click)="config.rowClick(row)"',
+            rowClick: row => {
+                if (this.xgrid.ctrlKey) {
+                    row.selected = !row.selected;
+                } else {
+                    this.selectedList.forEach(_ => _.selected = _ === row);
+                    this.selectedList = [];
+                    row.selected = !row.selected;
+                }
+                row.selected ?
+                    this.selectedList.push(row) :
+                    this.selectedList.splice(this.selectedList.indexOf(row), 1)
+            },
             //sspFn: this.getPagerData.bind(this),
             columnDefs: [
                 { headerName: 'Name', field: 'name', sort: true, filter: 'set'},

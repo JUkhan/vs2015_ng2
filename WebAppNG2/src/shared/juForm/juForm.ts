@@ -375,5 +375,6 @@ export interface FormOptions
     api?: juForm;
     [key: string]: any;
     modules?: any[];
+    tabClick?: (tabNeme: string, model: any, form: juForm) => void;
 }
 
