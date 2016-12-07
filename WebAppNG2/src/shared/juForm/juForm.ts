@@ -37,7 +37,9 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
     public ngOnInit() {
         
     }
-
+    public setZindex(index:number) {
+        jQuery(this._elementRef.nativeElement).find('.modal').css('z-index', index);
+    }
     public initOptions() {        
         this.options.viewMode = this.options.viewMode || 'panel';
         this.options.panelMode = this.options.panelMode || 'primary';

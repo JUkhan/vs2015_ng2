@@ -1,10 +1,11 @@
-﻿import {Component, Directive, OnInit, ViewEncapsulation} from '@angular/core';
+﻿import {Component, Directive, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {juWindowService} from '../../shared/juWindow/juWindowService';
 
 import { CrudExample }         from './crudExample';
 import { TreeExample }         from './treeExample';
 import {CellEditExample}       from './cellEditExample';
 import { FV}          from '../../shared/juForm/FV';
+import {Observable} from 'rxjs/Rx';
 //<div class="wnav" >
 //    <input type="button" class="btn btn-success" value= "Form"(click) = "service.createWindow('form')" >
 //        <input type="button" class="btn btn-success" value= "Grid"(click) = "service.createWindow('grid')" >
@@ -34,12 +35,23 @@ import { FV}          from '../../shared/juForm/FV';
                 Counter: {{ counter }} <em>(from lexical context)</em>.
             </p>
         </template>
+        <div style="display:table;border:solid 1px #333;">
+        <div>
+          <div style="display:table-cell;width:120px;border-right:solid 1px #333;width:230px">Jsim sdds sddsd sdsdds sdsd sdsd sdsd sdd sdds sdsd sdd  wewe wee wewe </div>
+          <div style="display:table-cell;width:220px">Jsim Khan</div>
+        </div>
+        <div style="border-top:solid 1px #333;background-color:#ededed">
+          <div style="display:table-cell;width:120px;border-right:solid 1px #333;width:230px">Jsim sdds sddsd sdsdds sdsd sdsd sdsd sdd sdds sdsd sdd  wewe wee wewe </div>
+          <div style="display:table-cell;width:220px">Jsim Khan</div>
+        </div>
+      </div>
     `,
    
     styles: [`
           .wnav{margin-top:1px;}  
     `],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class WindowComponent implements OnInit {
@@ -107,7 +119,19 @@ export class WindowComponent implements OnInit {
     public setThings(newThings: string): void {
 
         this.things = newThings;
+        const source = Observable.interval(100);
+        const eventNumber = val => val % 2 == 0;
+        const eventSource = source.filter(eventNumber);
 
+        const evenNumberCount = eventSource.scan(acc => acc + 1, 0);
+        const fiveEventNumbers = evenNumberCount.filter(_ => _ > 5);
+        eventSource
+            .withLatestFrom(evenNumberCount)
+            .map(([even, count]) => `Even ${even} count(${count})`)
+
+            .takeUntil(fiveEventNumbers)
+
+            .subscribe(_ => console.log(_));
     }
 }
 

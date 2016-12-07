@@ -37,6 +37,7 @@ export class MessageDialog implements OnInit, OnChanges
 
     public showDialog(title: string, message: string)
     {
+        this.form.setZindex(999999);
         if (title)
             this.formOptions['title'] = title;
         this.formOptions['message'] = message;

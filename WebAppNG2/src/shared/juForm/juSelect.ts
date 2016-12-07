@@ -260,7 +260,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         return { selected: item.selected, disabled: item[this.options.disabledItemProp], 'single-silected': !this.options.multiselect && item.selected};
     }
     private selectItem(item: any, e: any)
-    {
+    {        
         this.isEditable = false;
         if (this.options.multiselect) {
             e.stopPropagation();
@@ -353,7 +353,10 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     
     private setModelValue(val: any)
     {
-        if(!this.propertyName)return;
+        if (!this.propertyName) {
+            this.onChange.emit(val);
+            return;
+        }
         let props: Array<string> = this.propertyName.split('.');
         if (props.length > 1)
         {
@@ -374,7 +377,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         this.previousValue=val;
     }
     private publishChanges(val: any)
-    {
+    {        
         this.notifyRowEditor.next({});
         this.onChange.next({ value: val, sender: this, form: this.myForm, index: this.index });
         this.valueChanges.next({ value: val, sender: this, form: this.myForm, index: this.index });

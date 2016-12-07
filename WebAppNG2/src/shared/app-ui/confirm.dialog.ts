@@ -42,6 +42,7 @@ export class ConfirmDialog implements OnInit, OnChanges
     private noCallback = () => { }
     public showDialog(title: string, message: string, yesCallback?, noCallback?)
     {
+        this.form.setZindex(999999);
         if (title)
             this.formOptions['title'] = title;
         this.formOptions['message'] = message;
@@ -52,7 +53,8 @@ export class ConfirmDialog implements OnInit, OnChanges
         this.form.showModal();
     }
      public showDialogPromise(title: string, message: string):Promise<Number>
-    {
+     {
+         this.form.setZindex(999999);
         if (title)
             this.formOptions['title'] = title;
         this.formOptions['message'] = message;

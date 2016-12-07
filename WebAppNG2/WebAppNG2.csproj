@@ -715,6 +715,8 @@
     <TypeScriptCompile Include="src\setting\grid\crudExample.ts" />
     <TypeScriptCompile Include="src\setting\grid\treeExample.ts" />
     <TypeScriptCompile Include="src\setting\grid\windowExample.ts" />
+    <TypeScriptCompile Include="src\setting\project1\Project1.ts" />
+    <TypeScriptCompile Include="src\setting\project1\Word.ts" />
     <TypeScriptCompile Include="src\setting\setting.module.ts" />
     <TypeScriptCompile Include="src\setting\setting.routes.ts" />
     <TypeScriptCompile Include="src\shared\app-ui\attachment.ts" />

@@ -36,7 +36,8 @@ export class AppComponent {
             {
                 name: 'Settings',  icon: 'fa fa-gear', items: [
                     { name: 'CRUD Example', link: 'setting', icon: 'fa fa-home' },
-                    { name: 'Upload', link: 'setting/upload', icon: 'fa fa-home' }
+                    { name: 'Upload', link: 'setting/upload', icon: 'fa fa-home' },
+                    { name: 'Project-1', link: 'setting/project1', icon: 'fa fa-home' }
                 ]
             },
         ];
