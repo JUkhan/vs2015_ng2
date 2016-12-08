@@ -83,12 +83,10 @@ export class Project1 implements OnInit {
     private map() {
         this.words = this.text.split(/\s+/gm);        
     }
-    private calculate() {
-        //this.invoice = this.words[this.tokens.invoice[0].index];
-        //this.total = this.words[this.tokens.total[0].index];
-        //this.currency = this.total.substr(0, 1);
-        //this.total = this.total.substr(1);
-        this.total=this.getValue(this.tokens.total);
+    private calculate() {        
+        const totalRes = this.getValue(this.tokens.total);
+        this.total = totalRes.substr(1);
+        this.currency = totalRes.substr(0, 1);
     }
     private getValue(arr: any[]) {
         arr = arr.sort((a, b) => a.index - b.index);

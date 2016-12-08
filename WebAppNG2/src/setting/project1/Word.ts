@@ -9,9 +9,13 @@
     styles: [`
         .word{ margin:2px; padding:2px; cursor:pointer;}
         .word:hover{color:red;}
-        .selected{border:solid 1px red;}
-        .maped{background-color:steelblue;color:white}
-        .ctrlKey{ color:yellow;}
+        .selected{border:solid 1px red;background-color: #ededed; border-radius: 4px;}
+        .maped{    background-color: #ededed;
+                    color: #333;
+                    border: solid 1px #333;
+                    border-radius: 4px;
+               }
+        .ctrlKey{ color:blue;}
     `]
 })
 
