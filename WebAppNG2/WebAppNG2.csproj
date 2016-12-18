@@ -663,10 +663,6 @@
     <Content Include="Content\Site.css" />
     <Content Include="gulpfile.js" />
     <Content Include="systemjs.config.js" />
-    <Content Include="typings\globals\angular-protractor\index.d.ts" />
-    <Content Include="typings\globals\jasmine\index.d.ts" />
-    <Content Include="typings\globals\node\index.d.ts" />
-    <Content Include="typings\globals\selenium-webdriver\index.d.ts" />
     <Content Include="typings\index.d.ts" />
     <Content Include="typings\lodash\lodash.d.ts" />
     <Content Include="Web.config" />
@@ -748,6 +744,10 @@
     <TypeScriptCompile Include="src\shared\app-ui\mail.ts" />
     <TypeScriptCompile Include="src\shared\shared.module.ts" />
     <TypeScriptCompile Include="src\shared\ui.service.ts" />
+    <TypeScriptCompile Include="typings\globals\angular-protractor\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\jasmine\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\selenium-webdriver\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
