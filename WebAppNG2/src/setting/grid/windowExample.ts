@@ -6,18 +6,31 @@ import { TreeExample }         from './treeExample';
 import {CellEditExample}       from './cellEditExample';
 import { FV}          from '../../shared/juForm/FV';
 import {Observable} from 'rxjs/Rx';
-//<div class="wnav" >
-//    <input type="button" class="btn btn-success" value= "Form"(click) = "service.createWindow('form')" >
-//        <input type="button" class="btn btn-success" value= "Grid"(click) = "service.createWindow('grid')" >
-//            <input type="button" class="btn btn-success" value= "About"(click) = "service.createWindow('about')" >
-//                </div>
-//                < div class="pw" height= "500" > </div>
+
 
 @Component({
     moduleId: module.id,
     selector: 'test-component',
     //directives: [LogLifecycleDirective],
-    template: `<div juForm [options]="formDefs"></div>
+    template: `
+        <template-exp>
+                <div class="one">ONE</div>
+                <b class="two">TWO</b>
+                <header>
+                    <h1>Header</h1>
+                </header>
+                <j-Column header="Name" field="name" [rowData]="rdata">
+                    <template jTemplate="header">
+                        <button>Click Me</button>
+                    </template>
+                    <template jTemplate="body" let-row="data">
+                        <input type="text" [(ngModel)]="row.name">
+                        <button (click)="viewRowData(row)">Click Me</button>
+                    </template>
+                </j-Column>
+                <j-Column header="Address" field="address" [rowData]="rdata">
+                </j-Column>
+        </template-exp>
         <p>
             <a (click)="setThings( 'apples' )">Set Apples</a> &mdash;
             <a (click)="setThings( 'bananas' )">Set Bananas</a> &mdash;
@@ -55,12 +68,14 @@ import {Observable} from 'rxjs/Rx';
 })
 
 export class WindowComponent implements OnInit {
-
+    viewRowData(dt) {
+        console.log(dt);
+    }
     constructor(private service: juWindowService) {
         this.counter = 0;
         this.things = "apples";
     }
-    
+    rdata = { name: 'Abdulla', address: 'Tangail' };
     ngOnInit() {
         //this.service.windowConfig = {
         //    'about': { title: 'About us', width: 600, height: 400, loader: () =>CrudExample },

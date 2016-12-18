@@ -713,6 +713,7 @@
     <TypeScriptCompile Include="src\MyGrid\Row.ts" />
     <TypeScriptCompile Include="src\setting\grid\cellEditExample.ts" />
     <TypeScriptCompile Include="src\setting\grid\crudExample.ts" />
+    <TypeScriptCompile Include="src\setting\grid\TemplateExp.ts" />
     <TypeScriptCompile Include="src\setting\grid\treeExample.ts" />
     <TypeScriptCompile Include="src\setting\grid\windowExample.ts" />
     <TypeScriptCompile Include="src\setting\project1\Project1.ts" />

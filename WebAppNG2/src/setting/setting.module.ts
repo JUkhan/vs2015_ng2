@@ -8,11 +8,11 @@ import {WindowComponent}       from './grid/windowExample';
 import {Project1}              from './project1/project1';
 import {Word}              from './project1/word';
 import { routing }             from './setting.routes';
-
+import { TemplateExp, Header, TemplteRenderer, jColumn, jTemplate}         from './grid/TemplateExp';
 
 @NgModule({
     imports: [SharedModule, routing],
-    declarations: [CrudExample, CellEditExample, TreeExample, WindowComponent, Project1, Word],
+    declarations: [TemplateExp, Header, jColumn, jTemplate, TemplteRenderer, CrudExample, CellEditExample, TreeExample, WindowComponent, Project1, Word],
     exports: []
 })
 export default class SettingModule { }
