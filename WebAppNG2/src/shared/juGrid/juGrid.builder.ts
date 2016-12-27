@@ -1,4 +1,4 @@
-﻿import {Component, Renderer, ViewChildren, QueryList, ViewChild, ViewEncapsulation, ComponentFactory, NgModule, Input, Injectable, ElementRef} from '@angular/core';
+﻿import {Component, Renderer, ViewChildren, QueryList, ViewChild, ViewEncapsulation, ComponentFactory, NgModule, Input, Injectable, ElementRef, ChangeDetectorRef} from '@angular/core';
 import { CommonModule }         from "@angular/common";
 import { FormsModule }          from "@angular/forms";
 import {RuntimeCompiler}        from '@angular/compiler';
@@ -77,6 +77,9 @@ export class juGridBuilder
         this.options.columnDefs.forEach((item, index) =>
         {
             if (item.hide) return;
+            if (!item.editPermission) {
+                item.editPermission = row => true;
+            }
             this.getCell(item, `config.columnDefs[${index}]`, tpl, index);
         });
         tpl.push('</tr>');
@@ -109,8 +112,8 @@ export class juGridBuilder
             {                  
                 case 'juSelect':
                     change = item.change ? ` (option-change)="${config}.change($event)"` : '';
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style} ${item.inputExp}>
-                    <juSelect 
+                    tpl.push(`<td ${rowHeight} style="overflow:visible" [style.width.px]="config.columnDefs[${index}].width"><div ${style} ${item.inputExp}>
+                    <div [style.display]="(config.editPermission && ${config}.editPermission(row))?'block':'none'"><juSelect 
                         ${change} 
                         [config]="${config}"
                         [model]="row"
@@ -120,9 +123,9 @@ export class juGridBuilder
                         [options]="${config}.options||{}"
                         [index]="i"                        
                     >
-                    </juSelect></div>`);
+                    </juSelect></div><span ${item.inputExp} class="cell" [style.display]="(config.editPermission && ${config}.editPermission(row))?'none':'block'">{{(${config}.getValue && ${config}.getValue(row))||row['${item.field}']}}</span></div>`);
                     tpl.push(validation);
-                    tpl.push('</td>');
+                    tpl.push('</td>');  
                     break;
                 case 'select':
                     change = item.change ? `(change)="${config}.change(row, i)"` : '';
@@ -138,26 +141,33 @@ export class juGridBuilder
                     break;
                 case 'datepicker':
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style} ${item.inputExp}>
+                    <div [style.display]="(config.editPermission && ${config}.editPermission(row))?'block':'none'">
                     <div class="input-group date" [pickers]="${config}.config" picker-name="${item.type}" [model]="row" property="${item.field}" [config]="${config}" [form]="myForm" >
                         <input type="text" [disabled]="${config}.disabled" [(ngModel)]="row.${item.field}" class="form-control" placeholder="Enter ${header}">
                         <span class="input-group-addon">
                             <span class="fa fa-calendar"></span>
                         </span>
-                    </div></div>`);
+                    </div></div><span ${item.inputExp} class="cell" [style.display]="(config.editPermission  && ${config}.editPermission(row))?'none':'block'">{{(${config}.getValue && ${config}.getValue(row))||row['${item.field}']}}</span></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
 
                 case 'text':
                 case 'number':
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><input ${style} ${item.inputExp} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}">`);
-                    tpl.push('</div>');
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><div [style.display]="(config.editPermission && ${config}.editPermission(row))?'block':'none'"><input ${style} ${item.inputExp} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></div>`);
+                    tpl.push(`<span ${item.inputExp} class="cell" [style.display]="(config.editPermission && ${config}.editPermission(row))?'none':'block'">{{(${config}.getValue && ${config}.getValue(row))||row['${item.field}']}}</span></div>`);
+                    tpl.push(validation);
+                    tpl.push('</td>');
+                    break;
+                case 'checkbox':
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width">
+                              <div ${style}><input ${style} ${item.inputExp} class="text" type="checkbox" [(ngModel)]="row.${item.field}" [disabled]="!(config.editPermission && ${config}.editPermission(row))"></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'textarea':
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><textarea ${style} ${item.inputExp} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
-                    tpl.push('</div>');
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><div [style.display]="(config.editPermission  && ${config}.editPermission(row))?'block':'none'"><textarea ${style} ${item.inputExp} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
+                    tpl.push(`</div><span ${item.inputExp} class="cell" [style.display]="(config.editPermission && ${config}.editPermission(row))?'none':'block'">{{(${config}.getValue && ${config}.getValue(row))||row['${item.field}']}}</span></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
@@ -570,9 +580,29 @@ export class juGridBuilder
             private isColResize: boolean = false;
             private pager: juPager;
             private slideState: string = 'down';
-            constructor(private renderer: Renderer, private el: ElementRef)
+            constructor(private renderer: Renderer, private el: ElementRef, private changeDetector: ChangeDetectorRef)
             {
 
+            }
+            private _editPermission: boolean = true;
+            ngDoCheck()
+            {
+                
+                if (this._editPermission !== this.config.editPermission)
+                {                                 
+                    this._editPermission = this.config.editPermission;
+                    this.markForCheck();                    
+                }
+                
+                if ((this.viewList.length * this.config.rowHeight) > this.config.height)
+                {                    
+                    this.markForCheck(); 
+                }
+               
+            }
+            public markForCheck()
+            {
+                this.changeDetector.detectChanges(); 
             }
             public get valid()
             {
@@ -593,6 +623,7 @@ export class juGridBuilder
             }
             @ViewChildren(rowEditor) editors: QueryList<rowEditor>;
             @ViewChild('filterWindow') filterWindowRef: ElementRef;
+            @ViewChild('tc1') tableContainer: ElementRef;
             isValid(fieldName, index)
             {
                 let arr = this.editors.toArray(); 
@@ -617,6 +648,7 @@ export class juGridBuilder
                 {
                     this.columnResizing();
                 }
+                this._editPermission = this.config.editPermission;
             }
             private getStyle(tc1, tc2)
             {
@@ -638,6 +670,13 @@ export class juGridBuilder
             private tblScroll(e, headerDiv)
             {
                 headerDiv.scrollLeft = e.target.scrollLeft;
+            }
+            public setScrollTop(scrollTop: number)
+            {
+                if (this.tableContainer)
+                {
+                    this.tableContainer.nativeElement.scrollTop = scrollTop;
+                }
             }
             private columnResizing() {
 

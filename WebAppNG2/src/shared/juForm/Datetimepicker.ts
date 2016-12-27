@@ -41,8 +41,12 @@ export class Datetimepicker implements OnInit, OnDestroy {
                         this.form.componentRef.instance
                             .vlidate_input(e.format(), this.config);
                     }
+                    if(this.config.change){
+                        this.config.change(this.model);
+                    }
                     this.notifyRowEditor.next(e.format());
                 });
+                this.setDate(this.model[this.property]);
                 break;
             case 'timepicker':
                 jQuery(this.el.nativeElement).timepicker(this.pickers);
@@ -53,7 +57,7 @@ export class Datetimepicker implements OnInit, OnDestroy {
         }
         this.config.api = this;
     }
-    setDate(date: any) {       
+    setDate(date: any) {    
         this.pickerObject.datepicker('update', date);
         this.notifyRowEditor.next(date);
     }

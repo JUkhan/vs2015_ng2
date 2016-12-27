@@ -118,6 +118,10 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
         {
             this.options.noPager = false;
         }
+        if (!('editPermission' in this.options))
+        {
+            this.options.editPermission = true;
+        }
         if (this.options.formDefs)
         {
             this.options.formDefs.viewMode = 'popup';
@@ -180,12 +184,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
         }
        
         this.options.api = { grid: this, form: null };
-        Observable.fromEvent(document, 'keyup').subscribe(e =>
-        {
-            this.shiftKey = false;
-            this.altKey = false;
-            this.ctrlKey = false;
-        });
+       
     }
     
     public exportToCSV(data: any, fileName: string)
@@ -228,26 +227,7 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
             this.componentRef = null;
         }
     }
-    public shiftKey: boolean = false;
-    public ctrlKey: boolean = false;
-    public altKey: boolean = false;
-    keydown(key:'shift'|'ctrl'|'alt'): Observable<any>
-    {
-        return Observable.fromEvent(document, 'keydown')
-            .filter((e: any) =>
-            {
-                this.shiftKey = e.shiftKey;
-                this.ctrlKey = e.ctrlKey;
-                this.altKey = e.altKey;
-                switch (key)
-                {
-                    case 'shift':return this.shiftKey;
-                    case 'ctrl': return this.ctrlKey;
-                    case 'alt':  return this.altKey;
-                }
-                return false;
-            });
-    }
+    
     public render(): Promise<juGrid> {
         return this.refreshContent();
     }
@@ -312,6 +292,24 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
     public getData()
     {
         return this.data.length ? this.data : this.componentRef.instance.viewList;
+    }
+    public setData(data)
+    {
+         this.data.length ? this.data=data : this.componentRef.instance.viewList=data;
+    }
+    public markForCheck()
+    {
+        if (this.componentRef.instance)
+        {
+            this.componentRef.instance.markForCheck();
+        }
+    }
+    public setScrollTop(scrollTop: number)
+    {
+        if (this.componentRef.instance)
+        {
+            this.componentRef.instance.setScrollTop(scrollTop);
+        }
     }
     public showMessage(message: string, messageCss: string = 'alert alert-info')
     {
@@ -429,6 +427,9 @@ export interface ColumnDefs
     hide?: boolean;
     inputExp?: string;
     formatter?: (val: any) => any;
+    getValue?: (row: any) => string;
+    editPermission?: (row: any) => boolean;
+    config?:any;
 }
 export interface GridOptions
 {
@@ -470,7 +471,8 @@ export interface GridOptions
     colResize?: boolean;
     rowEvents?:string;
     crudColumnWidth?:number;
-    additionalActionInCrud?: [{ title: string, icon: string, click: (row: any) => void }];    
+    additionalActionInCrud?: [{ title: string, icon: string, click: (row: any) => void }];
+    editPermission?: boolean;   
 }
 export interface BaseFilter
 {

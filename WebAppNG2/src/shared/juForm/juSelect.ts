@@ -27,7 +27,7 @@ declare var jQuery: any;
                 <button (click)="isEditable=!isEditable" class="btn btn-default" type="button"><span class="caret"></span></button>
           </span>
         </div>
-        <div #dropdown class="dropdown-menu open" role="combobox" [style.min-width]="getMinwidth()" style="overflow: hidden; min-height: 0px;">            
+        <div #dropdown class="dropdown-menu open custom-dropdown-menu" role="combobox" [style.top.px]="menuTop" [style.min-width]="getMinwidth()" style="overflow: hidden; min-height: 0px;">            
             <div class="search-checkall" *ngIf="options.liveSearch||(options.multiselect && options.checkAll)">
                 <label (click)="$event.stopPropagation()" *ngIf="options.checkAll"><input (click)="checkAll(chkAll.checked)" #chkAll type="checkbox">Select All</label>
                 <input #searchEl *ngIf="options.liveSearch" [style.width.%]="options.checkAll?50:100" autofocus type="text" class="form-control" role="textbox" placeholder="Search...">
@@ -59,7 +59,6 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     @Input() config: any = {};
     @Input('myForm') myForm: any;
     @Output('option-change') onChange = new EventEmitter();
-    @Output() onLoad = new EventEmitter();
     @Input() index: number;
     @Input() set value(val: any)
     { 
@@ -71,14 +70,15 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     @ViewChild('editableText') private editableText: ElementRef;
     @ViewChild('dropdown')     private dropdownContent: ElementRef;
     private previousValue: any = '';
-    private selectedItem: any = {};
+    public selectedItem: any = {};
     private dataList_bckup: any[];
     private livesearchText: string;
     private hasSerchResult: boolean = true;
     private maxOptionsVisibility: string = 'hidden';
     private focusToValidate: boolean = false; 
     private tableBodyContent: any = null;
-    private isEditable: boolean = false; 
+    private isEditable: boolean = false;
+    private menuTop: number = 34;
     notifyRowEditor: Subject<any> = new Subject();
     valueChanges: Subject<any> = new Subject();
 
@@ -100,7 +100,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         this.options.selectedTextFormat = this.options.selectedTextFormat || 'values';
         this.options.btnStyle = this.options.btnStyle || 'btn-default';
         this.options.width = this.options.width || '';
-        this.options.height = this.options.height || 0
+        this.options.height = this.options.height || 200
         this.options.multipleSeparator = this.options.multipleSeparator || ','
 
         if (!('liveSearch' in this.options)) {
@@ -137,7 +137,6 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
                
             });
         }
-        this.onLoad.emit(this);
     }
     public ngOnChanges(changes: any) {                          
         if (changes.dataList && changes.dataList.currentValue && changes.dataList.currentValue !== changes.dataList.previousValue)
@@ -194,26 +193,47 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     public ngOnDestroy() {
 
     }
-    private getPositionStyle(){         
-        this.options.fixedPosition?'fixed;':'absolute';
+    private getPositionStyle()
+    {            
+       return this.options.fixedPosition?'fixed;':'absolute';
     }
-    private setFocusToValidate(buttonEl:any, e:any){
+    private setFocusToValidate(buttonEl: any, e: any)
+    {
+        
         this.focusToValidate = true;
-        if(this.options.fixedPosition){
-            let button = jQuery(buttonEl),
-                dropdown = jQuery(this.dropdownContent.nativeElement),
-                offset = button.offset(),
-                modelContent = jQuery(this.containerEl.nativeElement).parents('.modal-content'),
-                top = 0, left = 0;
-            if (modelContent.length == 1)
+        //if(this.options.fixedPosition){
+        //    let button = jQuery(buttonEl),
+        //        dropdown = jQuery(this.dropdownContent.nativeElement),
+        //        offset = button.offset(),
+        //        modelContent = jQuery(this.containerEl.nativeElement).parents('.modal-content'),
+        //        top = 0, left = 0;
+        //    if (modelContent.length == 1)
+        //    {
+        //        let modelOffset = modelContent.offset();
+        //        top = modelOffset.top;
+        //        left = modelOffset.left; 
+        //    }
+        //    dropdown.css('top', offset.top + button.outerHeight()-top + "px");
+        //    dropdown.css('left', offset.left-left + "px");
+        //}
+        var gridContainer = jQuery(this.containerEl.nativeElement).parents('.enableCellEditing');        
+        if (gridContainer.length)
+        {
+            var height = gridContainer.height();
+            var button = jQuery(buttonEl);
+            var top = button.offset().top - gridContainer.offset().top;
+            var btnHeight = button.outerHeight();
+            var menuHeight = jQuery(this.dropdownContent.nativeElement).height();            
+            if ((top + btnHeight + menuHeight) > height)
             {
-                let modelOffset = modelContent.offset();
-                top = modelOffset.top;
-                left = modelOffset.left; 
+                this.menuTop = -(btnHeight + menuHeight-14);
+            } else
+            {
+                this.menuTop = 34;
             }
-            dropdown.css('top', offset.top + button.outerHeight()-top + "px");
-            dropdown.css('left', offset.left-left + "px");
+
         }
+        //this.options.dropup = true;
         
     }
    
@@ -260,7 +280,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         return { selected: item.selected, disabled: item[this.options.disabledItemProp], 'single-silected': !this.options.multiselect && item.selected};
     }
     private selectItem(item: any, e: any)
-    {        
+    {
         this.isEditable = false;
         if (this.options.multiselect) {
             e.stopPropagation();
@@ -353,10 +373,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     
     private setModelValue(val: any)
     {
-        if (!this.propertyName) {
-            this.onChange.emit(val);
-            return;
-        }
+        if(!this.propertyName)return;
         let props: Array<string> = this.propertyName.split('.');
         if (props.length > 1)
         {
@@ -376,11 +393,20 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         }
         this.previousValue=val;
     }
+    private publistCount:number=0;
+    updated:boolean=false;
     private publishChanges(val: any)
-    {        
-        this.notifyRowEditor.next({});
+    {
+        this.publistCount++;
+         
+         if (this.publistCount > 1)
+         {
+             this.updated = true;
+             this.notifyRowEditor.next({});
+         }
         this.onChange.next({ value: val, sender: this, form: this.myForm, index: this.index });
         this.valueChanges.next({ value: val, sender: this, form: this.myForm, index: this.index });
+        
     }
     public hasError() { 
         this.myForm.componentRef.instance.vlidate_input( this.getValue(), this.config, !this.focusToValidate);        

@@ -117,6 +117,15 @@ export class juFormBuilder {
                         case 'ckeditor':
                             template.push(this._getCkEditorTemplate(item.field, item, refPath + `[${index}]`))
                             break;
+                        case 'button':
+                            template.push(this._getButtonTemplate(item.field, item, refPath + `[${index}]`))
+                            break;
+                        case 'checkbox':
+                            template.push(this._getCheckboxTemplate(item.field, item, refPath + `[${index}]`))
+                            break;
+                        case 'radio':
+                            template.push(this._getRadioTemplate(item.field, item, refPath + `[${index}]`))
+                            break;
                         case 'datepicker':
                             item.config = item.config || {}
                             if (!('autoclose' in item.config)) {
@@ -129,15 +138,6 @@ export class juFormBuilder {
                             break;
                         case 'file':
                             template.push(this._getFileTemplate(item.field, item, refPath + `[${index}]`));
-                            break;
-                        case 'button':
-                            template.push(this._getButtonTemplate(item.field, item, refPath + `[${index}]`));
-                            break;
-                        case 'checkbox':
-                            template.push(this._getCheckboxTemplate(item.field, item, refPath + `[${index}]`));
-                            break;
-                        case 'radio':
-                            template.push(this._getRadioTemplate(item.field, item, refPath + `[${index}]`));
                             break;
                         case 'groupLayout':
                             this.resolveGroupLayout(item, refPath, index, obj, template);
@@ -337,22 +337,22 @@ export class juFormBuilder {
         return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
 
     }
-    private _getButtonTemplate(fieldName: string, input: any, config: string) {
-        const label = `{{${config}.label}}`;
+    private _getButtonTemplate(fieldName: string, input: any, config: string){
+        const label =`{{${config}.label}}` ;
         return `<div class="col-md-${input.size}${this.getColOffset(input)}">
                         <button ${input.exp} (click)="${config}.click($event)">${label}</button>
                 </div>`
     }
-    private _getCheckboxTemplate(fieldName: string, input: any, config: string) {
-        const label = `{{${config}.label}}`;
-        const element = input.labelPos === 'left' ? `<label><span class="checkbox-radio-label">${label}</span> <input [(ngModel)]="model.${fieldName}" type="checkbox" ${input.exp}></label>` :
-            `<label><input [(ngModel)]="model.${fieldName}" type="checkbox" ${input.exp}> <span class="checkbox-radio-label">${label}</span></label>`;
+    private _getCheckboxTemplate(fieldName: string, input: any, config: string){
+        const label =`{{${config}.label}}` ;
+        const element=input.labelPos==='left'?`<label><span class="checkbox-radio-label">${label}</span> <input [(ngModel)]="model.${fieldName}" type="checkbox" ${input.exp}></label>`:
+        `<label><input [(ngModel)]="model.${fieldName}" type="checkbox" ${input.exp}> <span class="checkbox-radio-label">${label}</span></label>`;
         return `<div class="col-md-${input.size}${this.getColOffset(input)}">${element}</div>`;
     }
-    private _getRadioTemplate(fieldName: string, input: any, config: string) {
-        const label = `{{${config}.label}}`;
-        const element = input.labelPos === 'left' ? `<label><span class="checkbox-radio-label">${label}</span> <input [(ngModel)]="model.${fieldName}" type="radio" name="${input.radioName || 'what-if-007'}" ${input.exp}></label>` :
-            `<label><input [(ngModel)]="model.${fieldName}" type="radio" name="${input.radioName || 'what-if-007'}" ${input.exp}> <span class="checkbox-radio-label">${label}</span></label>`
+    private _getRadioTemplate(fieldName: string, input: any, config: string){        
+        const label =`{{${config}.label}}` ;
+        const element=input.labelPos==='left'?`<label><span class="checkbox-radio-label">${label}</span> <input [(ngModel)]="model.${fieldName}" type="radio" name="${input.radioName||'what-if-007'}" ${input.exp}></label>`:
+        `<label><input [(ngModel)]="model.${fieldName}" type="radio" name="${input.radioName||'what-if-007'}" ${input.exp}> <span class="checkbox-radio-label">${label}</span></label>`
         return `<div class="col-md-${input.size}${this.getColOffset(input)}">${element}</div>`
     }
     private getColOffset(input: any) {
@@ -475,6 +475,10 @@ export class juFormBuilder {
                     }
                 }
             }
+            public setFocus(fieldName: string)
+            {                 
+                jQuery('.'+fieldName, this.el.nativeElement).focus();
+            }
             private slideState: string = 'down';
             slideToggle() {
                 jQuery(this.el.nativeElement).find('.panel-body').slideToggle();
@@ -562,7 +566,7 @@ export class juFormBuilder {
                 if (e) {
                     e.preventDefault();
                 }
-
+                if (!tab) { tab = this.config.tabs[tabName]; }
                 if (!this.isTabEnable(tabName, tab)) {
                     return;
                 }
@@ -582,7 +586,8 @@ export class juFormBuilder {
                 this.active = tabName;
                 this.acriveTab = tab;
                 this.focus();
-                if (this.config.tabClick) {
+                if (this.config.tabClick)
+                {
                     this.config.tabClick(tabName, this.model, this.myForm);
                 }
             }
@@ -724,10 +729,11 @@ export class juFormBuilder {
         return DynamicFormComponent;
     }
     protected createComponentModule(componentType: any) {
-        const modules: any[] = this.options.modules || [];
+        const dynaModules:any[]=this.options.modules||[];
+
         @NgModule({
             imports: [
-                SharedModule, ...modules
+                 SharedModule, ...dynaModules
             ],
             declarations: [
                 componentType

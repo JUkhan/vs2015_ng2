@@ -37,9 +37,11 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
     public ngOnInit() {
         
     }
-    public setZindex(index:number) {
+    public setZindex(index:any)
+    {
         jQuery(this._elementRef.nativeElement).find('.modal').css('z-index', index);
     }
+
     public initOptions() {        
         this.options.viewMode = this.options.viewMode || 'panel';
         this.options.panelMode = this.options.panelMode || 'primary';
@@ -286,6 +288,13 @@ export class juForm implements  AfterViewInit, OnChanges, OnDestroy, OnInit
             sapi.setValue(value);
         return this;
     }
+    public setFocus(fieldName: string)
+    {
+        if (this.componentRef.instance)
+        {
+            this.componentRef.instance.setFocus(fieldName);
+        }
+    }
 }
 function async_call(fx: Function, time = 0) {
     let tid = setTimeout(() => {fx(); clearTimeout(tid);}, time);
@@ -361,6 +370,7 @@ export interface FormElement
     enable?: (form: any, model: any) => boolean;
     content?: string;
     options?: SelectOptions;
+    radioName?: string;
 }
 
 export interface FormOptions
@@ -376,7 +386,7 @@ export interface FormOptions
     buttons?: { [key: string]: { type: 'submit' | 'close' | 'button', exp?:string, cssClass?: string, click?: (event: any) => void } };
     api?: juForm;
     [key: string]: any;
-    modules?: any[];
-    tabClick?: (tabNeme: string, model: any, form: juForm) => void;
+    modules?:any[];
+    tabClick?: (tabName: string, model: any, form: juForm) => void;
 }
 

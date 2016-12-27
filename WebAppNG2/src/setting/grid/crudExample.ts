@@ -54,8 +54,7 @@ export class CrudExample implements OnInit {
     xgrid: juGrid;
     private onLoad(grid: juGrid)
     {
-        this.xgrid = grid;
-        grid.keydown('ctrl').subscribe();     
+        this.xgrid = grid;           
         this.service.get('dummydata/GetScholarList')
             .subscribe(list => {
                 this.scholarGridOptions.api.form
@@ -63,9 +62,7 @@ export class CrudExample implements OnInit {
                     .setData('address', this.addressList);
                 this.scholarList = list;
             });
-        //grid.keydown('ctrl').subscribe(e => { console.log(grid.shiftKey, grid.ctrlKey, grid.altKey) });
-        //grid.keydown('shift').subscribe(e => { console.log(grid.shiftKey, grid.ctrlKey, grid.altKey) });
-        //grid.keydown('alt').subscribe(e => { console.log(grid.shiftKey, grid.ctrlKey, grid.altKey) }); 
+       
     }
     educationCellRender(row) {
         return this.educationList.find(_ => _.value == row.education).text;
@@ -81,9 +78,9 @@ export class CrudExample implements OnInit {
             additionalActionInCrud:[{title:'Detail', icon:'fa fa-gear', click:row=>console.log(row)}],
             crudColumnWidth: 70,
             trClass: row => ({ selected: row.selected }),
-            rowEvents: '(click)="config.rowClick(row)"',
-            rowClick: row => {
-                if (this.xgrid.ctrlKey) {
+            rowEvents: '(click)="config.rowClick(row, $event)"',
+            rowClick: (row: any, e: any) => {                
+                if (e.ctrlKey) {
                     row.selected = !row.selected;
                 } else {
                     this.selectedList.forEach(_ => _.selected = _ === row);
