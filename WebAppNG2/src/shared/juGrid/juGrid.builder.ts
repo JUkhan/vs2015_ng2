@@ -406,7 +406,7 @@ export class juGridBuilder
         {
             colDef.push(cell);
             let rh = this.options.headerHeight > 0 ? `style="height:${this.options.headerHeight}px"` : '';
-            this.headerHtml[headerRowFlag].push(`<th ${rh} `);
+            this.headerHtml[headerRowFlag].push(`<th class="juHeader" ${rh} `);
             if (rs > 1)
             {
                 this.headerHtml[headerRowFlag].push(` valign="bottom" rowspan="${rs}"`);
@@ -698,7 +698,7 @@ export class juGridBuilder
                             if (e.target.tagName === 'TH') {
                                 if (Math.abs(e.x - jQuery(e.target).offset().left) < 7) {
                                     e.target.style.cursor = 'col-resize';
-                                    resizableEl = e.target;
+                                    resizableEl = e.target; 
                                     return true;
                                 }
                                 if (not_mousedown) {
@@ -710,14 +710,17 @@ export class juGridBuilder
                         })
                         .flatMap((e: any) => {
                             return Observable.fromEvent(e.target, 'mousedown')
+                                .filter((e: any) => {
+                                    const left = this.getParentNode(e.target).getBoundingClientRect().left;
+                                    return e.x - left <= 10;
+                                })
                                 .do((e: any) => {
                                     document.body.style.cursor = 'col-resize';
                                     not_mousedown = false;
                                     activeIndex = index;
                                     startX = e.x;
                                     tblWidth = this.config.width;
-                                    w1 = this.config.columnDefs[index - 1].width;
-                                    //w2 = this.config.columnDefs[index].width;
+                                    w1 = this.config.columnDefs[index - 1].width;                                    
                                     w2 = 0;
                                     this.positionResizeMarker(startX, resizableEl); 
                                 });
@@ -761,6 +764,12 @@ export class juGridBuilder
                 } else {
                     window.getSelection().removeAllRanges();
                 }
+            }
+            private getParentNode(node: any) {
+                while (!node.classList.contains('juHeader')) {
+                    node = node.parentNode;
+                }
+                return node;
             }
             private columnResizing__backup()
             {
