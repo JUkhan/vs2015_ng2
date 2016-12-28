@@ -33,14 +33,16 @@
     "@angular/platform-browser": "~2.2.0",
     "@angular/platform-browser-dynamic": "~2.2.0",
     "@angular/router": "~3.2.0",
+    "@ngrx/core": "^1.2.0",
+    "@ngrx/store": "^2.2.1",
     "angular-in-memory-web-api": "~0.1.15",
-    "systemjs": "0.19.40",
     "core-js": "^2.4.1",
+    "lodash": "^4.16.4",
+    "primeng": "^1.0.0",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.0-beta.12",
-    "zone.js": "^0.6.26",
-    "primeng": "^1.0.0",    
-    "lodash": "^4.16.4"    
+    "systemjs": "0.19.40",
+    "zone.js": "^0.6.26"
   },
   "devDependencies": {
     "browser-sync": "^2.13.0",

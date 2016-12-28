@@ -31,9 +31,9 @@ export class AppComponent {
             { name: 'CRUD', link: 'setting', icon: 'fa fa-home' },
             { name: 'Tree View', link: 'setting/treeView', icon: 'fa fa-home' },
             { name: 'Cell Edit', link: 'setting/cellEdit', icon: 'fa fa-home' },
-            { name: 'Window', link: 'setting/window', icon: 'fa fa-home' },
+            //{ name: 'Window', link: 'setting/window', icon: 'fa fa-home' },
             { name: 'Minesweeper', link: 'minesweeper', icon: 'fa fa-home' },
-            { name: 'storeEx', link: 'storeEx', icon: 'fa fa-home' },
+            { name: 'storeEx', link: 'storeEx', icon: 'fa fa-home' },          
             {
                 
                 name: 'Settings',  icon: 'fa fa-gear', items: [

@@ -63,7 +63,9 @@ export class juGridBuilder
                     </table>
                 </div>
             </div>            
-        </div>`);
+        </div>
+        <span #resizeMarker class="resize-marker"></span>
+        `);
         if ( this.options.pagerPos === 'bottom')
         {
             tpl.push('<div style="height:5px;"></div>');
@@ -625,6 +627,7 @@ export class juGridBuilder
             @ViewChildren(rowEditor) editors: QueryList<rowEditor>;
             @ViewChild('filterWindow') filterWindowRef: ElementRef;
             @ViewChild('tc1') tableContainer: ElementRef;
+            @ViewChild('resizeMarker') resizeMarker: ElementRef;
             isValid(fieldName, index)
             {
                 let arr = this.editors.toArray(); 
@@ -685,7 +688,7 @@ export class juGridBuilder
 
                     mousemove$ = Observable.fromEvent(document, 'mousemove'),
                     mouseup$ = Observable.fromEvent(document, 'mouseup'),
-                    startX = 0, w1 = 0, w2 = 0, not_mousedown = true, tblWidth = this.config.width, activeIndex=1;
+                    startX = 0, w1 = 0, w2 = 0, not_mousedown = true, tblWidth = this.config.width, activeIndex = 1, resizableEl;
                 
                 for (let index = 0; index < thList.length; index++) {
                     let th = thList[index];
@@ -695,6 +698,7 @@ export class juGridBuilder
                             if (e.target.tagName === 'TH') {
                                 if (Math.abs(e.x - jQuery(e.target).offset().left) < 7) {
                                     e.target.style.cursor = 'col-resize';
+                                    resizableEl = e.target;
                                     return true;
                                 }
                                 if (not_mousedown) {
@@ -713,24 +717,50 @@ export class juGridBuilder
                                     startX = e.x;
                                     tblWidth = this.config.width;
                                     w1 = this.config.columnDefs[index - 1].width;
-                                    w2 = this.config.columnDefs[index].width;
+                                    //w2 = this.config.columnDefs[index].width;
+                                    w2 = 0;
+                                    this.positionResizeMarker(startX, resizableEl); 
                                 });
                         })
                         .subscribe();
                         
                 }
                 mouseup$.subscribe(e => {
+                    this.config.columnDefs[activeIndex - 1].width = w1 + w2;
+                    this.config.width = tblWidth + w2;
                     document.body.style.cursor = 'default';
-                    not_mousedown = true
+                    not_mousedown = true;
+                    this.renderer.setElementStyle(this.resizeMarker.nativeElement, 'display', 'none');
+                    this.removeSelection();
                 });
                 mousemove$
                     .map((e: any) => e.x - startX)
-                    .filter(e => w1 + e > 20 && !not_mousedown)
+                    .filter(e => w1 + e > 20 && !not_mousedown)                    
                     .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } }) 
                     .subscribe(e => {
-                        this.config.columnDefs[activeIndex - 1].width = w1 + e;
-                        this.config.width = tblWidth + e;
+                        //this.config.columnDefs[activeIndex - 1].width = w1 + e;
+                        //this.config.width = tblWidth + e;
+                        w2 = e;
+                        this.positionResizeMarker(e + startX, resizableEl);
+                        this.removeSelection();
                     });                    
+            }
+            private positionResizeMarker(left: number, resizableEl:any) {
+                const rect = resizableEl.getBoundingClientRect();
+                const bodyRect = document.body.getBoundingClientRect();
+                const resizeElement = this.resizeMarker.nativeElement;
+                const height = this.tableContainer.nativeElement.clientHeight + resizableEl.clientHeight;
+                this.renderer.setElementStyle(resizeElement, 'top', (rect.top - bodyRect.top) + 'px');
+                this.renderer.setElementStyle(resizeElement, 'height', height + 'px');
+                this.renderer.setElementStyle(resizeElement, 'left', left + 'px');
+                this.renderer.setElementStyle(resizeElement, 'display', 'block');
+            }
+            private removeSelection() {
+                if ((<any>document).selection) {
+                    (<any>document).selection.empty();
+                } else {
+                    window.getSelection().removeAllRanges();
+                }
             }
             private columnResizing__backup()
             {

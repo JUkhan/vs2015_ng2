@@ -821,3 +821,10 @@ select.selectpicker {
 }
 
 /*End juSelect*/
+
+.resize-marker{
+    border-left:solid 1px #333;
+    position:absolute;
+    display:none;
+    z-index:999999;
+}

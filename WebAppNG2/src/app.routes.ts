@@ -7,6 +7,8 @@ export const routes: Routes = [
     { path: 'minesweeper', component: minesweeper },    
     { path: 'setting', loadChildren: 'app/setting/setting.module' },
     { path: 'storeEx', loadChildren: 'app/storeExample/storeEx.module' },
+   
+   
 ];
 
 export const routing = RouterModule.forRoot(routes);
