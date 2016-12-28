@@ -9,7 +9,7 @@ export class Store extends BehaviorSubject<any> {
         this.dispatcher            
             .scan((state, action) => this.reducer(state, action), initialState)
             .subscribe(state => super.next(state));
-        this.dispatch({ type: 'none' }); console.log('Store init');
+        console.log('Store init');
     }
     dispatch(action: { type: string,payload?:any }) {
         this.dispatcher.next(action);
@@ -23,7 +23,6 @@ export class Store extends BehaviorSubject<any> {
     }
 }
 
-//Combine Reducers Refresher
 const combineReducers = reducers => (state = {}, action) => {
     return Object.keys(reducers).reduce((nextState, key) => {
         nextState[key] = reducers[key](state[key], action);

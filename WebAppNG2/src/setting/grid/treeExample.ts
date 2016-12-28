@@ -40,7 +40,7 @@ export class TreeExample implements OnInit {
             columnDefs: [
                 { headerName: 'Name', sort: true, field: 'name', width: 250 },
                 { headerName: 'Education', sort: true, field: 'education' },
-                { headerName: 'Age', sort: true, field: 'age'},
+                { headerName: 'Age', sort: true, field: 'age', cellRenderer:row=>`<span style="color:green">${row.age}</span>`},
                 { headerName: 'Address', sort: true, field: 'address' },
                 { headerName: 'Description', sort: true, width: 300, field: 'description' },
                 { headerName: 'Description', width: 300, field: 'description' },

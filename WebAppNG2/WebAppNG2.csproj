@@ -743,9 +743,11 @@
     <TypeScriptCompile Include="src\shared\juWindow\juParentWindow.ts" />
     <TypeScriptCompile Include="src\shared\juWindow\juWindowService.ts" />
     <TypeScriptCompile Include="src\shared\app-ui\mail.ts" />
+    <TypeScriptCompile Include="src\shared\pipes\SafeHtmlPipe.ts" />
     <TypeScriptCompile Include="src\shared\shared.module.ts" />
     <TypeScriptCompile Include="src\shared\ui.service.ts" />
     <TypeScriptCompile Include="src\Store.ts" />
+    <TypeScriptCompile Include="src\storeExample\child.ts" />
     <TypeScriptCompile Include="src\storeExample\com.ts" />
     <TypeScriptCompile Include="src\storeExample\houseWorked.ts" />
     <TypeScriptCompile Include="src\storeExample\router.ts" />

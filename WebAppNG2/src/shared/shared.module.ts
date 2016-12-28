@@ -28,7 +28,7 @@ import {AppService}             from './app.service';
 import {CanDeactivateGuard}     from './canDeactivateGuard.service';
 import {juFormBuilder}          from './juForm/juForm.builder';
 import {juGridBuilder}          from './juGrid/juGrid.builder';
-
+import {SafeHtmlPipe} from './pipes/SafeHtmlPipe';
 @NgModule({
     imports: [CommonModule, RouterModule, FormsModule],
     declarations: [
@@ -42,7 +42,7 @@ import {juGridBuilder}          from './juGrid/juGrid.builder';
         FileSelect,
         Datetimepicker,
         juGrid,
-        rowEditor,
+        rowEditor, SafeHtmlPipe,
         MailComponent, MessageDialog, ConfirmDialog, ReportViewer, Attachment
     ],
     exports: [
@@ -58,7 +58,7 @@ import {juGridBuilder}          from './juGrid/juGrid.builder';
         FileSelect,
         Datetimepicker,
         juGrid,
-        rowEditor,
+        rowEditor, SafeHtmlPipe,
         MailComponent, MessageDialog, ConfirmDialog, ReportViewer, Attachment
     ],
     providers: [COMPILER_PROVIDERS]

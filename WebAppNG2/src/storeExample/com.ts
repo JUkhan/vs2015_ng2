@@ -1,5 +1,5 @@
 ﻿
-import {Component, OnInit}        from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy}        from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Store} from '../Store';
 import {ADD_HOUR, SUBTRACT_HOUR, ADD_INFO} from './houseWorked';
@@ -13,16 +13,19 @@ import {ADD_HOUR, SUBTRACT_HOUR, ADD_INFO} from './houseWorked';
                 <button (click)="increment()">++</button>
                 <button (click)="decrement()">--</button>
                 <button (click)="info()"> info</button>
-            </div> 
-            <p>{{person | async | json}}</p>       
-            `   
+            </div>             
+            <child [person]="person | async"></child>      
+            `,
+            changeDetection:ChangeDetectionStrategy.OnPush   
 })
 export class com  {
     count: Observable<any>;
     person: Observable<any>;
     constructor(private store: Store) {
         this.count = store.select('houseWorked');
-        this.person = store.select('person');
+        this.person = this.count.combineLatest(store.select('person'), (count:any, person)=>{
+                               return Object.assign({}, person,{count} );
+                            });
     }
     increment() {
         this.store.dispatch({ type: ADD_HOUR });

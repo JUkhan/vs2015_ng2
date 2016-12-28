@@ -232,7 +232,8 @@ export class juGridBuilder
         }
         else if (item.cellRenderer)
         {
-            tpl.push(` [innerHTML]="config.columnDefs[${index}].cellRenderer(row,i,f, l)">`);
+            tpl.push(` [innerHTML]="config.columnDefs[${index}].cellRenderer(row,i,f, l) | safeHtml">`);
+
         }
         else if (item.exp)
         {
@@ -302,11 +303,11 @@ export class juGridBuilder
                 if (index === 0)
                 {
                     tpl.push(`><a *ngIf="${row}.hasChild||${row}.items" href="javascript:;" (click)="toggleChildView(${row})" title="Toggling for child view."><b class="fa fa-{{${row}.expand?'minus':'plus'}}-square-o"></b></a>
-                 <span class="child-renderer" [innerHTML]="config.columnDefs[${index}].cellRenderer(${this.getParams(row, level)})"></span>`);
+                 <span class="child-renderer" [innerHTML]="config.columnDefs[${index}].cellRenderer(${this.getParams(row, level)}) | safeHtml"></span>`);
                 }
                 else
                 {
-                    tpl.push(` [innerHTML]="config.columnDefs[${index}].cellRenderer(${this.getParams(row, level)})">`);
+                    tpl.push(` [innerHTML]="config.columnDefs[${index}].cellRenderer(${this.getParams(row, level)}) | safeHtml">`);
                 }
             }
             else if (item.field)
