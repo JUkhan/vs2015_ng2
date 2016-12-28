@@ -4,7 +4,8 @@ import { FV}                      from '../../shared/juForm/FV';
 import {Observable}               from 'rxjs/Rx';
 import {AppService}               from '../../shared/app.service';
 import { SelectOptions}                      from '../../shared/juForm/JuSelect';
-
+import {Store, storeFactory} from '../../Store';
+import {houseWorked} from './houseWorked';
 @Component({
     moduleId: module.id,
     selector: 'cellEdit',
@@ -16,16 +17,22 @@ import { SelectOptions}                      from '../../shared/juForm/JuSelect'
                   [options]="gridOptions">
                    <template><button class="btn btn-primary" (click)="saveRecords()">Save Records</button></template>
             </div> 
-                      
-            `
+              <div>houseWorked: {{houseWorked | async}} <button (click)="onHouseWorked()">Click++</button></div>        
+            `,
+    providers: [storeFactory({ houseWorked})]
 })
 
 export class CellEditExample implements OnInit {
     private list: any[] = [];
     private gridOptions: GridOptions;
-
-    constructor(private service: AppService) { }
-
+    houseWorked: any;
+    constructor(private service: AppService, private store: Store) {
+        this.houseWorked = store.select('houseWorked');
+      
+    }
+    onHouseWorked() {
+        this.store.dispatch({ type: 'ADD_HOUR' });
+    }
     ngOnInit() {
         this.initGrid();
         this.service.get('dummydata/GetScholarList')

@@ -708,6 +708,7 @@
     <TypeScriptCompile Include="src\MyGrid\Renderer.ts" />
     <TypeScriptCompile Include="src\MyGrid\Row.ts" />
     <TypeScriptCompile Include="src\setting\grid\cellEditExample.ts" />
+    <TypeScriptCompile Include="src\setting\grid\houseWorked.ts" />
     <TypeScriptCompile Include="src\setting\grid\crudExample.ts" />
     <TypeScriptCompile Include="src\setting\grid\TemplateExp.ts" />
     <TypeScriptCompile Include="src\setting\grid\treeExample.ts" />
@@ -744,6 +745,11 @@
     <TypeScriptCompile Include="src\shared\app-ui\mail.ts" />
     <TypeScriptCompile Include="src\shared\shared.module.ts" />
     <TypeScriptCompile Include="src\shared\ui.service.ts" />
+    <TypeScriptCompile Include="src\Store.ts" />
+    <TypeScriptCompile Include="src\storeExample\com.ts" />
+    <TypeScriptCompile Include="src\storeExample\houseWorked.ts" />
+    <TypeScriptCompile Include="src\storeExample\router.ts" />
+    <TypeScriptCompile Include="src\storeExample\storeEx.module.ts" />
     <TypeScriptCompile Include="typings\globals\angular-protractor\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\jasmine\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
