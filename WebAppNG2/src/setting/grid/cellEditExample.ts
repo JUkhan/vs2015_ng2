@@ -57,8 +57,8 @@ export class CellEditExample implements OnInit {
                 { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item."><b class="fa fa-plus-circle"></b> </a>', width: 40, cellRenderer: (row, index) => `<div class="cell">${++index}</div>`  },
                 { headerName: 'Name', field: 'name', filter: 'set', sort: !true, exp:'<div class="cell"><b>{{row.name}}</b></div>'},
                 { headerName: 'Education', field: 'education', filter: 'set', sort: !true, change: this.changeEducation.bind(this), validators: FV.required, type: 'juSelect', width: 160, options:<SelectOptions>{width:'100%', fixedPosition:true, title:'Select education'} },
-                { headerName: 'Age', field: 'age', filter: 'number', sort: !true, type: 'number', width: 100, validators:[ FV.required, FV.validate(val=>parseInt(val)>20,'Age should be abobe 25') ]},
-                { headerName: 'Birth Date', field: 'bdate', type: 'datepicker', width: 160, validators: FV.required },
+                { headerName: 'Age', field: 'age', filter: 'number', sort: !true, type: 'number', width: 100, validators: [FV.required, FV.validate(val => parseInt(val) > 20, 'Age should be abobe 25')] },
+                { headerName: 'Birth Date', field: 'bdate', type: 'datepicker', width: 160, validators: FV.required, inputExp:`[disabled]="'true'"` },
                 { headerName: 'Address', field: 'address', type: 'juSelect', width: 170, validators: FV.required , options:{width:'100%', fixedPosition:true, title:'select addresss'}},
                 { headerName: 'Description', field: 'description', type: 'text', validators: [FV.required, FV.minLength(5)], width: 220 }
             ],

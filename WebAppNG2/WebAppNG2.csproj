@@ -684,6 +684,7 @@
     <Folder Include="app\" />
     <Folder Include="App_Data\" />
     <Folder Include="scripts\" />
+    <Folder Include="src\ngrxEx\" />
     <Folder Include="Views\DummyData\" />
     <Folder Include="Views\Utilization\" />
   </ItemGroup>
@@ -707,10 +708,6 @@
     <TypeScriptCompile Include="src\MyGrid\MyGrid.ts" />
     <TypeScriptCompile Include="src\MyGrid\Renderer.ts" />
     <TypeScriptCompile Include="src\MyGrid\Row.ts" />
-    <TypeScriptCompile Include="src\ngrxEx\com.ts" />
-    <TypeScriptCompile Include="src\ngrxEx\counter.ts" />
-    <TypeScriptCompile Include="src\ngrxEx\ngrxEx.module.ts" />
-    <TypeScriptCompile Include="src\ngrxEx\router.ts" />
     <TypeScriptCompile Include="src\setting\grid\cellEditExample.ts" />
     <TypeScriptCompile Include="src\setting\grid\houseWorked.ts" />
     <TypeScriptCompile Include="src\setting\grid\crudExample.ts" />

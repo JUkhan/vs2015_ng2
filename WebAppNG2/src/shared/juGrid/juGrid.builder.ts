@@ -142,14 +142,14 @@ export class juGridBuilder
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width">${item.content}</td>`);
                     break;
                 case 'datepicker':
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style} ${item.inputExp}>
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
                     <div [style.display]="(config.editPermission && ${config}.editPermission(row))?'block':'none'">
                     <div class="input-group date" [pickers]="${config}.config" picker-name="${item.type}" [model]="row" property="${item.field}" [config]="${config}" [form]="myForm" >
-                        <input type="text" [disabled]="${config}.disabled" [(ngModel)]="row.${item.field}" class="form-control" placeholder="Enter ${header}">
+                        <input type="text" ${item.inputExp} [(ngModel)]="row.${item.field}" class="form-control" placeholder="Enter ${header}">
                         <span class="input-group-addon">
                             <span class="fa fa-calendar"></span>
                         </span>
-                    </div></div><span ${item.inputExp} class="cell" [style.display]="(config.editPermission  && ${config}.editPermission(row))?'none':'block'">{{(${config}.getValue && ${config}.getValue(row))||row['${item.field}']}}</span></div>`);
+                    </div></div><span class="cell" [style.display]="(config.editPermission  && ${config}.editPermission(row))?'none':'block'">{{(${config}.getValue && ${config}.getValue(row))||row['${item.field}']}}</span></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
