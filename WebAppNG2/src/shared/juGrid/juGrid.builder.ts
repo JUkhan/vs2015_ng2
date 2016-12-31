@@ -95,7 +95,9 @@ export class juGridBuilder
         }      
         return `${config}.dataSrc`;
     }
-
+    private removeDisbled(exp: string) {
+        return exp.replace(/\[disabled\]\s*=\s*".+"/, '');
+    }
     private getCell(item, config: string, tpl: any[], index: number)
     {
         var style = '', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? `style="height:${this.options.rowHeight}px"` : '';
@@ -149,7 +151,7 @@ export class juGridBuilder
                         <span class="input-group-addon">
                             <span class="fa fa-calendar"></span>
                         </span>
-                    </div></div><span class="cell" [style.display]="(config.editPermission  && ${config}.editPermission(row))?'none':'block'">{{(${config}.getValue && ${config}.getValue(row))||row['${item.field}']}}</span></div>`);
+                    </div></div><span class="cell" [style.display]="(config.editPermission  && ${config}.editPermission(row))?'none':'block'">{{row['${item.field}']}}</span></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
@@ -157,7 +159,7 @@ export class juGridBuilder
                 case 'text':
                 case 'number':
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><div [style.display]="(config.editPermission && ${config}.editPermission(row))?'block':'none'"><input ${style} ${item.inputExp} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></div>`);
-                    tpl.push(`<span ${item.inputExp} class="cell" [style.display]="(config.editPermission && ${config}.editPermission(row))?'none':'block'">{{(${config}.getValue && ${config}.getValue(row))||row['${item.field}']}}</span></div>`);
+                    tpl.push(`<span ${this.removeDisbled(item.inputExp)} class="cell"[style.display] = "(config.editPermission && ${config}.editPermission(row))?'none':'block'" > {{row['${item.field}']}} </span></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
@@ -169,7 +171,7 @@ export class juGridBuilder
                     break;
                 case 'textarea':
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><div [style.display]="(config.editPermission  && ${config}.editPermission(row))?'block':'none'"><textarea ${style} ${item.inputExp} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
-                    tpl.push(`</div><span ${item.inputExp} class="cell" [style.display]="(config.editPermission && ${config}.editPermission(row))?'none':'block'">{{(${config}.getValue && ${config}.getValue(row))||row['${item.field}']}}</span></div>`);
+                    tpl.push(`</div><span ${this.removeDisbled(item.inputExp)} class="cell" [style.display]="(config.editPermission && ${config}.editPermission(row))?'none':'block'">{{row['${item.field}']}}</span></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
@@ -412,8 +414,7 @@ export class juGridBuilder
                 this.headerHtml[headerRowFlag].push(` valign="bottom" rowspan="${rs}"`);
             }
             if (cell.width)
-            {                
-                console.log()
+            { 
                 this.headerHtml[headerRowFlag].push(` [style.width.px]="config.columnDefs[${this._colIndex}].width"`);
             }
             if (cell.sort)
@@ -629,7 +630,7 @@ export class juGridBuilder
             @ViewChild('tc1') tableContainer: ElementRef;
             @ViewChild('resizeMarker') resizeMarker: ElementRef;
             isValid(fieldName, index)
-            {
+            {                
                 let arr = this.editors.toArray(); 
                 if (arr.length > index)
                 {
@@ -682,7 +683,7 @@ export class juGridBuilder
                     this.tableContainer.nativeElement.scrollTop = scrollTop;
                 }
             }
-            private columnResizing() {
+            private columnResizing_() {
 
                 let thList: any[] = this.el.nativeElement.querySelectorAll('table thead tr th'),
 
@@ -771,9 +772,8 @@ export class juGridBuilder
                 }
                 return node;
             }
-            private columnResizing__backup()
-            {
-                
+            private columnResizing()
+            {                
                 let thList: any[] = this.el.nativeElement.querySelectorAll('table thead tr th'),
 
                     mousemove$ = Observable.fromEvent(document, 'mousemove'),
@@ -820,8 +820,8 @@ export class juGridBuilder
                         .flatMap(e => mousemove$
                             .map((e: any) => e.x - startX)
                             .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } })
-                            .takeUntil(mouseup$.do(e => { not_mousedown = true; })))
-                        .distinctUntilChanged()
+                            .takeUntil(mouseup$.do(e => { not_mousedown = true; this.removeSelection(); })))
+                        .debounceTime(200)
                         .filter(e => e < 0 ? w1 + e > 20 : w2 - e > 20)
                         .subscribe(e =>
                         {

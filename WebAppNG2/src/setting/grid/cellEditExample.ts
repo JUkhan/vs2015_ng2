@@ -1,4 +1,4 @@
-﻿import {Component, OnInit}        from '@angular/core';
+﻿import {Component, OnInit, Renderer}        from '@angular/core';
 import {juGrid, GridOptions}                   from '../../shared/juGrid/juGrid';
 import { FV}                      from '../../shared/juForm/FV';
 import {Observable}               from 'rxjs/Rx';
@@ -26,19 +26,39 @@ export class CellEditExample implements OnInit {
     private list: any[] = [];
     private gridOptions: GridOptions;
     houseWorked: any;
-    constructor(private service: AppService, private store: Store) {
+    constructor(private service: AppService, private store: Store, private renderer: Renderer) {
         this.houseWorked = store.select('houseWorked');
       
     }
     onHouseWorked() {
         this.store.dispatch({ type: 'ADD_HOUR' });
     }
+    keydownListener: any;
     ngOnInit() {
         this.initGrid();
         this.service.get('dummydata/GetScholarList')
-            .subscribe(res => this.list = res);
+            .subscribe(res => {
+                res[0].selected = true;
+                this.selectedRow = res[0];
+                this.list = res;
+            });
+       
     }
-   
+    ngAfterViewInit() {
+        this.keydownListener = this.renderer.listenGlobal('window', 'keydown', e => {         
+            var keyupdown = false;
+            if (e.key === 'ArrowUp') { this.rowIndex--;  keyupdown = true;}
+            if (e.key === 'ArrowDown') { this.rowIndex++; keyupdown = true;}
+            if (this.rowIndex < 0 || this.rowIndex >= this.list.length) this.rowIndex = 0;
+            if (keyupdown) {
+                e.preventDefault();
+                this.rowClick(this.list[this.rowIndex]);
+            }
+        });
+    }
+    ngOnDestroy() {
+        this.keydownListener && this.keydownListener();
+    }
     private saveRecords() {
         console.log(this.gridOptions.api.grid.getUpdatedRecords());
         console.log(this.gridOptions.api.grid.getValidRows()); 
@@ -55,23 +75,34 @@ export class CellEditExample implements OnInit {
             enableCellEditing: true,
             columnDefs: [
                 { headerName: '<a href="javascript:;" (click)="config.addItem()" title="New item."><b class="fa fa-plus-circle"></b> </a>', width: 40, cellRenderer: (row, index) => `<div class="cell">${++index}</div>`  },
-                { headerName: 'Name', field: 'name', filter: 'set', sort: !true, exp:'<div class="cell"><b>{{row.name}}</b></div>'},
-                { headerName: 'Education', field: 'education', filter: 'set', sort: !true, change: this.changeEducation.bind(this), validators: FV.required, type: 'juSelect', width: 160, options:<SelectOptions>{width:'100%', fixedPosition:true, title:'Select education'} },
-                { headerName: 'Age', field: 'age', filter: 'number', sort: !true, type: 'number', width: 100, validators: [FV.required, FV.validate(val => parseInt(val) > 20, 'Age should be abobe 25')] },
-                { headerName: 'Birth Date', field: 'bdate', type: 'datepicker', width: 160, validators: FV.required, inputExp:`[disabled]="'true'"` },
-                { headerName: 'Address', field: 'address', type: 'juSelect', width: 170, validators: FV.required , options:{width:'100%', fixedPosition:true, title:'select addresss'}},
-                { headerName: 'Description', field: 'description', type: 'text', validators: [FV.required, FV.minLength(5)], width: 220 }
+                { editPermission: row => row.selected, headerName: 'Name', field: 'name', filter: 'set', sort: !true, exp:'<div class="cell"><b>{{row.name}}</b></div>'},
+                { editPermission: row => row.selected, headerName: 'Education', field: 'education', filter: 'set', sort: !true, change: this.changeEducation.bind(this), validators: FV.required, type: 'juSelect', width: 160, options: <SelectOptions>{ width: '100%', title: 'Select education' }, getValue: row => { const ed = this.educations.find(_ => _.value === row.education); return ed && ed.text; }},
+                { editPermission: row => row.selected, headerName: 'Age', field: 'age', filter: 'number', sort: !true, type: 'number', width: 100, validators: [FV.required, FV.validate(val => parseInt(val) > 20, 'Age should be abobe 25')] },
+                { editPermission: row => row.selected, headerName: 'Birth Date', field: 'bdate', type: 'datepicker', width: 160, validators: FV.required, inputExp:`[disabled]="'true'"` },
+                { editPermission: row => row.selected, headerName: 'Address', field: 'address', type: 'juSelect', width: 170, validators: FV.required , options:{width:'100%', title:'select addresss'}},
+                { editPermission: row => row.selected, headerName: 'Description', field: 'description', type: 'text', validators: [FV.required, FV.minLength(5)], width: 220 }
             ],
             addItem: () => {
                 this.counter++;
                 this.gridOptions.api.grid.addItem({ name: 'Abdulla' + this.counter });
-            }
+            },            
+            rowEvents: `(click)="config.rowClick(row)"`,
+            rowClick: this.rowClick.bind(this),
+            trClass: row => ({selected:row.selected})
         }
     }
-    counter = 0
+    private rowClick(row) {
+        this.selectedRow.selected = false;
+        row.selected = true;
+        this.selectedRow = row;
+    }
+    rowIndex: number = 0;
+    selectedRow: any = {};
+    counter = 0;
+    educations: any[]=[];
     private gridLoad(grid: juGrid) {
         this.service.get('dummyData/getEducations')
-            .subscribe(res => grid.setSelectData('education', res));
+            .subscribe(res => { this.educations = res; grid.setSelectData('education', res) });
         
     }
     private changeEducation(obj)
