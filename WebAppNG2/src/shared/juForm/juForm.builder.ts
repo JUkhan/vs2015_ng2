@@ -1,5 +1,5 @@
 ﻿import {Component, ComponentFactory, NgModule, Input, Injectable, ElementRef} from '@angular/core';
-import {RuntimeCompiler} from '@angular/compiler';
+import {Compiler } from '@angular/core';
 import {SharedModule} from '../shared.module';
 import {Observable, Subject}   from 'rxjs/Rx';
 declare var jQuery: any;
@@ -13,7 +13,7 @@ export class juFormBuilder {
     private isVertical: boolean;
     private activeTabs: any = {};
    
-    constructor(protected compiler: RuntimeCompiler) { } 
+    constructor(protected compiler: Compiler) { } 
        
     //private _cacheOfFactories: { [templateKey: string]: ComponentFactory<IJUForm> } = {};
     

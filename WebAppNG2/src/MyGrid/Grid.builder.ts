@@ -12,7 +12,7 @@
     Injectable,
     ElementRef,
     ViewEncapsulation} from '@angular/core';
-import {RuntimeCompiler} from '@angular/compiler';
+import {Compiler} from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { FormsModule }          from '@angular/forms';
 import {MyGridModule} from './MyGrid.module';
@@ -22,7 +22,7 @@ declare var jQuery: any;
 @Injectable()
 export class GridBuilder {
     private options: any;
-    constructor(protected compiler: RuntimeCompiler) { }
+    constructor(protected compiler: Compiler) { }
 
     protected getTemplate(): string {
         let tpl: any[] = [];

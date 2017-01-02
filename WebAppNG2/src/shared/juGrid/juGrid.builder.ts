@@ -1,7 +1,7 @@
 ﻿import {Component, Renderer, ViewChildren, QueryList, ViewChild, ViewEncapsulation, ComponentFactory, NgModule, Input, Injectable, ElementRef, ChangeDetectorRef} from '@angular/core';
 import { CommonModule }         from "@angular/common";
 import { FormsModule }          from "@angular/forms";
-import {RuntimeCompiler}        from '@angular/compiler';
+import {Compiler}        from '@angular/core';
 import {SharedModule}           from '../shared.module';
 import {juForm}                 from '../juForm/juForm';
 import {juPager}                from '../juPager/juPager';
@@ -18,7 +18,7 @@ declare var jQuery: any;
 export class juGridBuilder
 {
     private options: any = {};
-    constructor(protected compiler: RuntimeCompiler) { }
+    constructor(protected compiler: Compiler) { }
     private getTotalWidth()
     {
         let totalWidth = 0;
@@ -630,7 +630,8 @@ export class juGridBuilder
             @ViewChild('tc1') tableContainer: ElementRef;
             @ViewChild('resizeMarker') resizeMarker: ElementRef;
             isValid(fieldName, index)
-            {                
+            {
+                           
                 let arr = this.editors.toArray(); 
                 if (arr.length > index)
                 {
@@ -821,13 +822,14 @@ export class juGridBuilder
                             .map((e: any) => e.x - startX)
                             .do(diff => { if (Math.abs(diff) > 0) { this.isColResize = true; } })
                             .takeUntil(mouseup$.do(e => { not_mousedown = true; this.removeSelection(); })))
-                        .debounceTime(200)
+                        //.debounceTime(200)
                         .filter(e => e < 0 ? w1 + e > 20 : w2 - e > 20)
                         .subscribe(e =>
                         {
                             this.config.columnDefs[index - 1].width = w1 + e;
                             //this.config.columnDefs[index].width = w2 - e;
                             this.config.width = tblWidth+e;                           
+                            //this.removeSelection();
                             
                         });
                 }
