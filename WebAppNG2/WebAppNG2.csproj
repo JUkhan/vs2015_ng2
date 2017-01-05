@@ -696,6 +696,7 @@
     <TypeScriptCompile Include="src\app.component.ts" />
     <TypeScriptCompile Include="src\app.module.ts" />
     <TypeScriptCompile Include="src\app.routes.ts" />
+    <TypeScriptCompile Include="src\Cycle.ts" />
     <TypeScriptCompile Include="src\home\home.component.ts" />
     <TypeScriptCompile Include="src\home\index.ts" />
     <TypeScriptCompile Include="src\main.ts" />
@@ -750,9 +751,18 @@
     <TypeScriptCompile Include="src\Store.ts" />
     <TypeScriptCompile Include="src\storeExample\child.ts" />
     <TypeScriptCompile Include="src\storeExample\com.ts" />
+    <TypeScriptCompile Include="src\storeExample\helloEffects.ts" />
     <TypeScriptCompile Include="src\storeExample\houseWorked.ts" />
     <TypeScriptCompile Include="src\storeExample\router.ts" />
     <TypeScriptCompile Include="src\storeExample\storeEx.module.ts" />
+    <TypeScriptCompile Include="src\store\actions.ts" />
+    <TypeScriptCompile Include="src\store\bootstrap-listener.ts" />
+    <TypeScriptCompile Include="src\store\Dispatcher.ts" />
+    <TypeScriptCompile Include="src\store\effects-subscription.ts" />
+    <TypeScriptCompile Include="src\store\effects.module.ts" />
+    <TypeScriptCompile Include="src\store\effects.ts" />
+    <TypeScriptCompile Include="src\store\Store.ts" />
+    <TypeScriptCompile Include="src\store\util.ts" />
     <TypeScriptCompile Include="typings\globals\angular-protractor\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\jasmine\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />

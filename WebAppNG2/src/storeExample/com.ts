@@ -1,7 +1,7 @@
 ﻿
 import {Component, OnInit, ChangeDetectionStrategy}        from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {Store} from '../Store';
+import {Store} from '../store/Store';
 import {ADD_HOUR, SUBTRACT_HOUR, ADD_INFO} from './houseWorked';
 
 @Component({
