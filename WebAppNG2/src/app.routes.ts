@@ -7,7 +7,7 @@ export const routes: Routes = [
     { path: 'minesweeper', component: minesweeper },    
     { path: 'setting', loadChildren: 'app/setting/setting.module' },
     { path: 'storeEx', loadChildren: 'app/storeExample/storeEx.module' },
-   
+    { path: 'storeEx2', loadChildren: 'app/DisputeExceptionCode/DisputeExceptionCode.module' },
    
 ];
 

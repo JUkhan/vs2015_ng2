@@ -1,4 +1,4 @@
-﻿import {Component, Renderer, ViewChildren, QueryList, ViewChild, ViewEncapsulation, ComponentFactory, NgModule, Input, Injectable, ElementRef, ChangeDetectorRef} from '@angular/core';
+﻿import {Component, Renderer, ViewChildren, QueryList, ViewChild, ViewEncapsulation, ComponentFactory, NgModule, Input, Injectable, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule }         from "@angular/common";
 import { FormsModule }          from "@angular/forms";
 import {Compiler}        from '@angular/core';
@@ -571,7 +571,8 @@ export class juGridBuilder
         @Component({
             selector: 'dynamic-grid',
             template: tmpl,
-            encapsulation: ViewEncapsulation.None
+            encapsulation: ViewEncapsulation.None,
+            changeDetection: ChangeDetectionStrategy.Default
         })
         class DynamicGridComponent 
         {
@@ -630,8 +631,7 @@ export class juGridBuilder
             @ViewChild('tc1') tableContainer: ElementRef;
             @ViewChild('resizeMarker') resizeMarker: ElementRef;
             isValid(fieldName, index)
-            {
-                           
+            {                          
                 let arr = this.editors.toArray(); 
                 if (arr.length > index)
                 {

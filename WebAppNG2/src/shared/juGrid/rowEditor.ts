@@ -1,11 +1,11 @@
-import {Directive, OnInit, ContentChildren, QueryList, ElementRef, OnDestroy} from '@angular/core';
+import {Directive, OnInit, ContentChildren, QueryList, ElementRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {juSelect}                 from '../juForm/juSelect';
 import {Datetimepicker}                 from '../juForm/Datetimepicker';
 import {Observable, Subscription} from 'rxjs/Rx';
 @Directive({
     selector: '.row-editor',
     inputs: ['model','config'],
-    outputs:['rowUpdate']
+    outputs: ['rowUpdate']
 })
 export class rowEditor implements OnInit {  
     model: any;

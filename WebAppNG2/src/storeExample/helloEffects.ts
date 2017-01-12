@@ -1,7 +1,7 @@
 ﻿
 import {Injectable} from '@angular/core';
-import {Effect} from '../store/effects';
-import {Actions} from '../store/actions';
+import {Effect} from '../shared/store/effects';
+import {Actions} from '../shared/store/actions';
 import {ADD_HOUR, SUBTRACT_HOUR, ADD_INFO} from './houseWorked';
 import {Observable} from 'rxjs/Observable';
 
