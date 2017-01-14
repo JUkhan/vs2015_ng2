@@ -698,7 +698,11 @@
     <TypeScriptCompile Include="src\app.component.ts" />
     <TypeScriptCompile Include="src\app.module.ts" />
     <TypeScriptCompile Include="src\app.routes.ts" />
-    <TypeScriptCompile Include="src\Cycle.ts" />
+    <TypeScriptCompile Include="src\cycle\adapter.ts" />
+    <TypeScriptCompile Include="src\cycle\dom.ts" />
+    <TypeScriptCompile Include="src\cycle\core.ts" />
+    <TypeScriptCompile Include="src\cycle\makeDomDriver.ts" />
+    <TypeScriptCompile Include="src\cycle\run.ts" />
     <TypeScriptCompile Include="src\DisputeExceptionCode\DECSubModule\DECSub.module.ts" />
     <TypeScriptCompile Include="src\DisputeExceptionCode\DECSubModule\HCFA.ts" />
     <TypeScriptCompile Include="src\DisputeExceptionCode\DECSubModule\RPR.ts" />
