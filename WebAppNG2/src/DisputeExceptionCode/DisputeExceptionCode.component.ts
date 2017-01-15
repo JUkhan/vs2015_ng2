@@ -8,6 +8,7 @@ import {tabModel} from './Reducers/model';
 import {RPR} from './DECSubModule/RPR';
 import {HCFA} from './DECSubModule/HCFA';
 import {DisputeService} from './DisputeService';
+import {EffectsSubscription} from '../Shared/Store/effects-subscription';
 @Component({
     moduleId: module.id,
     selector: 'dispute-exception-code-tab',   
@@ -23,7 +24,7 @@ export class DisputeExceptionCode implements OnDestroy {
     rprCom:RPR;
     hcfaCom:HCFA;
     title:string='Dispute Code - Maintenance';
-    constructor(private store:Store, private actions:DECActions, private service:DisputeService) {        
+    constructor(private store: Store, private actions: DECActions, private service: DisputeService, private es: EffectsSubscription) {        
         this.initForm();
         this.setButtonStatus();
         this.loadData();
@@ -44,7 +45,8 @@ export class DisputeExceptionCode implements OnDestroy {
         }));
     }
     ngOnDestroy(){
-        this.subs.forEach(_=>_.unsubscribe());
+        this.subs.forEach(_ => _.unsubscribe());
+        this.es.ngOnDestroy();
     }
     protected initForm() {
         this.options = {

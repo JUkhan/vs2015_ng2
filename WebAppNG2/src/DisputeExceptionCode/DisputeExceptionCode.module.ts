@@ -31,9 +31,10 @@ import {DisputeService} from './DisputeService';
     ]
 })
 export default class DisputeExceptionCodeModule {
-    constructor(es:EffectsSubscription){
+    constructor(){
 
     }
-}
+    
+}   
 
 

@@ -9,9 +9,9 @@ export const makeDomDriver = function (container) {
             container.appendChild(el);            
         });
         return {
-            selectEvents(cssSelector, eventName) {
+            selectEvents(cssClass, eventName) {
                 return Observable.fromEvent(document, eventName)
-                    .filter((ev:any) => !!Array.from(ev.target.classList).find(name => name === cssSelector));
+                    .filter((ev: any) => !!Array.from(ev.target.classList).find(name => '.'+name === cssClass));
                     
             }
         }

@@ -34,7 +34,8 @@ export class EffectsSubscription extends Subscription implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (!this.closed) {
+           
+      if (!this.closed) {          
       this.unsubscribe();
     }
   }
