@@ -127,12 +127,13 @@ export class juFormBuilder {
                             template.push(this._getRadioTemplate(item.field, item, refPath + `[${index}]`))
                             break;
                         case 'datepicker':
+                        case 'datetimepicker':
                             item.config = item.config || {}
-                            if (!('autoclose' in item.config)) {
-                                item.config.autoclose = true;
-                            }
+                            //if (!('autoclose' in item.config)) {
+                            //    item.config.autoclose = true;
+                            //}
                             template.push(this._getDateTemplate(item.field, item, refPath + `[${index}]`));
-                            break;
+                            break;                       
                         case 'detail':
                             template.push(this._getDetailTemplate(item.field, item, refPath + `[${index}]`));
                             break;
@@ -393,6 +394,7 @@ export class juFormBuilder {
         return this.getHtml(input, element, fieldName, labelPos, labelSize, config);
 
     }
+    
     private _getSelectTemplate(fieldName: string, input: any, config: string)
     {        
         let labelSize = input.labelSize || this.options.labelSize || 3,

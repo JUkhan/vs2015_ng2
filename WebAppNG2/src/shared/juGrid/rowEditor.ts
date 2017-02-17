@@ -2,6 +2,7 @@ import {Directive, OnInit, ContentChildren, QueryList, ElementRef, OnDestroy, Ch
 import {juSelect}                 from '../juForm/juSelect';
 import {Datetimepicker}                 from '../juForm/Datetimepicker';
 import {Observable, Subscription} from 'rxjs/Rx';
+declare const jQuery:any;
 @Directive({
     selector: '.row-editor',
     inputs: ['model','config'],
@@ -28,7 +29,9 @@ export class rowEditor implements OnInit {
             this.subsList.push(_.notifyRowEditor.subscribe(() => { this.isUpdated = true }));
         });
     }
-
+    focus(key){        
+         jQuery('.'+key, this.el.nativeElement).focus();
+    }
     ngOnInit() {
 
     }

@@ -19,37 +19,49 @@ export class Datetimepicker implements OnInit, OnDestroy {
     private pickerObject: any;
     constructor(private el: ElementRef) { }
     ngOnInit() {
-        switch (this.pickerName) {
+        switch (this.pickerName) {            
             case 'datepicker':
-                this.pickerObject = jQuery('.input-group-addon',this.el.nativeElement).datepicker(this.pickers);
-                  this.inputSubscription=Observable.fromEvent(jQuery('input',this.el.nativeElement), 'keyup')
-                            .debounceTime(500)
-                            .distinctUntilChanged()
-                            .pluck('target', 'value')
-                            .subscribe(_ => this.setDate(_));               
-                this.pickerObject.on('changeDate', (e) => {
-                    if (this.property.indexOf('.') !== -1) {
-                        let arr = this.property.split('.'), len = arr.length - 1, obj = this.model;
-                        for (var i = 0; i < len; i++) {
-                            obj = obj[arr[i]];
+            case 'datetimepicker':
+                this.inputSubscription = Observable.fromEvent(jQuery('input', this.el.nativeElement), 'keyup')
+                    .debounceTime(500)
+                    .distinctUntilChanged()
+                    .pluck('target', 'value')
+                    .subscribe(_ => this.setDate(_)); 
+                if (!this.pickers) this.pickers = {};
+                this.pickerObject = jQuery(this.el.nativeElement)
+                    .datetimepicker(this.pickers)
+                    .on('changeDate',  (ev)=>
+                    {                       
+                        this.changeDate(jQuery('input', ev.target).val());
+                        
+                    })
+                    .on('show', ev =>
+                    {
+                        if (jQuery('input', this.el.nativeElement)[0].disabled)
+                        {
+                            this.pickerObject.datetimepicker('hide');
+                        }                        
+                        if (typeof this.config.dpShow === 'function')
+                        {
+                            this.config.dpShow(this.model);
                         }
-                        obj[arr[i]] = e.format();
-                    } else {
-                        this.model[this.property] = e.format();
-                    }
-                    if (this.form) {
-                        this.form.componentRef.instance
-                            .vlidate_input(e.format(), this.config);
-                    }
-                    if(this.config.change){
-                        this.config.change(this.model);
-                    }
-                    this.notifyRowEditor.next(e.format());
-                });
-                this.setDate(this.model[this.property]);
-                break;
-            case 'timepicker':
-                jQuery(this.el.nativeElement).timepicker(this.pickers);
+                       
+                    })
+                    .on('hide', ev =>
+                    {
+                        if (typeof this.config.dpHide === 'function')
+                        {
+                            this.config.dpHide(this.model);
+                        }                         
+                        this.changeDate(jQuery('input', ev.target).val());                      
+                    })
+                    .on('outOfRange', ev =>
+                    {
+                        if (typeof this.config.dpOutOfRange === 'function')
+                        {
+                            this.config.dpOutOfRange(this.model);
+                        }  
+                    });
                 break;
             case 'colorpicker':
                 jQuery(this.el.nativeElement).colorpicker(this.pickers);
@@ -57,15 +69,45 @@ export class Datetimepicker implements OnInit, OnDestroy {
         }
         this.config.api = this;
     }
-    setDate(date: any) {    
-        this.pickerObject.datepicker('update', date);
+    changeDate(val)
+    {
+        if (this.property.indexOf('.') !== -1)
+        {
+            let arr = this.property.split('.'), len = arr.length - 1, obj = this.model;
+            for (var i = 0; i < len; i++)
+            {
+                obj = obj[arr[i]];
+            }
+            obj[arr[i]] = val;
+        } else
+        {
+            this.model[this.property] = val;
+        }
+        if (this.form)
+        {
+            this.form.componentRef.instance
+                .vlidate_input(val, this.config);
+        }
+        if (this.config.change)
+        {
+            this.config.change(this.model);
+        }
+        this.notifyRowEditor.next(val); 
+    }
+    setDate(date: any)
+    {  
         this.notifyRowEditor.next(date);
     }
     ngOnDestroy() {
-        if (this.pickerName === 'datepicker') {
-            this.pickerObject.datepicker('destroy');
-        }        
-        this.inputSubscription.unsubscribe();
+        
+        if (this.pickerObject)
+        {           
+            this.pickerObject.datetimepicker('remove');
+        } 
+        if (this.inputSubscription)
+        {
+            this.inputSubscription.unsubscribe();
+        }
        
     }
 }

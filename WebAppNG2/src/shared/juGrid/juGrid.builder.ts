@@ -100,7 +100,11 @@ export class juGridBuilder
     }
     private getCell(item, config: string, tpl: any[], index: number)
     {
-        var style = '', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? `style="height:${this.options.rowHeight}px"` : '';
+        var style = '', pipe=item.pipe||'', change = '', validation = '', header = '', rowHeight = this.options.rowHeight > 0 ? `style="height:${this.options.rowHeight}px"` : '';
+        if (pipe && !(pipe.indexOf('|') === 0))
+        {
+            pipe = '|' + pipe;
+        }
         if (item.type)
         {
             if (item.validators)
@@ -144,34 +148,35 @@ export class juGridBuilder
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width">${item.content}</td>`);
                     break;
                 case 'datepicker':
+                case 'datetimepicker':
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}>
                     <div [style.display]="(config.editPermission && ${config}.editPermission(row))?'block':'none'">
                     <div class="input-group date" [pickers]="${config}.config" picker-name="${item.type}" [model]="row" property="${item.field}" [config]="${config}" [form]="myForm" >
-                        <input type="text" ${item.inputExp} [(ngModel)]="row.${item.field}" class="form-control" placeholder="Enter ${header}">
+                        <input type="text" ${item.inputExp} [(ngModel)]="row.${item.field}" class="form-control ${item.field}" placeholder="Enter ${header}">
                         <span class="input-group-addon">
                             <span class="fa fa-calendar"></span>
-                        </span>
-                    </div></div><span class="cell" [style.display]="(config.editPermission  && ${config}.editPermission(row))?'none':'block'">{{row['${item.field}']}}</span></div>`);
+                        </span>                            
+                    </div></div><span class="cell" [style.display]="(config.editPermission  && ${config}.editPermission(row))?'none':'block'">{{row['${item.field}']${pipe}}}</span></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
 
                 case 'text':
                 case 'number':
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><div [style.display]="(config.editPermission && ${config}.editPermission(row))?'block':'none'"><input ${style} ${item.inputExp} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></div>`);
-                    tpl.push(`<span ${this.removeDisbled(item.inputExp)} class="cell"[style.display] = "(config.editPermission && ${config}.editPermission(row))?'none':'block'" > {{row['${item.field}']}} </span></div>`);
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><div [style.display]="(config.editPermission && ${config}.editPermission(row))?'block':'none'"><input ${style} ${item.inputExp} class="text form-control ${item.field}" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></div>`);
+                    tpl.push(`<span ${this.removeDisbled(item.inputExp)} class="cell"[style.display] = "(config.editPermission && ${config}.editPermission(row))?'none':'block'" > {{row['${item.field}']${pipe}}} </span></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'checkbox':
                     tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width">
-                              <div ${style}><input ${style} ${item.inputExp} class="text" type="checkbox" [(ngModel)]="row.${item.field}" [disabled]="!(config.editPermission && ${config}.editPermission(row))"></div>`);
+                              <div ${style}><input ${style} ${item.inputExp} class="text ${item.field}" type="checkbox" [(ngModel)]="row.${item.field}" [disabled]="!(config.editPermission && ${config}.editPermission(row))"></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
                 case 'textarea':
-                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><div [style.display]="(config.editPermission  && ${config}.editPermission(row))?'block':'none'"><textarea ${style} ${item.inputExp} class="text form-control" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
-                    tpl.push(`</div><span ${this.removeDisbled(item.inputExp)} class="cell" [style.display]="(config.editPermission && ${config}.editPermission(row))?'none':'block'">{{row['${item.field}']}}</span></div>`);
+                    tpl.push(`<td ${rowHeight} [style.width.px]="config.columnDefs[${index}].width"><div ${style}><div [style.display]="(config.editPermission  && ${config}.editPermission(row))?'block':'none'"><textarea ${style} ${item.inputExp} class="text form-control ${item.field}" type="${item.type}" [(ngModel)]="row.${item.field}" placeholder="Enter ${header}"></textarea>`);
+                    tpl.push(`</div><span ${this.removeDisbled(item.inputExp)} class="cell" [style.display]="(config.editPermission && ${config}.editPermission(row))?'none':'block'">{{row['${item.field}']${pipe}}}</span></div>`);
                     tpl.push(validation);
                     tpl.push('</td>');
                     break;
@@ -189,6 +194,15 @@ export class juGridBuilder
         {
             tpl.push(this.getNormalTD(item, index));
         }
+    }
+    private getDateDisabledExp(exp)
+    {        
+        if (exp.indexOf('[disabled]') != -1)
+        {
+            const arr = /\[disabled\]="([^"]*)"/.exec(exp);
+            return `[style.display]="${arr[1]}?'none':'normal'"`;
+        }
+        return '';
     }
     private getPlainView()
     {
@@ -585,6 +599,7 @@ export class juGridBuilder
             private isColResize: boolean = false;
             private pager: juPager;
             private slideState: string = 'down';
+            private subscription ;
             constructor(private renderer: Renderer, private el: ElementRef, private changeDetector: ChangeDetectorRef)
             {
 
@@ -616,7 +631,7 @@ export class juGridBuilder
             public getValidRows():any[]
             {
                 let res: any[] = [];
-                let arr = this.editors.toArray();
+                let arr = this.editorsArray;
                 this.data.forEach((row: any, index: number) =>
                 {
                     if (arr[index].isErrorFree())
@@ -626,25 +641,37 @@ export class juGridBuilder
                 });
                 return res;
             }
+            private editorsArray:rowEditor[]=[];
             @ViewChildren(rowEditor) editors: QueryList<rowEditor>;
             @ViewChild('filterWindow') filterWindowRef: ElementRef;
             @ViewChild('tc1') tableContainer: ElementRef;
             @ViewChild('resizeMarker') resizeMarker: ElementRef;
-            isValid(fieldName, index)
-            {                          
-                let arr = this.editors.toArray(); 
-                if (arr.length > index)
+
+            ngAfterViewInit() {                
+                this.editorsArray = this.editors.toArray();               
+                this.subscription = this.editors.changes.subscribe(res => {
+                    this.editorsArray = this.editors.toArray();                   
+                })
+            }
+            focus(key, index){
+                if (this.editorsArray.length > index)
                 {
-                    return arr[index].isValid(fieldName);
+                    this.editorsArray[index].focus(key);
+                }
+            }
+            isValid(fieldName, index)
+            {  
+                if (this.editorsArray.length > index)
+                {
+                    return this.editorsArray[index].isValid(fieldName);
                 }
                 return { 'validation-msg-hide': true };
             }
             getValidationMsg(fieldName, index)
-            {
-                let arr = this.editors.toArray();
-                if (arr.length > index)
+            {  
+                if (this.editorsArray.length > index)
                 {
-                    return arr[index].getValidationMsg(fieldName);
+                    return this.editorsArray[index].getValidationMsg(fieldName);
                 }
                 return '';
             }
@@ -656,6 +683,7 @@ export class juGridBuilder
                 }
                 this._editPermission = this.config.editPermission;
             }
+           
             private getStyle(tc1, tc2)
             {
                 let style: any = {};
@@ -859,6 +887,7 @@ export class juGridBuilder
                 this.config.columnDefs
                     .filter(it => it.filterApi)
                     .forEach(it => { it.filterApi.destroy(); });
+                this.subscription.unsubscribe();
             }
             private trackByResolver()
             {
@@ -886,7 +915,7 @@ export class juGridBuilder
             }
             public setJuSelectData(key: string, value: any[], index: number)
             {
-                this.editors.toArray()[index].setJuSelectData(key, value);
+                this.editorsArray[index].setJuSelectData(key, value);
             }
             public setData(data)
             {

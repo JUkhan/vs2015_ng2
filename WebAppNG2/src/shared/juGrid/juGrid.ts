@@ -227,7 +227,11 @@ export class juGrid implements OnInit, OnChanges, OnDestroy
             this.componentRef = null;
         }
     }
-    
+    public focus(key, index){
+          if (this.componentRef){
+               this.componentRef.instance.focus(key, index);
+          }
+    }
     public render(): Promise<juGrid> {
         return this.refreshContent();
     }
@@ -429,8 +433,12 @@ export interface ColumnDefs
     formatter?: (val: any) => any;
     getValue?: (row: any) => string;
     editPermission?: (row: any) => boolean;
-    config?:any;
-}
+    config?: any;
+    pipe?: string;
+    dpShow?: (model: any) => void;
+    dpHide?: (model: any) => void;
+    dpOutOfRange?: (model: any) => void;
+}                                                     
 export interface GridOptions
 {
     title?:string;

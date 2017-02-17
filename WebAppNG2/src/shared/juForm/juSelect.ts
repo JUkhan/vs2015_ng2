@@ -12,7 +12,7 @@ declare var jQuery: any;
     changeDetection: ChangeDetectionStrategy.Default,
     template: `
     <div #maincontent [class.open]="isEditable" [ngClass]="getDropdownStyle()" class="btn-group bootstrap-select" [style.width]="options.width" data-container="body">
-        <button *ngIf="!options.editable" [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" #btn (click)="setFocusToValidate(btn, $event)">
+        <button *ngIf="!options.editable" [disabled]="options.disabled" type="button" [ngClass]="getBtnStyle()" class="btn dropdown-toggle {{propertyName}}" data-toggle="dropdown" role="button" [title]="getFormatedText()" aria-expanded="false" #btn (click)="setFocusToValidate(btn, $event)">
             <span class="filter-option pull-left"> 
                 <i *ngIf="selectedItem[options.iconProp]||options.iconRenderer" [class]="getSelectedIconStyle()"></i>               
                 <span class="{{options.multiselect?'':selectedItem[options.styleProp]}}">{{getFormatedText()}}</span>
@@ -32,7 +32,7 @@ declare var jQuery: any;
                 <label (click)="$event.stopPropagation()" *ngIf="options.checkAll"><input (click)="checkAll(chkAll.checked)" #chkAll type="checkbox">Select All</label>
                 <input #searchEl *ngIf="options.liveSearch" [style.width.%]="options.checkAll?50:100" autofocus type="text" class="form-control" role="textbox" placeholder="Search...">
             </div>
-            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false" [style.max-height.px]="options.height?options.height-46:'none'" style="overflow-y: auto; min-height: 0px;" >
+            <ul *ngIf="!options.columns" class="dropdown-menu inner" role="listbox" aria-expanded="false" [style.max-height.px]="options.height?options.height-46:'none'" style="overflow-y: auto; min-height: 0px;" >
                 <li [ngClass]="getItemClasses(item)" *ngFor="let item of dataList">
                     <a role="option" (click)="selectItem(item, $event)" role="option">
                         <span *ngIf="item[options.iconProp]||options.iconRenderer" [class]="getIconStyle(item)"></span>
@@ -46,6 +46,21 @@ declare var jQuery: any;
                     No results matched "{{livesearchText}}"
                 </li>                         
             </ul>
+            <table *ngIf="options.columns" class="table" style="margin-bottom:-1px">
+                    <thead><tr>
+                        <th *ngFor="let col of options.columns" [style.width.px]="col.width||120" style="display:inline-block">{{col.header}}</th>                        
+                    </tr></thead>
+            </table>
+            <div *ngIf="options.columns" [style.max-height.px]="claHeightWhenColumns()" style="overflow-y: auto; min-height: 0px;" >
+                <table class="table ju-select table-hover">
+                   
+                    <tbody>
+                        <tr [ngClass]="getItemClasses(item)" *ngFor="let item of dataList" role="option" (click)="selectItem(item, $event)" role="option">
+                            <td *ngFor="let col of options.columns" [style.width.px]="col.width||120" style="display:inline-block">{{item[col.field]}}</td>                           
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div [style.visibility]="maxOptionsVisibility" class="notify">{{options.maxOptionsText}}</div>
         </div>
 
@@ -83,7 +98,12 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     valueChanges: Subject<any> = new Subject();
 
     constructor(private renderer: Renderer) {  }
-
+    private claHeightWhenColumns()
+    {
+        if (!this.options.height) this.options.height = 200;
+        return this.options.liveSearch ? this.options.height - 83 : this.options.height - 46;  
+        
+    }
     public ngOnInit() {
         this.config.api = this;        
         this.options.textProp = this.options.textProp || 'text';
@@ -143,7 +163,7 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
         {
             this.dataList = changes.dataList.currentValue.map(item => Object.assign({}, item, { selected: false }));
             this.dataList_bckup = this.dataList;
-            if (this.previousValue && this.dataList && this.dataList.length > 0)
+            if (this.previousValue && this.dataList /*&& this.dataList.length > 0*/)
             {                             
                 this.setValue(this.previousValue);
                 if (this.myForm)
@@ -186,6 +206,10 @@ export class juSelect implements OnInit, OnChanges, AfterViewInit {
     }
     private getMinwidth()
     {
+        if (this.options.optionsWidth)
+        {
+            return this.options.optionsWidth;
+        }
         if (this.options.fixedPosition)
             return (jQuery(this.containerEl.nativeElement).width()||120)+'px';
         return '100%';
@@ -435,10 +459,12 @@ export interface SelectOptions {
     dropup?: boolean;
     btnStyle?: 'btn-default' | 'btn-primary' | 'btn-info' | 'btn-success' | 'btn-warning' | 'btn-danger';
     width?: string;
+    optionsWidth?: string;
     height?: number;
     fitWidth?: boolean;
     showMenuArrow?: boolean;
     multipleSeparator?: string;
     editable?: boolean;   
-    fixedPosition?:boolean;
+    fixedPosition?: boolean;
+    columns?: any[];
 }
